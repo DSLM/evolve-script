@@ -159,7 +159,53 @@ replaceLsit = {
     '':'',
     '':'',
     '':'',
-    '':''
+    '':'',
+
+    #将翻译代码注入脚本
+    """'use strict';""":"""'use strict';
+    var translateFinish = false;""",
+    """// Make sure we have jQuery UI even if script was injected without *monkey""":"""//翻译注入
+        if(!translateFinish)
+        {
+            let theKeys = Object.keys(buildings)
+            let difList = {
+                "Proxima Dyson Sphere (Orichalcum)": "奥利哈刚戴森球",
+                "Windmill (Evil)": "风车（邪恶种群）",
+                "Sirius Ascension Machine (Complete)":"飞升装置（已完成）"
+            }
+            for(let i = 0; i < theKeys.length; i++)
+            {
+                let buildObj = buildings[theKeys[i]]
+                let tempTitle
+                let tempB1 = buildObj._tab
+                let tempB2 = buildObj._id
+
+                if(Object.keys(difList).includes(buildObj.name)){
+                    buildObj.name = difList[buildObj.name];
+                    continue;
+                }
+
+                if(typeof(evolve.actions[tempB1][tempB2])  == "undefined")
+                {
+                    let tempSubObList = Object.keys(evolve.actions[tempB1]);
+                    for(let j = 0; j < tempSubObList.length; j++)
+                    {
+                        if(!(typeof(evolve.actions[tempB1][tempSubObList[j]][tempB2])  == "undefined"))
+                        {
+                            tempTitle = evolve.actions[tempB1][tempSubObList[j]][tempB2].title;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    tempTitle = evolve.actions[tempB1][tempB2].title
+                }
+                buildObj.name = (typeof(tempTitle) == "function") ? tempTitle() : tempTitle
+            }
+            translateFinish = true
+        }
+        // Make sure we have jQuery UI even if script was injected without *monkey"""
 }
 
 for key in replaceLsit.keys():
