@@ -8,6 +8,7 @@
 // @author       TMVictor
 // @author       Vollch
 // @match        https://pmotschmann.github.io/Evolve/
+// @match        https://likexia.gitee.io/evolve/
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -1724,7 +1725,7 @@
 
         // Base resources
         Money: new Resource("Money", "Money"),
-        Population: new Population("Population", "Population"), // We can't store the full elementId because we don't know the name of the population node until later
+        Population: new Population("人口", "Population"), // We can't store the full elementId because we don't know the name of the population node until later
         Slave: new Resource("Slave", "Slave"),
         Mana: new Resource("Mana", "Mana"),
         Knowledge: new Resource("Knowledge", "Knowledge"),
@@ -1793,7 +1794,7 @@
         Blood_Stone: new Resource("Blood Stone", "Blood_Stone"),
         Artifact: new Resource("Artifact", "Artifact"),
         Plasmid: new SpecialResource("Plasmid", "Plasmid"),
-        Antiplasmid: new AntiPlasmid("Anti-Plasmid", "Antiplasmid"),
+        Antiplasmid: new AntiPlasmid("反质粒", "Antiplasmid"),
         Phage: new SpecialResource("Phage", "Phage"),
         Dark: new SpecialResource("Dark", "Dark"),
         Harmony: new SpecialResource("Harmony", "Harmony"),
@@ -1801,15 +1802,15 @@
 
         // Special not-really-resources-but-we'll-treat-them-like-resources resources
         Supply: new Supply("Supplies", "Supply"),
-        Power: new Power("Power", "Power"),
-        StarPower: new StarPower("Star Power", "StarPower"),
-        Morale: new Morale("Morale", "Morale"),
+        Power: new Power("电力", "Power"),
+        StarPower: new StarPower("星", "StarPower"),
+        Morale: new Morale("士气", "Morale"),
         Moon_Support: new Support("月球支持", "Moon_Support", "space", "spc_moon"),
         Red_Support: new Support("红色行星支持", "Red_Support", "space", "spc_red"),
         Sun_Support: new Support("蜂群支持", "Sun_Support", "space", "spc_sun"),
         Belt_Support: new BeltSupport("小行星带支持", "Belt_Support", "space", "spc_belt"),
         Titan_Support: new Support("最大卫星支持", "Titan_Support", "space", "spc_titan"),
-        Electrolysis_Support: new ElectrolysisSupport("Electrolysis Plant", "Electrolysis_Support", "", ""),
+        Electrolysis_Support: new ElectrolysisSupport("电解工厂", "Electrolysis_Support", "", ""),
         Enceladus_Support: new Support("第六大卫星支持", "Enceladus_Support", "space", "spc_enceladus"),
         Eris_Support: new Support("矮行星支持", "Eris_Support", "space", "spc_eris"),
         Alpha_Support: new Support("半人马座α星系支持", "Alpha_Support", "interstellar", "int_alpha"),
@@ -10579,7 +10580,7 @@
                         if (obj.isAffordable(true)) {
                             state.queuedTargets.push(obj);
                             if (queueSave) {
-                                state.conflictTargets.push({name: obj.title, cause: "Queue", cost: obj.cost});
+                                state.conflictTargets.push({name: obj.title, cause: "队列", cost: obj.cost});
                             }
                         }
                     }
@@ -10591,11 +10592,11 @@
         });
 
         if (SpyManager.purchaseMoney && settings.prioritizeUnify.includes("save")) {
-            state.conflictTargets.push({name: techIds["tech-unification"].title, cause: "Purchase", cost: {Money: SpyManager.purchaseMoney}});
+            state.conflictTargets.push({name: techIds["tech-unification"].title, cause: "收购", cost: {Money: SpyManager.purchaseMoney}});
         }
 
         if (FleetManagerOuter.nextShipCost && settings.prioritizeOuterFleet.includes("save")) {
-            state.conflictTargets.push({name: game.global.space.shipyard.blueprint.name ?? "Unnamed ship", cause: "Ship", cost: FleetManagerOuter.nextShipCost});
+            state.conflictTargets.push({name: game.global.space.shipyard.blueprint.name ?? "无名舰船", cause: "舰船", cost: FleetManagerOuter.nextShipCost});
         }
 
         if (settings.autoTrigger) {
@@ -10607,7 +10608,7 @@
                 let obj = buildings.GorddonEmbassy;
                 state.triggerTargets.push(obj);
                 if (triggerSave) {
-                    state.conflictTargets.push({name: obj.title, cause: "Fleet", cost: obj.cost});
+                    state.conflictTargets.push({name: obj.title, cause: "战舰", cost: obj.cost});
                 }
             }
 
@@ -10618,7 +10619,7 @@
                 if (obj) {
                     state.triggerTargets.push(obj);
                     if (triggerSave) {
-                        state.conflictTargets.push({name: obj.title, cause: "Trigger", cost: obj.cost});
+                        state.conflictTargets.push({name: obj.title, cause: "触发器", cost: obj.cost});
                     }
                 }
             }
@@ -11301,9 +11302,10 @@
             return;
         }
 
-        //翻译注入
+        
         if(!translateFinish)
         {
+            //建筑翻译注入
             let theKeys = Object.keys(buildings)
             let difList = {
                 "Proxima Dyson Sphere (Orichalcum)": "奥利哈刚戴森球",
@@ -11339,6 +11341,35 @@
                     tempTitle = evolve.actions[tempB1][tempB2].title
                 }
                 buildObj.name = (typeof(tempTitle) == "function") ? tempTitle() : tempTitle
+            }
+            //资源翻译注入
+            theKeys = Object.keys(resources)
+            for(let i = 0; i < theKeys.length; i++)
+            {
+                switch(resources[theKeys[i]].constructor.name)
+                {
+                    case "Resource":
+                        resources[theKeys[i]].name = game.global.resource[resources[theKeys[i]]._id].name
+                        break;
+                    case "SpecialResource":
+                    case "Supply":
+                        resources[theKeys[i]].name = game.loc("resource_"+resources[theKeys[i]]._id+"_name")
+                        break;
+                    case "Support":
+                    case "BeltSupport":
+                    case "ElectrolysisSupport":
+                        break;
+                    default:
+                        console.log(resources[theKeys[i]].constructor.name)
+                        break;
+                }
+            }
+            //arpa翻译注入
+            theKeys = Object.keys(projects)
+            for(let i = 0; i < theKeys.length; i++)
+            {
+                let tempObj = game.actions.arpa[projects[theKeys[i]]._id].title
+                projects[theKeys[i]].name = (typeof(tempObj) == "function") ?  tempObj() : tempObj
             }
             translateFinish = true
         }

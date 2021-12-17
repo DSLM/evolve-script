@@ -6,13 +6,24 @@ newFile = open("evolve_automation_chinese.user.js", "w", encoding="utf-8")
 content = oldFile.read()
 
 replaceLsit = {
+    #开头
     'https://gist.github.com/Vollch/b1a5eec305558a48b7f4575d317d7dd1/raw/evolve_automation.user.js':'https://github.com/DSLM/evolve-script/raw/master/evolve_automation_chinese.user.js',
+    '// @match        https://pmotschmann.github.io/Evolve/':'''// @match        https://pmotschmann.github.io/Evolve/
+// @match        https://likexia.gitee.io/evolve/''',
     '// This script forked from TMVictor\'s script version 3.3.1. Original script: https://gist.github.com/TMVictor/3f24e27a21215414ddc68842057482da':'// This script forked from TMVictor\'s script version 3.3.1. Original script: https://gist.github.com/TMVictor/3f24e27a21215414ddc68842057482da\n// Removed downloadURL in case that script got screwed up. Original downloadURL: @downloadURL  https://gist.github.com/Vollch/b1a5eec305558a48b7f4575d317d7dd1/raw/evolve_automation.user.js',
+
+    #资源
+    'Population: new Population("Population", "Population")':'Population: new Population("人口", "Population")',
+    'Antiplasmid: new AntiPlasmid("Anti-Plasmid", "Antiplasmid")':'Antiplasmid: new AntiPlasmid("反质粒", "Antiplasmid")',
+    'Power: new Power("Power", "Power")':'Power: new Power("电力", "Power")',
+    'StarPower: new StarPower("Star Power", "StarPower")':'StarPower: new StarPower("星", "StarPower")',
+    'Morale: new Morale("Morale", "Morale")':'Morale: new Morale("士气", "Morale")',
     '"Moon Support"':'"月球支持"',
     '"Red Support"':'"红色行星支持"',
     '"Sun Support"':'"蜂群支持"',
     '"Belt Support"':'"小行星带支持"',
     '"Titan Support"':'"最大卫星支持"',
+    '"Electrolysis Plant"':'"电解工厂"',
     '"Enceladus Support"':'"第六大卫星支持"',
     '"Eris Support"':'"矮行星支持"',
     '"Alpha Support"':'"半人马座α星系支持"',
@@ -21,6 +32,16 @@ replaceLsit = {
     '"Alien Support"':'"第五星系支持"',
     '"Lake Support"':'"湖泊支持"',
     '"Spire Support"':'"尖塔支持"',
+
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+
     '() => "Locked",':'() => "未解锁",',
     '() => "Queued building, processing...",':'() => "处理建筑队列……",',
     '() => "Active trigger, processing...",':'() => "处理触发器……",',
@@ -139,11 +160,11 @@ replaceLsit = {
     '<span class="has-text-warning" style="width: 2.75rem; display: inline-block; text-align: center;">Away</span>':'<span class="has-text-warning" style="width: 2.75rem; display: inline-block; text-align: center;">线卖</span>',
     '<span class="has-text-warning" style="width: 2.75rem; margin-right: 0.3em; display: inline-block; text-align: center;">Auto</span>':'<span class="has-text-warning" style="width: 2.75rem; margin-right: 0.3em; display: inline-block; text-align: center;">自动</span>',
     '<span class="has-text-warning" style="width: 2.75rem; display: inline-block; text-align: center;">Over</span>':'<span class="has-text-warning" style="width: 2.75rem; display: inline-block; text-align: center;">溢出</span>',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
+    'state.conflictTargets.push({name: obj.title, cause: "Queue", cost: obj.cost});':'state.conflictTargets.push({name: obj.title, cause: "队列", cost: obj.cost});',
+    'state.conflictTargets.push({name: techIds["tech-unification"].title, cause: "Purchase", cost: {Money: SpyManager.purchaseMoney}});':'state.conflictTargets.push({name: techIds["tech-unification"].title, cause: "收购", cost: {Money: SpyManager.purchaseMoney}});',
+    'state.conflictTargets.push({name: game.global.space.shipyard.blueprint.name ?? "Unnamed ship", cause: "Ship", cost: FleetManagerOuter.nextShipCost});':'state.conflictTargets.push({name: game.global.space.shipyard.blueprint.name ?? "无名舰船", cause: "舰船", cost: FleetManagerOuter.nextShipCost});',
+    'state.conflictTargets.push({name: obj.title, cause: "Fleet", cost: obj.cost});':'state.conflictTargets.push({name: obj.title, cause: "战舰", cost: obj.cost});',
+    'state.conflictTargets.push({name: obj.title, cause: "Trigger", cost: obj.cost});':'state.conflictTargets.push({name: obj.title, cause: "触发器", cost: obj.cost});',
     '':'',
     '':'',
     '':'',
@@ -164,9 +185,10 @@ replaceLsit = {
     #将翻译代码注入脚本
     """'use strict';""":"""'use strict';
     var translateFinish = false;""",
-    """// Make sure we have jQuery UI even if script was injected without *monkey""":"""//翻译注入
+    """// Make sure we have jQuery UI even if script was injected without *monkey""":"""
         if(!translateFinish)
         {
+            //建筑翻译注入
             let theKeys = Object.keys(buildings)
             let difList = {
                 "Proxima Dyson Sphere (Orichalcum)": "奥利哈刚戴森球",
@@ -202,6 +224,35 @@ replaceLsit = {
                     tempTitle = evolve.actions[tempB1][tempB2].title
                 }
                 buildObj.name = (typeof(tempTitle) == "function") ? tempTitle() : tempTitle
+            }
+            //资源翻译注入
+            theKeys = Object.keys(resources)
+            for(let i = 0; i < theKeys.length; i++)
+            {
+                switch(resources[theKeys[i]].constructor.name)
+                {
+                    case "Resource":
+                        resources[theKeys[i]].name = game.global.resource[resources[theKeys[i]]._id].name
+                        break;
+                    case "SpecialResource":
+                    case "Supply":
+                        resources[theKeys[i]].name = game.loc("resource_"+resources[theKeys[i]]._id+"_name")
+                        break;
+                    case "Support":
+                    case "BeltSupport":
+                    case "ElectrolysisSupport":
+                        break;
+                    default:
+                        console.log(resources[theKeys[i]].constructor.name)
+                        break;
+                }
+            }
+            //arpa翻译注入
+            theKeys = Object.keys(projects)
+            for(let i = 0; i < theKeys.length; i++)
+            {
+                let tempObj = game.actions.arpa[projects[theKeys[i]]._id].title
+                projects[theKeys[i]].name = (typeof(tempObj) == "function") ?  tempObj() : tempObj
             }
             translateFinish = true
         }
