@@ -11310,7 +11310,24 @@
             let difList = {
                 "Proxima Dyson Sphere (Orichalcum)": "奥利哈刚戴森球",
                 "Windmill (Evil)": "风车（邪恶种群）",
-                "Sirius Ascension Machine (Complete)":"飞升装置（已完成）"
+                "Sirius Ascension Machine (Complete)":"飞升装置（已完成）",
+                "Shed":"仓库",
+                "Alpha Warehouse":"半人马座α星系仓库",
+                "Titan Habitat":"最大卫星定居点",
+                "Alpha Habitat":"半人马座定居点",
+                "Red Mine":"红色星球行星矿井",
+                "Titan Mine":"最大卫星行星矿井",
+                "Dwarf Mass Relay":"质量中继器",
+                "Dwarf Mass Relay (Complete)":"质量中继器（已完成）",
+                '':'',
+                '':'',
+                '':'',
+                '':'',
+                '':'',
+                '':'',
+                '':'',
+                '':'',
+                '':''
             }
             for(let i = 0; i < theKeys.length; i++)
             {
@@ -11360,7 +11377,7 @@
                     case "ElectrolysisSupport":
                         break;
                     default:
-                        console.log(resources[theKeys[i]].constructor.name)
+                        //console.log(resources[theKeys[i]].constructor.name)
                         break;
                 }
             }
