@@ -33,15 +33,139 @@ replaceLsit = {
     '"Lake Support"':'"湖泊支持"',
     '"Spire Support"':'"尖塔支持"',
 
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
+    #种族警告
+    '>This race have special requirements:':'>此种族的特殊要求为：',
+    '. This condition is met.':'。当前满足此条件。',
+    '>Warning! This race have special requirements:':'>警告！此种族的特殊要求为：',
+    '. This condition is not met.':'。当前不满足此条件。',
+    '. This condition is bypassed. Race will have ${100 - suited * 100}% penalty.':'。当前可使用此种族，但受到 ${100 - suited * 100}% 的产量惩罚。',
+    '''case "aquatic":
+        return "Oceanic planet";
+    case "fey":
+        return "Forest planet";
+    case "sand":
+        return "Desert planet";
+    case "heat":
+        return "Volcanic planet";
+    case "polar":
+        return "Tundra planet";
+    case "demonic":
+        return "Hellscape planet";
+    case "angelic":
+        return "Eden planet";''':
+        '''case "aquatic":
+            return "海洋星球";
+        case "fey":
+            return "森林星球";
+        case "sand":
+            return "沙漠星球";
+        case "heat":
+            return "火山星球";
+        case "polar":
+            return "苔原星球";
+        case "demonic":
+            return "地狱星球";
+        case "angelic":
+            return "伊甸园星球";''',
+
+    #侧边栏高级设置
+    ">Variable 1<": ">变量1<",
+    ">Check<": ">运算<",
+    ">Variable 2<": ">变量2<",
+    ">Result<": ">结果<",
+    ">Value<": ">值<",
+    '>Type<':'>类型<',
+    '''"AND": (a, b) => a && b,
+    "OR": (a, b) => a || b,
+    "NOR": (a, b) => !(a || b),
+    "NAND": (a, b) => !(a && b),
+    "XOR": (a, b) => !a != !b,
+    "XNOR": (a, b) => !a == !b,
+    "AND!": (a, b) => a && !b,
+    "OR!": (a, b) => a || !b,''':
+    '''"与": (a, b) => a && b,
+    "或": (a, b) => a || b,
+    "或非": (a, b) => !(a || b),
+    "与非": (a, b) => !(a && b),
+    "异或": (a, b) => !a != !b,
+    "同或": (a, b) => !a == !b,
+    "与(变量2取非)": (a, b) => a && !b,
+    "或(变量2取非)": (a, b) => a || !b,''',
+    'let types = Object.entries(checkTypes).map(([id, type]) => `<option value="${id}" title="${type.desc}">${id.replace(/([A-Z])/g, \' $1\').trim()}</option>`).join();':'let types = Object.entries(checkTypes).map(([id, type]) => `<option value="${id}" title="${type.desc}">${type.title}</option>`).join();',
+    'desc: "Returns string"':'desc: "返回字符串的值", title:"字符串"',
+    'desc: "Returns number"':'desc: "返回数值的值", title:"数值"',
+    'desc: "Returns boolean"':'desc: "返回布尔值的值", title:"布尔值"',
+    'desc: "Returns default value of setting, types varies"':'desc: "返回默认设置的值，数值类型可变", title:"默认设置"',
+    'desc: "Returns current value of setting, types varies"':'desc: "返回当前设置的值，数值类型可变", title:"当前设置"',
+    'desc: "Returns result of evaluating code"':'desc: "返回代码求值后的值", title:"求值"',
+    'desc: "Return true when building is unlocked"':'desc: "如果建筑已解锁，则返回真值", title:"建筑是否解锁"',
+    'desc: "Return true when building have all required resources, and can be purchased"':'desc: "如果建筑满足所有建造条件并可以建造，则返回真值", title:"建筑是否可点击"',
+    'desc: "Return true when building is affordable, i.e. costs of all resources below storage caps"':'desc: "如果建筑足够资源建造，则返回真值", title:"建筑是否足够资源建造"',
+    'desc: "Returns amount of buildings as number"':'desc: "以数值形式返回建筑数量", title:"建筑数量"',
+    'desc: "Returns amount of powered buildings as number"':'desc: "以数值形式返回建筑已供能的数量", title:"建筑启用数量"',
+    'desc: "Returns amount of unpowered buildings as number"':'desc: "以数值形式返回建筑未供能的数量", title:"建筑停用数量"',
+    'desc: "Return true when project is unlocked"':'desc: "如果ARPA项目已解锁，则返回真值", title:"ARPA项目是否解锁"',
+    'desc: "Returns amount of projects as number"':'desc: "以数值形式返回ARPA项目数量", title:"ARPA项目数量"',
+    'desc: "Returns progress of projects as number"':'desc: "以数值形式返回ARPA项目的进度", title:"ARPA项目进度"',
+    'desc: "Returns true when job is unlocked"':'desc: "如果工作已解锁，则返回真值", title:"工作是否解锁"',
+    'desc: "Returns current amount of assigned workers as number"':'desc: "以数值形式返回已分配的工人数量", title:"工作数量"',
+    'desc: "Returns maximum amount of assigned workers as number"':'desc: "以数值形式返回可分配的工人上限数量", title:"工作上限"',
+    'desc: "Returns true when research is unlocked"':'desc: "如果研究已解锁，则返回真值", title:"研究是否解锁"',
+    'desc: "Returns true when research is complete"':'desc: "如果研究已完成，则返回真值", title:"研究是否完成"',
+    'desc: "Returns true when resource or support is unlocked"':'desc: "如果资源已解锁，则返回真值", title:"资源是否解锁"',
+    'desc: "Returns current amount of resource or support as number"':'desc: "以数值形式返回当前资源或支持的数量", title:"资源数量"',
+    'desc: "Returns maximum amount of resource or support as number"':'desc: "以数值形式返回资源或支持上限的数量", title:"资源上限"',
+    'desc: "Returns current income of resource or unused support as number"':'desc: "以数值形式返回当前资源收入或未使用的支持的数量", title:"资源收入"',
+    'desc: "Returns storage ratio of resource as number. Number 0.5 means that storage is 50% full, and such."':'desc: "以数值形式返回当前资源与上限比值的数量。0.5意味着资源到达了储量上限的50%，以此类推。", title:"资源比例"',
+    'desc: "Returns true when current amount of resource above maximum costs"':'desc: "如果当前资源超过了最大花费，则返回真值。", title:"资源是否满足"',
+    'desc: "Returns true when resource is demanded, i.e. missed by some prioritized task, such as queue or trigger"':'desc: "如果资源目前需要，则返回真值。例如，当前队列或者触发器的消耗包含此项资源。", title:"资源是否需要"',
+    'desc: "Returns ID of selected race as string"':'desc: "以字符串形式返回所选择种族的类别", title:"种族类别"',
+    'desc: "Returns true when selected race pillared at current star level"':'desc: "如果当前种族已经在当前成就等级下在永恒立柱上嵌入水晶，则返回真值", title:"种族是否已嵌水晶"',
+    'desc: "Returns true when playing selected genus"':'desc: "如果当前种群为所选择的种群，则返回真值", title:"当前种群"',
+    'desc: "Returns true when mimicking selected genus"':'desc: "如果拟态特质选择的种群为所选择的种群，则返回真值", title:"拟态种群"',
+    'desc: "Returns trait level as number"':'desc: "以数值形式返回特质的等级", title:"特质等级"',
+    'desc: "Returns true when selected reset is active"':'desc: "如果正在进行所选择的重置类型，则返回真值", title:"重置类型"',
+    'desc: "Returns true when selected challenge is active"':'desc: "如果当前游戏激活了相应的挑战，则返回真值", title:"挑战"',
+    'desc: "Returns true when playing in selected universe"':'desc: "如果当前宇宙为所选择的宇宙，则返回真值", title:"宇宙"',
+    'desc: "Returns true when selected government is active"':'desc: "如果当前社会体制为所选择的社会体制，则返回真值", title:"社会体制"',
+    'desc: "Returns true when selected governor is active"':'desc: "如果当前游戏激活了相应的总督，则返回真值", title:"总督"',
+    'desc: "Returns amount of items in queue as number"':'desc: "以数值形式返回队列中内容的数量", title:"队列"',
+    'desc: "Returns ingame date as number"':'desc: "以数值形式返回游戏中天数的数量", title:"天数"',
+    'desc: "Returns amount of soldiers as number"':'desc: "以数值形式返回士兵的数量", title:"士兵数"',
+    'desc: "Returns true when playing in selected biome"':'desc: "如果当前行星的生物群系为所选择的生物群系，则返回真值", title:"行星生物群系"',
+    'desc: "Returns true when planet have selected trait"':'desc: "如果当前行星的星球特性为所选择的星球特性，则返回真值", title:"行星星球特性"',
+    '[{val: "species", label: "Current Race", hint: "Current race"},':'[{val: "species", label: "当前种族", hint: "当前种族"},',
+    '{val: "gods", label: "Fanaticism Race", hint: "Gods race"},':'{val: "gods", label: "狂热信仰种族", hint: "狂热信仰的种族"},',
+    '{val: "old_gods", label: "Deify Race", hint: "Old gods race"},':'{val: "old_gods", label: "神化先祖种族", hint: "神化先祖的种族"},',
+    '{val: "protoplasm", label: "Protoplasm", hint: "Race is not chosen yet"},':'{val: "protoplasm", label: "原生质", hint: "还未选择种族"},',
+    '[{val: "bigbang", label: "Big Bang", hint: "Universe is not chosen yet"},':'[{val: "bigbang", label: "大爆炸", hint: "还未选择宇宙"},',
+    '[{val: "none", label: "None", hint: "No governor selected"},':'[{val: "none", label: "无", hint: "还未选择总督"},',
+    '[{val: "queue", label: "Building", hint: "Buildings and projects queue"},':'[{val: "queue", label: "建筑", hint: "建筑队列"},',
+    '{val: "r_queue", label: "Research", hint: "Research queue"},':'{val: "r_queue", label: "研究", hint: "研究队列"},',
+    '{val: "evo", label: "Evolution", hint: "Evolution queue"}]},':'{val: "evo", label: "进化", hint: "进化队列"}]},',
+    '[{val: "day", label: "Day (Year)", hint: "Day of year"},':'[{val: "day", label: "天数(年)", hint: "一年中的第几天"},',
+    '{val: "moon", label: "Day (Month)", hint: "Day of month"},':'{val: "moon", label: "天数(月)", hint: "一月中的第几天"},',
+    '{val: "total", label: "Day (Total)", hint: "Day of run"},':'{val: "total", label: "天数(总)", hint: "本轮游戏天数"},',
+    '{val: "year", label: "Year", hint: "Year of run"},':'{val: "year", label: "年数", hint: "本轮游戏年数"},',
+    '{val: "orbit", label: "Orbit", hint: "Planet orbit in days"}]},':'{val: "orbit", label: "公转天数", hint: "行星公转的天数"}]},',
+    '[{val: "workers", label: "Total Soldiers"},':'[{val: "workers", label: "士兵总数"},',
+    '{val: "max", label: "Total Soldiers Max"},':'{val: "max", label: "士兵总上限"},',
+    '{val: "currentCityGarrison", label: "City Soldiers"},':'{val: "currentCityGarrison", label: "非地狱维度士兵数"},',
+    '{val: "maxCityGarrison", label: "City Soldiers Max"},':'{val: "maxCityGarrison", label: "非地狱维度士兵上限"},',
+    '{val: "hellSoldiers", label: "Hell Soldiers"},':'{val: "hellSoldiers", label: "地狱维度士兵数"},',
+    '{val: "hellGarrison", label: "Hell Garrison"},':'{val: "hellGarrison", label: "地狱维度驻扎士兵"},',
+    '{val: "hellPatrols", label: "Hell Patrols"},':'{val: "hellPatrols", label: "地狱维度巡逻队数量"},',
+    '{val: "hellPatrolSize", label: "Hell Patrol Size"},':'{val: "hellPatrolSize", label: "地狱维度巡逻队规模"},',
+    '{val: "wounded", label: "Wounded Soldiers"},':'{val: "wounded", label: "伤兵数"},',
+    '{val: "deadSoldiers", label: "Dead Soldiers"},':'{val: "deadSoldiers", label: "士兵阵亡数"},',
+    '{val: "crew", label: "Ship Crew"}]},':'{val: "crew", label: "船员数"}]},',
+
+
     '':'',
     '':'',
     '':'',
 
+    #硬编码汉化部分
     '() => "Locked",':'() => "未解锁",',
     '() => "Queued building, processing...",':'() => "处理建筑队列……",',
     '() => "Active trigger, processing...",':'() => "处理触发器……",',

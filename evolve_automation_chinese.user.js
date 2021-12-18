@@ -11853,46 +11853,46 @@
         resource: {def: "Food", arg: "select_cb", options: () => Object.values(resources).map(r =>
           ({val: r._id, label: r.name}))},
         race: {def: "species", arg: "select_cb", options: () =>
-          [{val: "species", label: "Current Race", hint: "Current race"},
-           {val: "gods", label: "Fanaticism Race", hint: "Gods race"},
-           {val: "old_gods", label: "Deify Race", hint: "Old gods race"},
-           {val: "protoplasm", label: "Protoplasm", hint: "Race is not chosen yet"},
+          [{val: "species", label: "当前种族", hint: "当前种族"},
+           {val: "gods", label: "狂热信仰种族", hint: "狂热信仰的种族"},
+           {val: "old_gods", label: "神化先祖种族", hint: "神化先祖的种族"},
+           {val: "protoplasm", label: "原生质", hint: "还未选择种族"},
            ...Object.values(races).map(race =>
           ({val: race.id, label: race.name, hint: race.desc}))]},
         challenge: {def: "junker", arg: "select_cb", options: () => challenges.flat().map(c =>
           ({val: c.trait, label: game.loc(`evo_challenge_${c.id}`), hint: game.loc(`evo_challenge_${c.id}_effect`)}))},
         universe: {def: "standard", arg: "select_cb", options: () =>
-          [{val: "bigbang", label: "Big Bang", hint: "Universe is not chosen yet"},
+          [{val: "bigbang", label: "大爆炸", hint: "还未选择宇宙"},
            ...universes.map(u =>
           ({val: u, label: game.loc(`universe_${u}`), hint: game.loc(`universe_${u}_desc`)}))]},
         government: {def: "anarchy", arg: "select_cb", options: () => Object.keys(GovernmentManager.Types).map(g =>
           ({val: g, label: game.loc(`govern_${g}`), hint: game.loc(`govern_${g}_desc`)}))},
         governor: {def: "none", arg: "select_cb", options: () =>
-          [{val: "none", label: "None", hint: "No governor selected"},
+          [{val: "none", label: "无", hint: "还未选择总督"},
            ...governors.map(id =>
           ({val: id, label: game.loc(`governor_${id}`), hint: game.loc(`governor_${id}_desc`)}))]},
         queue: {def: "queue", arg: "select_cb", options: () =>
-          [{val: "queue", label: "Building", hint: "Buildings and projects queue"},
-           {val: "r_queue", label: "Research", hint: "Research queue"},
-           {val: "evo", label: "Evolution", hint: "Evolution queue"}]},
+          [{val: "queue", label: "建筑", hint: "建筑队列"},
+           {val: "r_queue", label: "研究", hint: "研究队列"},
+           {val: "evo", label: "进化", hint: "进化队列"}]},
         date: {def: "day", arg: "select_cb", options: () =>
-          [{val: "day", label: "Day (Year)", hint: "Day of year"},
-           {val: "moon", label: "Day (Month)", hint: "Day of month"},
-           {val: "total", label: "Day (Total)", hint: "Day of run"},
-           {val: "year", label: "Year", hint: "Year of run"},
-           {val: "orbit", label: "Orbit", hint: "Planet orbit in days"}]},
+          [{val: "day", label: "天数(年)", hint: "一年中的第几天"},
+           {val: "moon", label: "天数(月)", hint: "一月中的第几天"},
+           {val: "total", label: "天数(总)", hint: "本轮游戏天数"},
+           {val: "year", label: "年数", hint: "本轮游戏年数"},
+           {val: "orbit", label: "公转天数", hint: "行星公转的天数"}]},
         soldiers: {def: "workers", arg: "select_cb", options: () =>
-          [{val: "workers", label: "Total Soldiers"},
-           {val: "max", label: "Total Soldiers Max"},
-           {val: "currentCityGarrison", label: "City Soldiers"},
-           {val: "maxCityGarrison", label: "City Soldiers Max"},
-           {val: "hellSoldiers", label: "Hell Soldiers"},
-           {val: "hellGarrison", label: "Hell Garrison"},
-           {val: "hellPatrols", label: "Hell Patrols"},
-           {val: "hellPatrolSize", label: "Hell Patrol Size"},
-           {val: "wounded", label: "Wounded Soldiers"},
-           {val: "deadSoldiers", label: "Dead Soldiers"},
-           {val: "crew", label: "Ship Crew"}]},
+          [{val: "workers", label: "士兵总数"},
+           {val: "max", label: "士兵总上限"},
+           {val: "currentCityGarrison", label: "非地狱维度士兵数"},
+           {val: "maxCityGarrison", label: "非地狱维度士兵上限"},
+           {val: "hellSoldiers", label: "地狱维度士兵数"},
+           {val: "hellGarrison", label: "地狱维度驻扎士兵"},
+           {val: "hellPatrols", label: "地狱维度巡逻队数量"},
+           {val: "hellPatrolSize", label: "地狱维度巡逻队规模"},
+           {val: "wounded", label: "伤兵数"},
+           {val: "deadSoldiers", label: "士兵阵亡数"},
+           {val: "crew", label: "船员数"}]},
         tab: {def: "civTabs1", arg: "select_cb", options: () =>
           [{val: "civTabs0", label: game.loc('tab_evolve')},
            {val: "civTabs1", label: game.loc('tab_civil')},
@@ -11914,48 +11914,48 @@
     }
     // TODO: Make trigger use all this checks, migration will be a bit tedius, but doable
     const checkTypes = {
-        String: { fn: (v) => v, arg: "string", def: "none", desc: "Returns string" },
-        Number: { fn: (v) => v, arg: "number", def: 0, desc: "Returns number" },
-        Boolean: { fn: (v) => v, arg: "boolean", def: false, desc: "Returns boolean" },
-        SettingDefault: { fn: (s) => settingsRaw[s], arg: "string", def: "masterScriptToggle", desc: "Returns default value of setting, types varies" },
-        SettingCurrent: { fn: (s) => settings[s], arg: "string", def: "masterScriptToggle", desc: "Returns current value of setting, types varies" },
-        Eval: { fn: (s) => eval(s), arg: "string", def: "Math.PI", desc: "Returns result of evaluating code" },
-        BuildingUnlocked: { fn: (b) => buildingIds[b].isUnlocked(), ...argType.building, desc: "Return true when building is unlocked" },
-        BuildingClickable: { fn: (b) => buildingIds[b].isClickable(), ...argType.building, desc: "Return true when building have all required resources, and can be purchased" },
-        BuildingAffordable: { fn: (b) => buildingIds[b].isAffordable(true), ...argType.building, desc: "Return true when building is affordable, i.e. costs of all resources below storage caps" },
-        BuildingCount: { fn: (b) => buildingIds[b].count, ...argType.building, desc: "Returns amount of buildings as number" },
-        BuildingEnabled: { fn: (b) => buildingIds[b].stateOnCount, ...argType.building, desc: "Returns amount of powered buildings as number" },
-        BuildingDisabled: { fn: (b) => buildingIds[b].stateOffCount, ...argType.building, desc: "Returns amount of unpowered buildings as number" },
-        ProjectUnlocked: { fn: (p) => arpaIds[p].isUnlocked(), ...argType.project, desc: "Return true when project is unlocked" },
-        ProjectCount: { fn: (p) => arpaIds[p].count, ...argType.project, desc: "Returns amount of projects as number" },
-        ProjectProgress: { fn: (p) => arpaIds[p].progress, ...argType.project, desc: "Returns progress of projects as number" },
-        JobUnlocked: { fn: (j) => jobIds[j].isUnlocked(), ...argType.job, desc: "Returns true when job is unlocked" },
-        JobCount: { fn: (j) => jobIds[j].count, ...argType.job, desc: "Returns current amount of assigned workers as number" },
-        JobMax: { fn: (j) => jobIds[j].max, ...argType.job, desc: "Returns maximum amount of assigned workers as number" },
-        ResearchUnlocked:  { fn: (r) => techIds[r].isUnlocked(), ...argType.research, desc: "Returns true when research is unlocked" },
-        ResearchComplete:  { fn: (r) => techIds[r].isResearched(), ...argType.research, desc: "Returns true when research is complete" },
-        ResourceUnlocked: { fn: (r) => resources[r].isUnlocked(), ...argType.resource, desc: "Returns true when resource or support is unlocked" },
-        ResourceQuantity: { fn: (r) => resources[r].currentQuantity, ...argType.resource, desc: "Returns current amount of resource or support as number" },
-        ResourceStorage: { fn: (r) => resources[r].maxQuantity, ...argType.resource, desc: "Returns maximum amount of resource or support as number" },
-        ResourceIncome: { fn: (r) => resources[r].rateOfChange, ...argType.resource, desc: "Returns current income of resource or unused support as number" }, // rateOfChange holds full diff of resource at the moment when overrides checked
-        ResourceRatio: { fn: (r) => resources[r].storageRatio, ...argType.resource, desc: "Returns storage ratio of resource as number. Number 0.5 means that storage is 50% full, and such." },
-        ResourceSatisfied: { fn: (r) => resources[r].usefulRatio >= 1, ...argType.resource, desc: "Returns true when current amount of resource above maximum costs" },
-        ResourceDemanded: { fn: (r) => resources[r].isDemanded(), ...argType.resource, desc: "Returns true when resource is demanded, i.e. missed by some prioritized task, such as queue or trigger" },
-        RaceId: { fn: (r) => argMap.race(r), ...argType.race, desc: "Returns ID of selected race as string" },
-        RacePillared: { fn: (r) => game.global.pillars[argMap.race(r)] >= game.alevel(), ...argType.race, desc: "Returns true when selected race pillared at current star level" },
-        RaceGenus: { fn: (g) => races[game.global.race.species]?.genus === g, ...argType.genus, desc: "Returns true when playing selected genus" },
-        MimicGenus: { fn: (g) => (game.global.race.ss_genus ?? 'none') === g, ...argType.genus_ss, desc: "Returns true when mimicking selected genus" },
-        TraitLevel: { fn: (t) => game.global.race[t] ?? 0, ...argType.trait, desc: "Returns trait level as number" },
-        ResetType: { fn: (r) => settings.prestigeType === r, arg: "select", options: prestigeOptions, def: "mad", desc: "Returns true when selected reset is active" },
-        Challenge: { fn: (c) => game.global.race[c] ? true : false, ...argType.challenge, desc: "Returns true when selected challenge is active" },
-        Universe: { fn: (u) => game.global.race.universe === u, ...argType.universe, desc: "Returns true when playing in selected universe" },
-        Government: { fn: (g) => game.global.civic.govern.type === g, ...argType.government, desc: "Returns true when selected government is active" },
-        Governor: { fn: (g) => getGovernor() === g, ...argType.governor, desc: "Returns true when selected governor is active" },
-        Queue: { fn: (q) => q === "evo" ? settingsRaw.evolutionQueue.length : game.global[q].queue.length, ...argType.queue, desc: "Returns amount of items in queue as number" },
-        Date: { fn: (d) => d === "total" ? game.global.stats.days : game.global.city.calendar[d], ...argType.date, desc: "Returns ingame date as number" },
-        Soldiers: { fn: (s) => WarManager[s], ...argType.soldiers, desc: "Returns amount of soldiers as number" },
-        PlanetBiome: { fn: (b) => game.global.city.biome === b, ...argType.biome, desc: "Returns true when playing in selected biome" },
-        PlanetTrait: { fn: (t) => game.global.city.ptrait === t, ...argType.ptrait, desc: "Returns true when planet have selected trait" },
+        String: { fn: (v) => v, arg: "string", def: "none", desc: "返回字符串的值", title:"字符串" },
+        Number: { fn: (v) => v, arg: "number", def: 0, desc: "返回数值的值", title:"数值" },
+        Boolean: { fn: (v) => v, arg: "boolean", def: false, desc: "返回布尔值的值", title:"布尔值" },
+        SettingDefault: { fn: (s) => settingsRaw[s], arg: "string", def: "masterScriptToggle", desc: "返回默认设置的值，数值类型可变", title:"默认设置" },
+        SettingCurrent: { fn: (s) => settings[s], arg: "string", def: "masterScriptToggle", desc: "返回当前设置的值，数值类型可变", title:"当前设置" },
+        Eval: { fn: (s) => eval(s), arg: "string", def: "Math.PI", desc: "返回代码求值后的值", title:"求值" },
+        BuildingUnlocked: { fn: (b) => buildingIds[b].isUnlocked(), ...argType.building, desc: "如果建筑已解锁，则返回真值", title:"建筑是否解锁" },
+        BuildingClickable: { fn: (b) => buildingIds[b].isClickable(), ...argType.building, desc: "如果建筑满足所有建造条件并可以建造，则返回真值", title:"建筑是否可点击" },
+        BuildingAffordable: { fn: (b) => buildingIds[b].isAffordable(true), ...argType.building, desc: "如果建筑足够资源建造，则返回真值", title:"建筑是否足够资源建造" },
+        BuildingCount: { fn: (b) => buildingIds[b].count, ...argType.building, desc: "以数值形式返回建筑数量", title:"建筑数量" },
+        BuildingEnabled: { fn: (b) => buildingIds[b].stateOnCount, ...argType.building, desc: "以数值形式返回建筑已供能的数量", title:"建筑启用数量" },
+        BuildingDisabled: { fn: (b) => buildingIds[b].stateOffCount, ...argType.building, desc: "以数值形式返回建筑未供能的数量", title:"建筑停用数量" },
+        ProjectUnlocked: { fn: (p) => arpaIds[p].isUnlocked(), ...argType.project, desc: "如果ARPA项目已解锁，则返回真值", title:"ARPA项目是否解锁" },
+        ProjectCount: { fn: (p) => arpaIds[p].count, ...argType.project, desc: "以数值形式返回ARPA项目数量", title:"ARPA项目数量" },
+        ProjectProgress: { fn: (p) => arpaIds[p].progress, ...argType.project, desc: "以数值形式返回ARPA项目的进度", title:"ARPA项目进度" },
+        JobUnlocked: { fn: (j) => jobIds[j].isUnlocked(), ...argType.job, desc: "如果工作已解锁，则返回真值", title:"工作是否解锁" },
+        JobCount: { fn: (j) => jobIds[j].count, ...argType.job, desc: "以数值形式返回已分配的工人数量", title:"工作数量" },
+        JobMax: { fn: (j) => jobIds[j].max, ...argType.job, desc: "以数值形式返回可分配的工人上限数量", title:"工作上限" },
+        ResearchUnlocked:  { fn: (r) => techIds[r].isUnlocked(), ...argType.research, desc: "如果研究已解锁，则返回真值", title:"研究是否解锁" },
+        ResearchComplete:  { fn: (r) => techIds[r].isResearched(), ...argType.research, desc: "如果研究已完成，则返回真值", title:"研究是否完成" },
+        ResourceUnlocked: { fn: (r) => resources[r].isUnlocked(), ...argType.resource, desc: "如果资源已解锁，则返回真值", title:"资源是否解锁" },
+        ResourceQuantity: { fn: (r) => resources[r].currentQuantity, ...argType.resource, desc: "以数值形式返回当前资源或支持的数量", title:"资源数量" },
+        ResourceStorage: { fn: (r) => resources[r].maxQuantity, ...argType.resource, desc: "以数值形式返回资源或支持上限的数量", title:"资源上限" },
+        ResourceIncome: { fn: (r) => resources[r].rateOfChange, ...argType.resource, desc: "以数值形式返回当前资源收入或未使用的支持的数量", title:"资源收入" }, // rateOfChange holds full diff of resource at the moment when overrides checked
+        ResourceRatio: { fn: (r) => resources[r].storageRatio, ...argType.resource, desc: "以数值形式返回当前资源与上限比值的数量。0.5意味着资源到达了储量上限的50%，以此类推。", title:"资源比例" },
+        ResourceSatisfied: { fn: (r) => resources[r].usefulRatio >= 1, ...argType.resource, desc: "如果当前资源超过了最大花费，则返回真值。", title:"资源是否满足" },
+        ResourceDemanded: { fn: (r) => resources[r].isDemanded(), ...argType.resource, desc: "如果资源目前需要，则返回真值。例如，当前队列或者触发器的消耗包含此项资源。", title:"资源是否需要" },
+        RaceId: { fn: (r) => argMap.race(r), ...argType.race, desc: "以字符串形式返回所选择种族的类别", title:"种族类别" },
+        RacePillared: { fn: (r) => game.global.pillars[argMap.race(r)] >= game.alevel(), ...argType.race, desc: "如果当前种族已经在当前成就等级下在永恒立柱上嵌入水晶，则返回真值", title:"种族是否已嵌水晶" },
+        RaceGenus: { fn: (g) => races[game.global.race.species]?.genus === g, ...argType.genus, desc: "如果当前种群为所选择的种群，则返回真值", title:"当前种群" },
+        MimicGenus: { fn: (g) => (game.global.race.ss_genus ?? 'none') === g, ...argType.genus_ss, desc: "如果拟态特质选择的种群为所选择的种群，则返回真值", title:"拟态种群" },
+        TraitLevel: { fn: (t) => game.global.race[t] ?? 0, ...argType.trait, desc: "以数值形式返回特质的等级", title:"特质等级" },
+        ResetType: { fn: (r) => settings.prestigeType === r, arg: "select", options: prestigeOptions, def: "mad", desc: "如果正在进行所选择的重置类型，则返回真值", title:"重置类型" },
+        Challenge: { fn: (c) => game.global.race[c] ? true : false, ...argType.challenge, desc: "如果当前游戏激活了相应的挑战，则返回真值", title:"挑战" },
+        Universe: { fn: (u) => game.global.race.universe === u, ...argType.universe, desc: "如果当前宇宙为所选择的宇宙，则返回真值", title:"宇宙" },
+        Government: { fn: (g) => game.global.civic.govern.type === g, ...argType.government, desc: "如果当前社会体制为所选择的社会体制，则返回真值", title:"社会体制" },
+        Governor: { fn: (g) => getGovernor() === g, ...argType.governor, desc: "如果当前游戏激活了相应的总督，则返回真值", title:"总督" },
+        Queue: { fn: (q) => q === "evo" ? settingsRaw.evolutionQueue.length : game.global[q].queue.length, ...argType.queue, desc: "以数值形式返回队列中内容的数量", title:"队列" },
+        Date: { fn: (d) => d === "total" ? game.global.stats.days : game.global.city.calendar[d], ...argType.date, desc: "以数值形式返回游戏中天数的数量", title:"天数" },
+        Soldiers: { fn: (s) => WarManager[s], ...argType.soldiers, desc: "以数值形式返回士兵的数量", title:"士兵数" },
+        PlanetBiome: { fn: (b) => game.global.city.biome === b, ...argType.biome, desc: "如果当前行星的生物群系为所选择的生物群系，则返回真值", title:"行星生物群系" },
+        PlanetTrait: { fn: (t) => game.global.city.ptrait === t, ...argType.ptrait, desc: "如果当前行星的星球特性为所选择的星球特性，则返回真值", title:"行星星球特性" },
     }
 
     function openOverrideModal(event) {
@@ -11978,17 +11978,17 @@
         currentNode.append(`
           <table style="width:100%; text-align: left">
             <tr>
-              <th class="has-text-warning" colspan="2">Variable 1</th>
-              <th class="has-text-warning" colspan="1">Check</th>
-              <th class="has-text-warning" colspan="2">Variable 2</th>
-              <th class="has-text-warning" colspan="3">Result</th>
+              <th class="has-text-warning" colspan="2">变量1</th>
+              <th class="has-text-warning" colspan="1">运算</th>
+              <th class="has-text-warning" colspan="2">变量2</th>
+              <th class="has-text-warning" colspan="3">结果</th>
             </tr>
             <tr>
-              <th class="has-text-warning" style="width:17%">Type</th>
-              <th class="has-text-warning" style="width:16%">Value</th>
+              <th class="has-text-warning" style="width:17%">类型</th>
+              <th class="has-text-warning" style="width:16%">值</th>
               <th class="has-text-warning" style="width:10%"></th>
-              <th class="has-text-warning" style="width:17%">Type</th>
-              <th class="has-text-warning" style="width:16%">Value</th>
+              <th class="has-text-warning" style="width:17%">类型</th>
+              <th class="has-text-warning" style="width:16%">值</th>
               <th class="has-text-warning" style="width:15%"></th>
               <th style="width:9%"></th>
             </tr>
@@ -12118,7 +12118,7 @@
     }
 
     function buildConditionType(override, num, rebuild) {
-        let types = Object.entries(checkTypes).map(([id, type]) => `<option value="${id}" title="${type.desc}">${id.replace(/([A-Z])/g, ' $1').trim()}</option>`).join();
+        let types = Object.entries(checkTypes).map(([id, type]) => `<option value="${id}" title="${type.desc}">${type.title}</option>`).join();
         return $(`<select style="width: 100%">${types}</select>`)
         .val(override["type" + num])
         .on('change', function() {
@@ -12611,11 +12611,11 @@
         if (race && race.getCondition() !== '') {
             let suited = race.getHabitability();
             if (suited === 1) {
-                $("#script_race_warning").html(`<span class="has-text-success">This race have special requirements: ${race.getCondition()}. This condition is met.</span>`);
+                $("#script_race_warning").html(`<span class="has-text-success">此种族的特殊要求为： ${race.getCondition()}。当前满足此条件。</span>`);
             } else if (suited === 0) {
-                $("#script_race_warning").html(`<span class="has-text-danger">Warning! This race have special requirements: ${race.getCondition()}. This condition is not met.</span>`);
+                $("#script_race_warning").html(`<span class="has-text-danger">警告！此种族的特殊要求为： ${race.getCondition()}。当前不满足此条件。</span>`);
             } else {
-                $("#script_race_warning").html(`<span class="has-text-warning">Warning! This race have special requirements: ${race.getCondition()}. This condition is bypassed. Race will have ${100 - suited * 100}% penalty.</span>`);
+                $("#script_race_warning").html(`<span class="has-text-warning">警告！此种族的特殊要求为： ${race.getCondition()}。当前可使用此种族，但受到 ${100 - suited * 100}% 的产量惩罚。</span>`);
             }
         } else {
             $("#script_race_warning").empty();
@@ -12925,10 +12925,10 @@
               <th class="has-text-warning" colspan="5">Action</th>
             </tr>
             <tr>
-              <th class="has-text-warning" style="width:16%">Type</th>
+              <th class="has-text-warning" style="width:16%">类型</th>
               <th class="has-text-warning" style="width:18%">Id</th>
               <th class="has-text-warning" style="width:11%">Count</th>
-              <th class="has-text-warning" style="width:16%">Type</th>
+              <th class="has-text-warning" style="width:16%">类型</th>
               <th class="has-text-warning" style="width:18%">Id</th>
               <th class="has-text-warning" style="width:11%">Count</th>
               <th style="width:5%"></th>
