@@ -12293,8 +12293,8 @@
             <label title="${hintText}" tabindex="0">
               <span>${labelText}</span>
               <input type="text" style="height: 25px; width: 150px; float: right;" placeholder="研究……">
-              <button class="button" style="height: 25px; float: right; margin-right: 4px; margin-left: 4px;">Remove</button>
-              <button class="button" style="height: 25px; float: right;">Add</button>
+              <button class="button" style="height: 25px; float: right; margin-right: 4px; margin-left: 4px;">移除</button>
+              <button class="button" style="height: 25px; float: right;">增加</button>
             </label>
             <br>
             <textarea class="script_${settingName} textarea" style="margin-top: 12px" readonly></textarea>
@@ -13221,18 +13221,18 @@
         currentNode.empty().off("*");
 
         // Theology 1
-        let theology1Options = [{val: "auto", label: "Script Managed", hint: "Picks Anthropology for MAD prestige, and Fanaticism for others. Achieve-worthy combos are exception, on such runs Fanaticism will be always picked."},
+        let theology1Options = [{val: "auto", label: "由脚本管理", hint: "进行核弹重置时选择人类学，其余情况下选择狂热信仰。需要狂热信仰祖先才能完成成就时例外，此时将一直选择狂热信仰。"},
                                 {val: "tech-anthropology", label: game.loc('tech_anthropology'), hint: game.loc('tech_anthropology_effect')},
                                 {val: "tech-fanaticism", label: game.loc('tech_fanaticism'), hint: game.loc('tech_fanaticism_effect')}];
-        addSettingsSelect(currentNode, "userResearchTheology_1", "Target Theology 1", "Theology 1 technology to research, have no effect after getting Transcendence perk", theology1Options);
+        addSettingsSelect(currentNode, "userResearchTheology_1", "神学研究分支1", "神学研究分支1的选择，获得超越特权以后失效", theology1Options);
 
         // Theology 2
-        let theology2Options = [{val: "auto", label: "Script Managed", hint: "Picks Deify for Ascension prestige, and Study for others"},
+        let theology2Options = [{val: "auto", label: "由脚本管理", hint: "进行飞升重置时选择神化先祖，其余情况下选择研究先祖"},
                                 {val: "tech-study", label: game.loc('tech_study'), hint: game.loc('tech_study_desc')},
                                 {val: "tech-deify", label: game.loc('tech_deify'), hint: game.loc('tech_deify_desc')}];
-        addSettingsSelect(currentNode, "userResearchTheology_2", "Target Theology 2", "Theology 2 technology to research", theology2Options);
+        addSettingsSelect(currentNode, "userResearchTheology_2", "神学研究分支2", "神学研究分支2的选择", theology2Options);
 
-        addSettingsList(currentNode, "researchIgnore", "Ignored researches", "Listed researches won't be purchased without manual input, or user defined trigger. On top of this list script will also ignore some other special techs, such as Limit Collider, Dark Energy Bomb, Exotic Infusion, etc.", techIds);
+        addSettingsList(currentNode, "researchIgnore", "忽略的研究", "脚本将不会进行相应的自动研究。部分特殊研究同样不会自动进行，例如限制对撞机，暗能量炸弹和奇异灌输等。", techIds);
 
         document.documentElement.scrollTop = document.body.scrollTop = currentScrollPosition;
     }

@@ -522,21 +522,21 @@ var CNZ_MAP = {
     // 研究设置
     // "Research Settings": "研究设置",
     // "Reset Research Settings": "研究设置还原",
-    "Target Theology 1": "神学研究分支1",
-    "Anthropology": "人类学",
-    "Fanaticism": "狂热信仰",
-    "Target Theology 2": "神学研究分支2",
-    "Study": "研究先祖",
-    "Deify": "神化先祖",
-    "Ignored researches": "忽略的研究",
-    "Add": "增加",
-    "Remove": "移除",
+    // "Target Theology 1": "神学研究分支1",
+    // "Anthropology": "人类学",
+    // "Fanaticism": "狂热信仰",
+    // "Target Theology 2": "神学研究分支2",
+    // "Study": "研究先祖",
+    // "Deify": "神化先祖",
+    // "Ignored researches": "忽略的研究",
+    // "Add": "增加",
+    // "Remove": "移除",
 
-    "Picks Anthropology for MAD prestige, and Fanaticism for others. Achieve-worthy combos are exception, on such runs Fanaticism will be always picked.": "进行核弹重置时选择人类学，其余情况下选择狂热信仰。需要狂热信仰祖先才能完成成就时例外，此时将一直选择狂热信仰。",
-    "Theology 1 technology to research, have no effect after getting Transcendence perk": "神学研究分支1的选择，获得超越特权以后失效",
-    "Picks Deify for Ascension prestige, and Study for others": "进行飞升重置时选择神化先祖，其余情况下选择研究先祖",
-    "Theology 2 technology to research": "神学研究分支2的选择",
-    "Listed researches won't be purchased without manual input, or user defined trigger. On top of this list script will also ignore some other special techs, such as Limit Collider, Dark Energy Bomb, Exotic Infusion, etc.": "脚本将不会进行相应的自动研究。部分特殊研究同样不会自动进行，例如限制对撞机，暗能量炸弹和奇异灌输等。",
+    // "Picks Anthropology for MAD prestige, and Fanaticism for others. Achieve-worthy combos are exception, on such runs Fanaticism will be always picked.": "进行核弹重置时选择人类学，其余情况下选择狂热信仰。需要狂热信仰祖先才能完成成就时例外，此时将一直选择狂热信仰。",
+    // "Theology 1 technology to research, have no effect after getting Transcendence perk": "神学研究分支1的选择，获得超越特权以后失效",
+    // "Picks Deify for Ascension prestige, and Study for others": "进行飞升重置时选择神化先祖，其余情况下选择研究先祖",
+    // "Theology 2 technology to research": "神学研究分支2的选择",
+    // "Listed researches won't be purchased without manual input, or user defined trigger. On top of this list script will also ignore some other special techs, such as Limit Collider, Dark Energy Bomb, Exotic Infusion, etc.": "脚本将不会进行相应的自动研究。部分特殊研究同样不会自动进行，例如限制对撞机，暗能量炸弹和奇异灌输等。",
 
     // 外交事务设置
     // "Foreign Affairs Settings": "外交事务设置",
@@ -1059,7 +1059,7 @@ var CNZ_MAP = {
     "Automatically turns off the hell patrol and surveyor log messages": "自动关闭巡逻队和勘探者相关的日志",
 
     // 种族
-    "Script Managed": "由脚本管理",
+    // "Script Managed": "由脚本管理",
     // "Auto Achievements": "自动完成成就",
     /*
     "Antid": "蚂蚁人",
