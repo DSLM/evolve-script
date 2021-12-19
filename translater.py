@@ -405,6 +405,24 @@ replaceLsit = {
     'addSettingsSelect(currentNode, "fleetOuterShips", "Ships to build", "Once avalable and affordable script will build ship of selected design, and send it to region with most piracy * weighting", shipOptions);':'addSettingsSelect(currentNode, "fleetOuterShips", "舰船建造类型", "当舰船可以建造时，脚本将按照选项建造舰船，并派往 敌人战力*权重 最高的地区", shipOptions);',
 
     # NOTE: 质量喷射设置
+    '[{val: "cap", label: "Capped", hint: "Use capped resources"},':'[{val: "cap", label: "达到上限", hint: "使用达到上限的资源"},',
+    '{val: "excess", label: "Excess", hint: "Use excess resources"},':'{val: "excess", label: "多余", hint: "使用多余的资源"},',
+    '{val: "all", label: "All", hint: "Use all resources. This option can prevent script from progressing, and intended to use with additional conditions."},':'{val: "all", label: "所有", hint: "使用所有的资源。使用此项后可能会导致脚本进度卡顿，请谨慎使用。"},',
+    '{val: "mixed", label: "Capped > Excess", hint: "Use capped resources first, switching to excess resources when capped alone is not enough."},':'{val: "mixed", label: "上限 > 多余", hint: "首先使用达到上限的资源，如果资源不足，再使用多余的资源。"},',
+    '{val: "full", label: "Capped > Excess > All", hint: "Use capped first, then excess, then everything else. Same as \'All\' option can be potentialy dungerous."}];':'{val: "full", label: "上限 > 多余 > 所有", hint: "首先使用达到上限的资源，然后使用多余的资源，最后再使用所有的资源。请注意使用此项带来的风险。"}];',
+    'let spendDesc = "Configures threshold when script will be allowed to use resources. With any option script will try to use most expensive of allowed resources within selected group. Craftables, when enabled, always use excess amount as threshold, having no cap.";':'let spendDesc = "设置脚本使用资源的阈值。无论使用什么选项，脚本都会优先考虑价值最高的资源。若选择的是锻造物，则阈值永远为多余模式，因为它们没有上限。";',
+    'addSettingsSelect(currentNode, "ejectMode", "Eject mode", spendDesc, spendOptions);':'addSettingsSelect(currentNode, "ejectMode", "质量喷射模式", spendDesc, spendOptions);',
+    'addSettingsSelect(currentNode, "supplyMode", "Supply mode", spendDesc, spendOptions);':'addSettingsSelect(currentNode, "supplyMode", "补给模式", spendDesc, spendOptions);',
+    'addSettingsSelect(currentNode, "naniteMode", "Nanite mode", spendDesc, spendOptions);':'addSettingsSelect(currentNode, "naniteMode", "纳米体模式", spendDesc, spendOptions);',
+    'addSettingsToggle(currentNode, "prestigeWhiteholeStabiliseMass", "Stabilize blackhole", "Stabilizes the blackhole with exotic materials, disabled on whitehole runs");':'addSettingsToggle(currentNode, "prestigeWhiteholeStabiliseMass", "是否稳定黑洞", "一直选择稳定黑洞，进行黑洞重置时无效");',
+    '>Resource<':'>资源名称<',
+    '>Atomic Mass<':'>原子质量<',
+    '>Eject<':'>允许喷射<',
+    '>Nanite<':'>纳米体用<',
+    '>Supply Value<':'>补给价值<',
+    '>Supply<':'>允许补给<',
+    'ejectElement.append(`<span class="mass">Export <span class="has-text-caution">${SupplyManager.supplyOut(resource.id)}</span>, Gain <span class="has-text-success">${SupplyManager.supplyIn(resource.id)}</span></span>`);':'ejectElement.append(`<span class="mass">使用<span class="has-text-caution">${SupplyManager.supplyOut(resource.id)}</span>，获得<span class="has-text-success">${SupplyManager.supplyIn(resource.id)}</span></span>`);',
+
     # NOTE: 市场设置
     # NOTE: 存储设置
     # NOTE: 魔法设置

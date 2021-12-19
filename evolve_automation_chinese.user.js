@@ -13638,26 +13638,26 @@
         let currentNode = $('#script_ejectorContent');
         currentNode.empty().off("*");
 
-        let spendOptions = [{val: "cap", label: "Capped", hint: "Use capped resources"},
-                            {val: "excess", label: "Excess", hint: "Use excess resources"},
-                            {val: "all", label: "All", hint: "Use all resources. This option can prevent script from progressing, and intended to use with additional conditions."},
-                            {val: "mixed", label: "Capped > Excess", hint: "Use capped resources first, switching to excess resources when capped alone is not enough."},
-                            {val: "full", label: "Capped > Excess > All", hint: "Use capped first, then excess, then everything else. Same as 'All' option can be potentialy dungerous."}];
-        let spendDesc = "Configures threshold when script will be allowed to use resources. With any option script will try to use most expensive of allowed resources within selected group. Craftables, when enabled, always use excess amount as threshold, having no cap.";
-        addSettingsSelect(currentNode, "ejectMode", "Eject mode", spendDesc, spendOptions);
-        addSettingsSelect(currentNode, "supplyMode", "Supply mode", spendDesc, spendOptions);
-        addSettingsSelect(currentNode, "naniteMode", "Nanite mode", spendDesc, spendOptions);
-        addSettingsToggle(currentNode, "prestigeWhiteholeStabiliseMass", "Stabilize blackhole", "Stabilizes the blackhole with exotic materials, disabled on whitehole runs");
+        let spendOptions = [{val: "cap", label: "达到上限", hint: "使用达到上限的资源"},
+                            {val: "excess", label: "多余", hint: "使用多余的资源"},
+                            {val: "all", label: "所有", hint: "使用所有的资源。使用此项后可能会导致脚本进度卡顿，请谨慎使用。"},
+                            {val: "mixed", label: "上限 > 多余", hint: "首先使用达到上限的资源，如果资源不足，再使用多余的资源。"},
+                            {val: "full", label: "上限 > 多余 > 所有", hint: "首先使用达到上限的资源，然后使用多余的资源，最后再使用所有的资源。请注意使用此项带来的风险。"}];
+        let spendDesc = "设置脚本使用资源的阈值。无论使用什么选项，脚本都会优先考虑价值最高的资源。若选择的是锻造物，则阈值永远为多余模式，因为它们没有上限。";
+        addSettingsSelect(currentNode, "ejectMode", "质量喷射模式", spendDesc, spendOptions);
+        addSettingsSelect(currentNode, "supplyMode", "补给模式", spendDesc, spendOptions);
+        addSettingsSelect(currentNode, "naniteMode", "纳米体模式", spendDesc, spendOptions);
+        addSettingsToggle(currentNode, "prestigeWhiteholeStabiliseMass", "是否稳定黑洞", "一直选择稳定黑洞，进行黑洞重置时无效");
 
         currentNode.append(`
           <table style="width:100%">
             <tr>
-              <th class="has-text-warning" style="width:20%">Resource</th>
-              <th class="has-text-warning" style="width:20%">Atomic Mass</th>
-              <th class="has-text-warning" style="width:10%">Eject</th>
-              <th class="has-text-warning" style="width:10%">Nanite</th>
-              <th class="has-text-warning" style="width:30%">Supply Value</th>
-              <th class="has-text-warning" style="width:10%">Supply</th>
+              <th class="has-text-warning" style="width:20%">资源名称</th>
+              <th class="has-text-warning" style="width:20%">原子质量</th>
+              <th class="has-text-warning" style="width:10%">允许喷射</th>
+              <th class="has-text-warning" style="width:10%">纳米体用</th>
+              <th class="has-text-warning" style="width:30%">补给价值</th>
+              <th class="has-text-warning" style="width:10%">允许补给</th>
             </tr>
             <tbody id="script_ejectorTableBody"></tbody>
           </table>`);
@@ -13704,7 +13704,7 @@
 
             if (SupplyManager.isConsumable(resource)) {
                 ejectElement = ejectElement.next();
-                ejectElement.append(`<span class="mass">Export <span class="has-text-caution">${SupplyManager.supplyOut(resource.id)}</span>, Gain <span class="has-text-success">${SupplyManager.supplyIn(resource.id)}</span></span>`);
+                ejectElement.append(`<span class="mass">使用<span class="has-text-caution">${SupplyManager.supplyOut(resource.id)}</span>，获得<span class="has-text-success">${SupplyManager.supplyIn(resource.id)}</span></span>`);
 
                 ejectElement = ejectElement.next();
                 addTableToggle(ejectElement, "res_supply" + resource.id);
@@ -13751,7 +13751,7 @@
               <th class="has-text-warning" colspan="1"></th>
             </tr>
             <tr>
-              <th class="has-text-warning" style="width:15%">Resource</th>
+              <th class="has-text-warning" style="width:15%">资源名称</th>
               <th class="has-text-warning" style="width:10%">Buy</th>
               <th class="has-text-warning" style="width:10%">Ratio</th>
               <th class="has-text-warning" style="width:10%">Sell</th>
@@ -13894,7 +13894,7 @@
         currentNode.append(`
           <table style="width:100%">
             <tr>
-              <th class="has-text-warning" style="width:35%">Resource</th>
+              <th class="has-text-warning" style="width:35%">资源名称</th>
               <th class="has-text-warning" style="width:15%">是否启用</th>
               <th class="has-text-warning" style="width:15%">Store Overflow</th>
               <th class="has-text-warning" style="width:15%">Max Crates</th>
@@ -14062,7 +14062,7 @@
         currentNode.append(`
           <table style="width:100%">
             <tr>
-              <th class="has-text-warning" style="width:20%">Resource</th>
+              <th class="has-text-warning" style="width:20%">资源名称</th>
               <th class="has-text-warning" style="width:20%">是否启用</th>
               <th class="has-text-warning" style="width:20%">权重</th>
               <th class="has-text-warning" style="width:40%"></th>
@@ -14182,7 +14182,7 @@
         currentNode.append(`
           <table style="width:100%">
             <tr>
-              <th class="has-text-warning" style="width:35%">Resource</th>
+              <th class="has-text-warning" style="width:35%">资源名称</th>
               <th class="has-text-warning" style="width:20%">是否启用</th>
               <th class="has-text-warning" style="width:20%">权重</th>
               <th class="has-text-warning" style="width:20%">Priority</th>
@@ -14230,7 +14230,7 @@
         currentNode.append(`
           <table style="width:100%">
             <tr>
-              <th class="has-text-warning" style="width:35%">Resource</th>
+              <th class="has-text-warning" style="width:35%">资源名称</th>
               <th class="has-text-warning" style="width:20%">是否启用</th>
               <th class="has-text-warning" style="width:20%" title="Ratio between resources. Script assign craftsmans to resource with lowest 'amount / weighting'. Ignored by manual crafting.">权重</th>
               <th class="has-text-warning" style="width:20%" title="Only craft resource when storage ratio of all required materials above given number. E.g. bricks with 0.1 min materials will be crafted only when cement storage at least 10% filled.">Min Materials</th>
@@ -14277,7 +14277,7 @@
         currentNode.append(`
           <table style="width:100%">
             <tr>
-              <th class="has-text-warning" style="width:35%">Resource</th>
+              <th class="has-text-warning" style="width:35%">资源名称</th>
               <th class="has-text-warning" style="width:20%"></th>
               <th class="has-text-warning" style="width:20%">权重</th>
               <th class="has-text-warning" style="width:20%">Priority</th>
