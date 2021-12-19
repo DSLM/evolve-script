@@ -13381,14 +13381,14 @@
     }
 
     function updateFleetOuter(currentNode, secondaryPrefix) {
-        addStandardHeading(currentNode, "Outer Solar");
-        addSettingsNumber(currentNode, "fleetOuterCrew", "Minimum idle soldiers", "Only build ships when amount of idle soldiers, excluding wounded ones, above give number.");
-        addSettingsNumber(currentNode, "fleetOuterMinSyndicate", "Minimum syndicate", "Send ships only to regions with syndicate activity above given level.");
+        addStandardHeading(currentNode, "太阳系外围");
+        addSettingsNumber(currentNode, "fleetOuterCrew", "空闲士兵下限", "只在空闲士兵数量(不包括伤兵)大于此数值时建造舰船。");
+        addSettingsNumber(currentNode, "fleetOuterMinSyndicate", "辛迪加战力下限", "只对辛迪加战力超过相应数值的区域派遣舰船。");
 
-        let shipOptions = [{val: "none", label: "None", hint: "Ship buildign disabled"},
-                           {val: "user", label: "Current design", hint: "Build whatever currently set in Ship Yard"},
-                           {val: "custom", label: "Preset", hint: "Build ships with components configured below. All components need to be unlocked, and resulting design should have enough power"}];
-        addSettingsSelect(currentNode, "fleetOuterShips", "Ships to build", "Once avalable and affordable script will build ship of selected design, and send it to region with most piracy * weighting", shipOptions);
+        let shipOptions = [{val: "none", label: "无", hint: "不建造舰船"},
+                           {val: "user", label: "当前设计", hint: "按照船坞当前的设计来建造舰船"},
+                           {val: "custom", label: "预设", hint: "按照下方的组件配置来建造舰船。所有的组件必须都解锁了，而且最终设计的动力必须足够"}];
+        addSettingsSelect(currentNode, "fleetOuterShips", "舰船建造类型", "当舰船可以建造时，脚本将按照选项建造舰船，并派往 敌人战力*权重 最高的地区", shipOptions);
         for (let [type, parts] of Object.entries(FleetManagerOuter.ShipConfig)) {
             let partOptions = parts.map(id => ({val: id, label: game.loc(`outer_shipyard_${type}_${id}`)}));
             addSettingsSelect(currentNode, `fleet_outer_${type}`, game.loc(`outer_shipyard_${type}`), "Preset ship component", partOptions);
@@ -13397,7 +13397,7 @@
         currentNode.append(`
           <table style="width:100%">
             <tr>
-              <th class="has-text-warning" style="width:55%">Region</th>
+              <th class="has-text-warning" style="width:55%">地区</th>
               <th class="has-text-warning" style="width:20%">权重</th>
               <th style="width:25%"></th>
             </tr>
@@ -13434,24 +13434,24 @@
     }
 
     function updateFleetAndromeda(currentNode, secondaryPrefix) {
-        addStandardHeading(currentNode, "Andromeda");
-        addSettingsToggle(currentNode, "fleetMaxCover", "Maximize protection of prioritized systems", "Adjusts ships distribution to fully supress piracy in prioritized regions. Some potential defence will be wasted, as it will use big ships to cover small holes, when it doesn't have anything fitting better. This option is not required: all your dreadnoughts still will be used even without this option.");
-        addSettingsNumber(currentNode, "fleetEmbassyKnowledge", "Mininum knowledge for Embassy", "Building Embassy increases maximum piracy up to 100, script won't Auto Build it until this knowledge cap is reached.");
-        addSettingsNumber(currentNode, "fleetAlienGiftKnowledge", "Mininum knowledge for Alien Gift", "Researching Alien Gift increases maximum piracy up to 250, script won't Auto Research it until this knowledge cap is reached.");
-        addSettingsNumber(currentNode, "fleetAlien2Knowledge", "Mininum knowledge for Alien 2 Assault", "Assaulting Alien 2 increases maximum piracy up to 500, script won't do it until this knowledge cap is reached. Regardless of set value it won't ever try to assault until you have big enough fleet to do it without loses.");
+        addStandardHeading(currentNode, "仙女座星云");
+        addSettingsToggle(currentNode, "fleetMaxCover", "优先级高的地区尽可能最大化保护", "会优先分配舰船给优先级高的地区以完全压制相应地区的海盗活动。可能会在大船较多小船较少时浪费舰船。即使不开启此项，无畏舰仍然会正常进行分配。");
+        addSettingsNumber(currentNode, "fleetEmbassyKnowledge", "建造大使馆的知识阈值", "建造大使馆后，海盗的活动会更加剧烈，因此脚本只会在到达相应数值的知识上限时进行建造。");
+        addSettingsNumber(currentNode, "fleetAlienGiftKnowledge", "研究外星礼物的知识阈值", "研究外星礼物后，海盗的活动会更加剧烈，因此脚本只会在到达相应数值的知识上限时进行研究。");
+        addSettingsNumber(currentNode, "fleetAlien2Knowledge", "进行第五星系任务的知识阈值", "进行第五星系任务后，海盗的活动会更加剧烈，因此脚本只会在到达相应数值的知识上限时进行研究。另外，除非您能够无损伤地完成任务，否则脚本也不会自动进行此任务。");
 
-        let assaultOptions = [{val: "ignore", label: "Manual assault", hint: "Won't ever launch assault mission on Chthonian"},
-                              {val: "high", label: "High casualties", hint: "Unlock Chthonian using mixed fleet, high casualties (1250+ total fleet power, 500 will be lost)"},
-                              {val: "avg", label: "Average casualties", hint: "Unlock Chthonian using mixed fleet, average casualties (2500+ total fleet power, 160 will be lost)"},
-                              {val: "low", label: "Low casualties", hint: "Unlock Chthonian using mixed fleet, low casualties (4500+ total fleet power, 80 will be lost)"},
-                              {val: "frigate", label: "Frigate", hint: "Unlock Chthonian loosing Frigate ship(s) (4500+ total fleet power, suboptimal for banana\\instinct runs)"},
-                              {val: "dread", label: "Dreadnought", hint: "Unlock Chthonian with Dreadnought suicide mission"}];
-        addSettingsSelect(currentNode, "fleetChthonianLoses", "Chthonian Mission", "Assault Chthonian when chosen outcome is achievable. Mixed fleet formed to clear mission with minimum possible wasted ships, e.g. for low causlities it can sacriface 8 scouts, or 2 corvettes and 2 scouts, or frigate, and such. Whatever will be first available. It also takes in account perks and challenges, adjusting fleet accordingly.", assaultOptions);
+        let assaultOptions = [{val: "ignore", label: "不自动进行", hint: "不会自动进行幽冥星系任务"},
+                              {val: "high", label: "严重损失", hint: "使用混合舰队进行幽冥星系任务，损失极大(1250以上总战力，损失500左右战力的舰队)"},
+                              {val: "avg", label: "一般损失", hint: "使用混合舰队进行幽冥星系任务，损失一般(2500以上总战力，损失160左右战力的舰队)"},
+                              {val: "low", label: "低损失", hint: "使用混合舰队进行幽冥星系任务，损失低(4500以上总战力，损失80左右战力的舰队)"},
+                              {val: "frigate", label: "损失大型护卫舰", hint: "只损失大型护卫舰进行幽冥星系任务(4500以上总战力，对于香蕉共和国挑战或直觉特质的种族更好一些)"},
+                              {val: "dread", label: "损失无畏舰", hint: "看着无畏舰燃烧吧"}];
+        addSettingsSelect(currentNode, "fleetChthonianLoses", "幽冥星系任务条件", "当满足任务条件时自动进行幽冥星系任务。会尽可能少损失舰队，同时会考虑特权和挑战来调整舰队。", assaultOptions);
 
         currentNode.append(`
           <table style="width:100%; text-align: left">
             <tr>
-              <th class="has-text-warning" style="width:95%">Region</th>
+              <th class="has-text-warning" style="width:95%">地区</th>
               <th style="width:5%"></th>
             </tr>
             <tbody id="script_${secondaryPrefix}fleetTableBody"></tbody>
@@ -13469,8 +13469,8 @@
         // Build all other productions settings rows
         for (let i = 0; i < galaxyRegions.length; i++) {
             let fleetElement = $(`#script_${secondaryPrefix}fleet_${galaxyRegions[i]}`);
-            let nameRef = galaxyRegions[i] === "gxy_alien1" ? "Alien 1 System"
-                        : galaxyRegions[i] === "gxy_alien2" ? "Alien 2 System"
+            let nameRef = galaxyRegions[i] === "gxy_alien1" ? "第四星系"
+                        : galaxyRegions[i] === "gxy_alien2" ? "第五星系"
                         : game.actions.galaxy[galaxyRegions[i]].info.name;
 
             fleetElement.append(buildTableLabel(typeof nameRef === "function" ? nameRef() : nameRef));
