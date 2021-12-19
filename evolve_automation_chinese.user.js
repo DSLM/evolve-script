@@ -13258,45 +13258,45 @@
         let currentNode = $(`#script_${secondaryPrefix}warContent`);
         currentNode.empty().off("*");
 
-        addSettingsHeader1(currentNode, "Foreign Powers");
-        addSettingsToggle(currentNode, "foreignPacifist", "Pacifist", "Turns attacks off and on");
+        addSettingsHeader1(currentNode, "外国势力相关");
+        addSettingsToggle(currentNode, "foreignPacifist", "是否为和平主义者", "是否进攻敌国");
 
-        addSettingsToggle(currentNode, "foreignUnification", "Perform unification", "Perform unification once all three powers are controlled. autoResearch should be enabled for this to work.");
-        addSettingsToggle(currentNode, "foreignOccupyLast", "Occupy last foreign power", "Occupy last foreign power once other two are controlled, and unification is researched to speed up unification. Disable if you want annex\\purchase achievements.");
-        addSettingsToggle(currentNode, "foreignForceSabotage", "Sabotage foreign power when useful", "Perform sabotage against current target if it's useful(power above 50), regardless of required power, and default action defined above");
-        addSettingsToggle(currentNode, "foreignTrainSpy", "Train spies", "Train spies to use against foreign powers");
-        addSettingsNumber(currentNode, "foreignSpyMax", "Maximum spies", "Maximum spies per foreign power");
+        addSettingsToggle(currentNode, "foreignUnification", "是否进行统一", "是否在控制了三个敌对国家后进行统一。需要开启自动研究后此项才能生效。");
+        addSettingsToggle(currentNode, "foreignOccupyLast", "是否占领最后一个未占领的国家", "当控制其他两个国家并研究统一后，自动占领最后一个国家。它可以加速统一。除非您是要做统一方式相关的成就，否则不建议关闭此项。");
+        addSettingsToggle(currentNode, "foreignForceSabotage", "在有必要的时候对敌对国家进行破坏活动", "在有需要的时候(军事力量大于50)，对当前的目标进行破坏活动。将无视下方选项的相应设置。");
+        addSettingsToggle(currentNode, "foreignTrainSpy", "派遣间谍", "训练间谍用于在外国势力执行任务");
+        addSettingsNumber(currentNode, "foreignSpyMax", "最大间谍数", "每个敌对国家最多训练的间谍数");
 
-        addSettingsNumber(currentNode, "foreignPowerRequired", "Military Power to switch target", "Switches to attack next foreign power once its power lowered down to this number. When exact numbers not know script tries to approximate it.");
+        addSettingsNumber(currentNode, "foreignPowerRequired", "改变目标至少需要的军事力量", "当一个国家的军事实力低于此数值时，转为攻击它。如果确切数字无法看到，则脚本会尝试进行估计。");
 
-        let policyOptions = [{val: "Ignore", label: "Ignore", hint: ""},
+        let policyOptions = [{val: "Ignore", label: "忽略", hint: ""},
                              ...Object.entries(SpyManager.Types).map(([name, task]) => (
                              {val: name, label: game.loc("civics_spy_" + task.id), hint: ""})),
-                             {val: "Occupy", label: "Occupy", hint: ""}];
-        addSettingsSelect(currentNode, "foreignPolicyInferior", "Inferior Power", "Perform this against inferior foreign power, with military power equal or below given threshold. Complex actions includes required preparation - Annex and Purchase will incite and influence, Occupy will sabotage, until said options will be available.", policyOptions);
-        addSettingsSelect(currentNode, "foreignPolicySuperior", "Superior Power", "Perform this against superior foreign power, with military power above given threshold. Complex actions includes required preparation - Annex and Purchase will incite and influence, Occupy will sabotage, until said options will be available.", policyOptions);
+                             {val: "Occupy", label: "占领", hint: ""}];
+        addSettingsSelect(currentNode, "foreignPolicyInferior", "对较弱小的国家进行的间谍活动", "对较弱小的国家进行的间谍活动类型，较弱小指军事力量不高于上方数值的国家。复杂的活动将首先进行相应的准备——吞并和收购将先进行煽动和亲善，占领将先进行破坏，直到相应的选项可用为止。", policyOptions);
+        addSettingsSelect(currentNode, "foreignPolicySuperior", "对较强大的国家进行的间谍活动", "对较强大的国家进行的间谍活动类型，较强大指军事力量高于上方数值的国家。复杂的活动将首先进行相应的准备——吞并和收购将先进行煽动和亲善，占领将先进行破坏，直到相应的选项可用为止。", policyOptions);
 
-        let rivalOptions = [{val: "Ignore", label: "Ignore", hint: ""},
-                            {val: "Influence", label: "Alliance", hint: ""},
-                            {val: "Sabotage", label: "War", hint: ""}];
-        addSettingsSelect(currentNode, "foreignPolicyRival", "Rival Power (The True Path)", "Perform this against rival foreign power.", rivalOptions);
+        let rivalOptions = [{val: "Ignore", label: "忽略", hint: ""},
+                            {val: "Influence", label: "联盟", hint: ""},
+                            {val: "Sabotage", label: "战斗", hint: ""}];
+        addSettingsSelect(currentNode, "foreignPolicyRival", "竞争国家(智械黎明模式)", "对竞争国家进行的间谍活动类型。", rivalOptions);
 
         // Campaign panel
-        addSettingsHeader1(currentNode, "Campaigns");
-        addSettingsNumber(currentNode, "foreignAttackLivingSoldiersPercent", "Minimum percentage of alive soldiers for attack", "Only attacks if you ALSO have the target battalion size of healthy soldiers available, so this setting will only take effect if your battalion does not include all of your soldiers");
-        addSettingsNumber(currentNode, "foreignAttackHealthySoldiersPercent", "Minimum percentage of healthy soldiers for attack", "Set to less than 100 to take advantage of being able to heal more soldiers in a game day than get wounded in a typical attack");
-        addSettingsNumber(currentNode, "foreignHireMercMoneyStoragePercent", "Hire mercenary if money storage greater than percent", "Hire a mercenary if remaining money after purchase will be greater than this percent");
-        addSettingsNumber(currentNode, "foreignHireMercCostLowerThanIncome", "OR if cost lower than money earned in X seconds", "Combines with the money storage percent setting to determine when to hire mercenaries");
-        addSettingsNumber(currentNode, "foreignHireMercDeadSoldiers", "AND amount of dead soldiers above this number", "Hire a mercenary only when current amount of dead soldiers above given number");
+        addSettingsHeader1(currentNode, "战役相关");
+        addSettingsNumber(currentNode, "foreignAttackLivingSoldiersPercent", "只在士兵生存人数大于此比例时进攻", "下方的未受伤士兵比例也会生效，因此只在未让所有士兵进攻时生效");
+        addSettingsNumber(currentNode, "foreignAttackHealthySoldiersPercent", "只在未受伤士兵人数大于此比例时进攻", "合理设置为某个低于100的值，可以有效利用游戏内的自然愈合机制");
+        addSettingsNumber(currentNode, "foreignHireMercMoneyStoragePercent", "如果资金存量大于此比例，则聘请雇佣兵", "如果聘请后剩余资金大于此比例，则聘请雇佣兵");
+        addSettingsNumber(currentNode, "foreignHireMercCostLowerThanIncome", "或者聘请花费小于此秒数的资金产量，则聘请雇佣兵", "结合剩余资金比例，可以管理聘请雇佣兵的时机");
+        addSettingsNumber(currentNode, "foreignHireMercDeadSoldiers", "并且需要阵亡士兵数量大于此数值，才会聘请雇佣兵", "只在阵亡士兵数量超过此数值时聘请雇佣兵");
 
-        addSettingsNumber(currentNode, "foreignMinAdvantage", "Minimum advantage", "Minimum advantage to launch campaign, ignored during ambushes. 100% chance to win will be reached at approximately(influenced by traits and selected campaign) 75% advantage.");
-        addSettingsNumber(currentNode, "foreignMaxAdvantage", "Maximum advantage", "Once campaign is selected, your battalion will be limited in size down to this advantage, reducing potential loses");
-        addSettingsNumber(currentNode, "foreignMaxSiegeBattalion", "Maximum siege battalion", "Maximum battalion for siege campaign. Only try to siege if it's possible with up to given amount of soldiers. Siege is expensive, if you'll be doing it with too big battalion it might be less profitable than other combat campaigns. This option does not applied to unifying sieges, it affect only looting.");
+        addSettingsNumber(currentNode, "foreignMinAdvantage", "最低优势", "进行相应战役类型最少需要的优势。进行伏击时忽略此项。大概在75%优势(受特质和战役类型影响)附近可以做到100%胜率。");
+        addSettingsNumber(currentNode, "foreignMaxAdvantage", "最高优势", "当选择相应战役类型后，参加战斗的士兵数将限制在尽可能接近此优势的数量，以减少损失");
+        addSettingsNumber(currentNode, "foreignMaxSiegeBattalion", "最高围城士兵数", "进行围城的最大士兵数。只在此数值的士兵数量可以进行围城时这么做。围城的损失通常很大，如果需要大量士兵才能进行的话，收益将无法弥补损失。此项不影响统一时的围城士兵数。");
 
-        let protectOptions = [{val: "never", label: "Never", hint: "No additional limits to battalion size. Always send maximum soldiers allowed with current Max Advantage."},
-                              {val: "always", label: "Always", hint: "Limit battalions to sizes which will neven suffer any casualties in successful fights. You still will lose soldiers after failures, increasing minimum advantage can improve winning odds. This option designed to use with armored races favoring frequent attacks, with no approppriate build it may prevent any attacks from happening."},
-                              {val: "auto", label: "Auto", hint: "Tries to maximize total number of attacks, alternating between full and safe attacks based on soldiers condition, to get most from both healing and recruiting."}];
-        addSettingsSelect(currentNode, "foreignProtect", "Protect soldiers", "Configures safety of attacks. This option does not applies to unifying sieges, it affect only looting.", protectOptions);
+        let protectOptions = [{val: "never", label: "永不", hint: "不限制参加战斗的士兵数。永远尽可能使用最高优势对应的士兵数。"},
+                              {val: "always", label: "常时", hint: "将参加战斗的士兵数限制为战斗胜利后不损失任何士兵的数值。战败则仍然可能损失士兵，此时提升最低优势可以增加胜率。此项是供有装甲相关特质的种族优化进攻频率使用，如果设置不当，可能会导致士兵永远不进攻。"},
+                              {val: "auto", label: "自动", hint: "尽可能增加战斗总次数，根据士兵情况，自动在前两个选项之间切换，以优化战斗结果。"}];
+        addSettingsSelect(currentNode, "foreignProtect", "是否保护士兵", "设置士兵攻击的烈度。此项不影响统一时的围城士兵数。", protectOptions);
 
         document.documentElement.scrollTop = document.body.scrollTop = currentScrollPosition;
     }
