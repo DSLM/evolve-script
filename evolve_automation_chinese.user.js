@@ -13736,30 +13736,30 @@
         let currentNode = $('#script_marketContent');
         currentNode.empty().off("*");
 
-        addSettingsNumber(currentNode, "minimumMoney", "Manual trade minimum money", "Minimum money to keep after bulk buying");
-        addSettingsNumber(currentNode, "minimumMoneyPercentage", "Manual trade minimum money percentage", "Minimum percentage of money to keep after bulk buying");
-        addSettingsNumber(currentNode, "tradeRouteMinimumMoneyPerSecond", "Trade minimum money /s", "Uses the highest per second amount of these two values. Will trade for resources until this minimum money per second amount is hit");
-        addSettingsNumber(currentNode, "tradeRouteMinimumMoneyPercentage", "Trade minimum money percentage /s", "Uses the highest per second amount of these two values. Will trade for resources until this percentage of your money per second amount is hit");
-        addSettingsToggle(currentNode, "tradeRouteSellExcess", "Sell excess resources", "With this option enabled script will be allowed to sell resources above amounts needed for constructions or researches, without it script sell only capped resources. As side effect boughts will also be limited to that amounts, to avoid 'buy up to cap -> sell excess' loops.");
+        addSettingsNumber(currentNode, "minimumMoney", "手动贸易保留的资金数量", "批量购买后至少保留相应的资金数量");
+        addSettingsNumber(currentNode, "minimumMoneyPercentage", "手动贸易保留的资金比例", "批量购买后至少保留相应的资金比例");
+        addSettingsNumber(currentNode, "tradeRouteMinimumMoneyPerSecond", "贸易允许的每秒资金收入最低值", "两项中较高的数值生效。达到每秒资金收入最低值后，才会购买资源");
+        addSettingsNumber(currentNode, "tradeRouteMinimumMoneyPercentage", "贸易允许的每秒资金收入最低比例", "两项中较高的数值生效。达到每秒资金收入最低比例后，才会购买资源");
+        addSettingsToggle(currentNode, "tradeRouteSellExcess", "是否出售多余的资源", "开启后将在建造或研究不需要的时候出售相应的资源，否则只会在接近上限时出售。同时，购买相应资源时也有会类似限制，以避免进入购买-出售的死循环。");
 
         currentNode.append(`
           <table style="width:100%">
             <tr>
               <th class="has-text-warning" colspan="1"></th>
-              <th class="has-text-warning" colspan="4">Manual Trades</th>
-              <th class="has-text-warning" colspan="4">Trade Routes</th>
+              <th class="has-text-warning" colspan="4">手动贸易</th>
+              <th class="has-text-warning" colspan="4">贸易路线</th>
               <th class="has-text-warning" colspan="1"></th>
             </tr>
             <tr>
               <th class="has-text-warning" style="width:15%">资源名称</th>
-              <th class="has-text-warning" style="width:10%">Buy</th>
-              <th class="has-text-warning" style="width:10%">Ratio</th>
-              <th class="has-text-warning" style="width:10%">Sell</th>
-              <th class="has-text-warning" style="width:10%">Ratio</th>
-              <th class="has-text-warning" style="width:10%">In</th>
-              <th class="has-text-warning" style="width:10%">Away</th>
+              <th class="has-text-warning" style="width:10%">购买</th>
+              <th class="has-text-warning" style="width:10%">比例</th>
+              <th class="has-text-warning" style="width:10%">出售</th>
+              <th class="has-text-warning" style="width:10%">比例</th>
+              <th class="has-text-warning" style="width:10%">购买用路线数</th>
+              <th class="has-text-warning" style="width:10%">出售用路线数</th>
               <th class="has-text-warning" style="width:10%">权重</th>
-              <th class="has-text-warning" style="width:10%">Priority</th>
+              <th class="has-text-warning" style="width:10%">优先级</th>
               <th style="width:5%"></th>
             </tr>
             <tbody id="script_marketTableBody"></tbody>
@@ -13820,16 +13820,16 @@
             },
         });
 
-        addStandardHeading(currentNode, "Galaxy Trades");
-        addSettingsNumber(currentNode, "marketMinIngredients", "Minimum materials to preserve", "Galaxy Market will buy resources only when all selling materials above given ratio");
+        addStandardHeading(currentNode, "星际贸易");
+        addSettingsNumber(currentNode, "marketMinIngredients", "原料保底产量", "星际贸易只在所有出售的材料都高于保底产量时购买相应资源");
 
         currentNode.append(`
           <table style="width:100%">
             <tr>
-              <th class="has-text-warning" style="width:30%">Buy</th>
-              <th class="has-text-warning" style="width:30%">Sell</th>
+              <th class="has-text-warning" style="width:30%">购买</th>
+              <th class="has-text-warning" style="width:30%">出售</th>
               <th class="has-text-warning" style="width:20%">权重</th>
-              <th class="has-text-warning" style="width:20%">Priority</th>
+              <th class="has-text-warning" style="width:20%">优先级</th>
             </tr>
             <tbody id="script_marketGalaxyTableBody"></tbody>
           </table>`);
@@ -14185,7 +14185,7 @@
               <th class="has-text-warning" style="width:35%">资源名称</th>
               <th class="has-text-warning" style="width:20%">是否启用</th>
               <th class="has-text-warning" style="width:20%">权重</th>
-              <th class="has-text-warning" style="width:20%">Priority</th>
+              <th class="has-text-warning" style="width:20%">优先级</th>
               <th style="width:5%"></th>
             </tr>
             <tbody id="script_productionTableBodyFactory"></tbody>
@@ -14280,7 +14280,7 @@
               <th class="has-text-warning" style="width:35%">资源名称</th>
               <th class="has-text-warning" style="width:20%"></th>
               <th class="has-text-warning" style="width:20%">权重</th>
-              <th class="has-text-warning" style="width:20%">Priority</th>
+              <th class="has-text-warning" style="width:20%">优先级</th>
               <th style="width:5%"></th>
             </tr>
             <tbody id="script_productionTableBodyMiningDrone"></tbody>
@@ -15375,10 +15375,10 @@
           <div class="market-item vb" id="script_market_top_row" style="overflow:hidden">
             <span style="margin-left: auto; margin-right: 0.2rem; float:right;">
               ${!game.global.race['no_trade']?`
-              <span class="has-text-success" style="width: 2.75rem; margin-right: 0.3em; display: inline-block; text-align: center;">买</span>
-              <span class="has-text-danger" style="width: 2.75rem; margin-right: 0.3em; display: inline-block; text-align: center;">卖</span>`:''}
-              <span class="has-text-warning" style="width: 2.75rem; margin-right: 0.3em; display: inline-block; text-align: center;">线买</span>
-              <span class="has-text-warning" style="width: 2.75rem; display: inline-block; text-align: center;">线卖</span>
+              <span class="has-text-success" style="width: 2.75rem; margin-right: 0.3em; display: inline-block; text-align: center;">购买</span>
+              <span class="has-text-danger" style="width: 2.75rem; margin-right: 0.3em; display: inline-block; text-align: center;">出售</span>`:''}
+              <span class="has-text-warning" style="width: 2.75rem; margin-right: 0.3em; display: inline-block; text-align: center;">购买用路线数</span>
+              <span class="has-text-warning" style="width: 2.75rem; display: inline-block; text-align: center;">出售用路线数</span>
             </span>
           </div>`);
 

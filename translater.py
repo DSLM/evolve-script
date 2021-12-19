@@ -424,6 +424,22 @@ replaceLsit = {
     'ejectElement.append(`<span class="mass">Export <span class="has-text-caution">${SupplyManager.supplyOut(resource.id)}</span>, Gain <span class="has-text-success">${SupplyManager.supplyIn(resource.id)}</span></span>`);':'ejectElement.append(`<span class="mass">使用<span class="has-text-caution">${SupplyManager.supplyOut(resource.id)}</span>，获得<span class="has-text-success">${SupplyManager.supplyIn(resource.id)}</span></span>`);',
 
     # NOTE: 市场设置
+    'addSettingsNumber(currentNode, "minimumMoney", "Manual trade minimum money", "Minimum money to keep after bulk buying");':'addSettingsNumber(currentNode, "minimumMoney", "手动贸易保留的资金数量", "批量购买后至少保留相应的资金数量");',
+    'addSettingsNumber(currentNode, "minimumMoneyPercentage", "Manual trade minimum money percentage", "Minimum percentage of money to keep after bulk buying");':'addSettingsNumber(currentNode, "minimumMoneyPercentage", "手动贸易保留的资金比例", "批量购买后至少保留相应的资金比例");',
+    'addSettingsNumber(currentNode, "tradeRouteMinimumMoneyPerSecond", "Trade minimum money /s", "Uses the highest per second amount of these two values. Will trade for resources until this minimum money per second amount is hit");':'addSettingsNumber(currentNode, "tradeRouteMinimumMoneyPerSecond", "贸易允许的每秒资金收入最低值", "两项中较高的数值生效。达到每秒资金收入最低值后，才会购买资源");',
+    'addSettingsNumber(currentNode, "tradeRouteMinimumMoneyPercentage", "Trade minimum money percentage /s", "Uses the highest per second amount of these two values. Will trade for resources until this percentage of your money per second amount is hit");':'addSettingsNumber(currentNode, "tradeRouteMinimumMoneyPercentage", "贸易允许的每秒资金收入最低比例", "两项中较高的数值生效。达到每秒资金收入最低比例后，才会购买资源");',
+    'addSettingsToggle(currentNode, "tradeRouteSellExcess", "Sell excess resources", "With this option enabled script will be allowed to sell resources above amounts needed for constructions or researches, without it script sell only capped resources. As side effect boughts will also be limited to that amounts, to avoid \'buy up to cap -> sell excess\' loops.");':'addSettingsToggle(currentNode, "tradeRouteSellExcess", "是否出售多余的资源", "开启后将在建造或研究不需要的时候出售相应的资源，否则只会在接近上限时出售。同时，购买相应资源时也有会类似限制，以避免进入购买-出售的死循环。");',
+    '>Manual Trades<':'>手动贸易<',
+    '>Trade Routes<':'>贸易路线<',
+    '>Buy<':'>购买<',
+    '>Ratio<':'>比例<',
+    '>Sell<':'>出售<',
+    '>In<':'>购买用路线数<',
+    '>Away<':'>出售用路线数<',
+    '>Priority<':'>优先级<',
+    'addStandardHeading(currentNode, "Galaxy Trades");':'addStandardHeading(currentNode, "星际贸易");',
+    'addSettingsNumber(currentNode, "marketMinIngredients", "Minimum materials to preserve", "Galaxy Market will buy resources only when all selling materials above given ratio");':'addSettingsNumber(currentNode, "marketMinIngredients", "原料保底产量", "星际贸易只在所有出售的材料都高于保底产量时购买相应资源");',
+
     # NOTE: 存储设置
     # NOTE: 魔法设置
     # NOTE: 生产设置
