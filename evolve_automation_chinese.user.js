@@ -12915,22 +12915,22 @@
         let currentNode = $('#script_triggerContent');
         currentNode.empty().off("*");
 
-        currentNode.append('<div style="margin-top: 10px;"><button id="script_trigger_add" class="button">Add New Trigger</button></div>');
+        currentNode.append('<div style="margin-top: 10px;"><button id="script_trigger_add" class="button">添加新触发器</button></div>');
         $("#script_trigger_add").on("click", addTriggerSetting);
 
         currentNode.append(`
           <table style="width:100%">
             <tr>
-              <th class="has-text-warning" colspan="3">Requirement</th>
-              <th class="has-text-warning" colspan="5">Action</th>
+              <th class="has-text-warning" colspan="3">需求</th>
+              <th class="has-text-warning" colspan="5">行动</th>
             </tr>
             <tr>
               <th class="has-text-warning" style="width:16%">类型</th>
               <th class="has-text-warning" style="width:18%">Id</th>
-              <th class="has-text-warning" style="width:11%">Count</th>
+              <th class="has-text-warning" style="width:11%">计数</th>
               <th class="has-text-warning" style="width:16%">类型</th>
               <th class="has-text-warning" style="width:18%">Id</th>
-              <th class="has-text-warning" style="width:11%">Count</th>
+              <th class="has-text-warning" style="width:11%">计数</th>
               <th style="width:5%"></th>
               <th style="width:5%"></th>
             </tr>
@@ -13010,9 +13010,9 @@
         // Requirement Type
         let typeSelectNode = $(`
           <select>
-            <option value = "unlocked" title = "This condition is met when technology is shown in research tab">Unlocked</option>
-            <option value = "researched" title = "This condition is met when technology is researched">Researched</option>
-            <option value = "built" title = "This condition is met when you have 'count' or greater amount of buildings">Built</option>
+            <option value = "unlocked" title = "当相应研究解锁后，视为满足条件">解锁时</option>
+            <option value = "researched" title = "当进行相应研究后，视为满足条件">研究后</option>
+            <option value = "built" title = "当相应建筑的数量达到相应数值后，视为满足条件">建造时</option>
           </select>`);
         typeSelectNode.val(trigger.requirementType);
 
@@ -13062,9 +13062,9 @@
         // Action Type
         let typeSelectNode = $(`
           <select>
-            <option value = "research" title = "Research technology">Research</option>
-            <option value = "build" title = "Build buildings up to 'count' amount">Build</option>
-            <option value = "arpa" title = "Build projects up to 'count' amount">A.R.P.A.</option>
+            <option value = "research" title = "进行相应研究">研究</option>
+            <option value = "build" title = "建造建筑，数量上限为计数">建造</option>
+            <option value = "arpa" title = "建造ARPA项目，数量上限为计数">A.R.P.A.</option>
           </select>`);
         typeSelectNode.val(trigger.actionType);
 
