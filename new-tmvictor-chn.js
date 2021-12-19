@@ -332,37 +332,37 @@ var CNZ_MAP = {
     // 常规设置
     //"General Settings": "常规设置",
     //"Reset General Settings": "常规设置还原",
-    "Script tick rate": "脚本运算频率",
-    "Prioritization": "优先级",
-    "Save": "保留",
-    "Request": "请求",
-    "Request & Save": "保留及请求",
-    "Allow using prioritized resources for crafting": "允许使用优先生产和购买的资源进行锻造和生产",
-    "Prioritize resources for Pre-MAD researches": "资源是否优先分配给相互毁灭前的研究",
-    "Prioritize resources for Space+ researches": "资源是否优先分配给太空后的研究",
-    "Prioritize resources for missions": "资源是否优先分配给任务",
-    "Queue": "队列",
-    "Triggers": "触发器",
-    "Unification": "统一",
-    "Ship (The True Path)": "舰船(智械黎明模式)",
-    "Auto clicker": "自动点击",
-    "Always autoclick resources": "是否总是自动收集资源",
-    "Maximum clicks per tick": "每时刻最高点击次数",
+    // "Script tick rate": "脚本运算频率",
+    // "Prioritization": "优先级",
+    // "Save": "保留",
+    // "Request": "请求",
+    // "Request & Save": "保留及请求",
+    // "Allow using prioritized resources for crafting": "允许使用优先生产和购买的资源进行锻造和生产",
+    // "Prioritize resources for Pre-MAD researches": "资源是否优先分配给相互毁灭前的研究",
+    // "Prioritize resources for Space+ researches": "资源是否优先分配给太空后的研究",
+    // "Prioritize resources for missions": "资源是否优先分配给任务",
+    // "Queue": "队列",
+    // "Triggers": "触发器",
+    // "Unification": "统一",
+    // "Ship (The True Path)": "舰船(智械黎明模式)",
+    // "Auto clicker": "自动点击",
+    // "Always autoclick resources": "是否总是自动收集资源",
+    // "Maximum clicks per tick": "每时刻最高点击次数",
 
-    "Script runs once per this amount of game ticks. Game tick every 250ms, thus with rate 4 script will run once per second. You can set it lower to make script act faster, or increase it if you have performance issues. Tick rate should be a positive integer.": "每达到相应时刻后脚本就进行一次运算。游戏每250毫秒达到一个时刻，因此设为4以后脚本将每秒运算一次。您可以将此值调低以使脚本更快运行，也可以将此值调高来避免卡顿。时刻数值需要为正整数。",
-    "Does nothing": "什么都不做",
-    "Missing resources preserved from using.": "缺失的资源保留下来不使用。",
-    "Production and buying of missing resources will be prioritized.": "优先生产和购买缺失的资源。",
-    "Missing resources will be prioritized, and preserved from using.": "优先生产和购买缺失的资源，并保留它们不使用。",
-    "When disabled script won't make craftables out of prioritized resources in foundry and factory.": "如果关闭此项，则脚本不会使用优先的资源来制造锻造物和工厂产品。",
-    "Readjust trade routes and production to resources required for unlocked and affordable researches. Works only with no active triggers, or queue. Missing resources will have 100 priority where applicable(autoMarket, autoGalaxyMarket, autoFactory, autoMiningDroid), or just 'top priority' where not(autoTax, autoCraft, autoCraftsmen, autoQuarry, autoSmelter).": "将贸易路线和生产资源调整为已解锁且上限足够的研究所需要的资源。只在触发器和队列中没有内容激活时生效。缺少的资源对于自动贸易、自动银河贸易、自动工厂和自动采矿机器人来说权重为100，对于自动税率、自动锻造、自动温石棉控制、自动冶炼来说为最高优先级。",
-    "Readjust trade routes and production to resources required for unlocked and affordable missions. Missing resources will have 100 priority where applicable(autoMarket, autoGalaxyMarket, autoFactory, autoMiningDroid), or just 'top priority' where not(autoTax, autoCraft, autoCraftsmen, autoQuarry, autoSmelter).": "将贸易路线和生产资源调整为已解锁且上限足够的任务所需要的资源。缺少的资源对于自动贸易、自动银河贸易、自动工厂和自动采矿机器人来说权重为100，对于自动税率、自动锻造、自动温石棉控制、自动冶炼来说为最高优先级。",
-    "Alter script behaviour to speed up queued items, prioritizing missing resources.": "调整脚本处理队列中项目的方式，优先缺失的资源。",
-    "Alter script behaviour to speed up triggers, prioritizing missing resources.": "调整脚本处理触发器中项目的方式，优先缺失的资源。",
-    "Alter script behaviour to speed up unification, prioritizing money required to purchase foreign cities.": "调整脚本处理统一的方式，优先使用资金来收购周边国家。",
-    "Alter script behaviour to assist fleet building, prioritizing resources required for current design of ship.": "调整脚本分配舰队建筑的方式，优先舰船缺失的资源。",
-    "By default script will click only during early stage of autoBuild, to bootstrap production. With this toggled on it will continue clicking forever": "默认情况下脚本只在游戏初期自动收集资源，开启此项后将一直自动收集资源",
-    "Number of clicks performed at once, each script tick. Will not ever click more than needed to fill storage.": "每时刻自动收集资源的点击次数。只在库存未满的范围内有效。",
+    // "Script runs once per this amount of game ticks. Game tick every 250ms, thus with rate 4 script will run once per second. You can set it lower to make script act faster, or increase it if you have performance issues. Tick rate should be a positive integer.": "每达到相应时刻后脚本就进行一次运算。游戏每250毫秒达到一个时刻，因此设为4以后脚本将每秒运算一次。您可以将此值调低以使脚本更快运行，也可以将此值调高来避免卡顿。时刻数值需要为正整数。",
+    // "Does nothing": "什么都不做",
+    // "Missing resources preserved from using.": "缺失的资源保留下来不使用。",
+    // "Production and buying of missing resources will be prioritized.": "优先生产和购买缺失的资源。",
+    // "Missing resources will be prioritized, and preserved from using.": "优先生产和购买缺失的资源，并保留它们不使用。",
+    // "When disabled script won't make craftables out of prioritized resources in foundry and factory.": "如果关闭此项，则脚本不会使用优先的资源来制造锻造物和工厂产品。",
+    // "Readjust trade routes and production to resources required for unlocked and affordable researches. Works only with no active triggers, or queue. Missing resources will have 100 priority where applicable(autoMarket, autoGalaxyMarket, autoFactory, autoMiningDroid), or just 'top priority' where not(autoTax, autoCraft, autoCraftsmen, autoQuarry, autoSmelter).": "将贸易路线和生产资源调整为已解锁且上限足够的研究所需要的资源。只在触发器和队列中没有内容激活时生效。缺少的资源对于自动贸易、自动银河贸易、自动工厂和自动采矿机器人来说权重为100，对于自动税率、自动锻造、自动温石棉控制、自动冶炼来说为最高优先级。",
+    // "Readjust trade routes and production to resources required for unlocked and affordable missions. Missing resources will have 100 priority where applicable(autoMarket, autoGalaxyMarket, autoFactory, autoMiningDroid), or just 'top priority' where not(autoTax, autoCraft, autoCraftsmen, autoQuarry, autoSmelter).": "将贸易路线和生产资源调整为已解锁且上限足够的任务所需要的资源。缺少的资源对于自动贸易、自动银河贸易、自动工厂和自动采矿机器人来说权重为100，对于自动税率、自动锻造、自动温石棉控制、自动冶炼来说为最高优先级。",
+    // "Alter script behaviour to speed up queued items, prioritizing missing resources.": "调整脚本处理队列中项目的方式，优先缺失的资源。",
+    // "Alter script behaviour to speed up triggers, prioritizing missing resources.": "调整脚本处理触发器中项目的方式，优先缺失的资源。",
+    // "Alter script behaviour to speed up unification, prioritizing money required to purchase foreign cities.": "调整脚本处理统一的方式，优先使用资金来收购周边国家。",
+    // "Alter script behaviour to assist fleet building, prioritizing resources required for current design of ship.": "调整脚本分配舰队建筑的方式，优先舰船缺失的资源。",
+    // "By default script will click only during early stage of autoBuild, to bootstrap production. With this toggled on it will continue clicking forever": "默认情况下脚本只在游戏初期自动收集资源，开启此项后将一直自动收集资源",
+    // "Number of clicks performed at once, each script tick. Will not ever click more than needed to fill storage.": "每时刻自动收集资源的点击次数。只在库存未满的范围内有效。",
 
     // 政府设置
     //"Government Settings": "政府设置",
@@ -1061,6 +1061,7 @@ var CNZ_MAP = {
     // 种族
     "Script Managed": "由脚本管理",
     "Auto Achievements": "自动完成成就",
+    /*
     "Antid": "蚂蚁人",
     "Mantis": "螳螂人",
     "Scorpid": "蝎子",
@@ -1104,14 +1105,17 @@ var CNZ_MAP = {
     "Tuskin": "獠牙人",
     "Kamel": "骆驼人",
     "Custom": "自建种族",
+    */
 
     // 宇宙
+    /*
     "Standard": "标准宇宙",
     "Heavy": "高引力宇宙",
     "Antimatter": "反物质宇宙",
     "Evil": "邪恶宇宙",
     "Micro": "微型宇宙",
     "Magic": "魔法宇宙",
+    */
 
     // 星球
     "Most habitable": "最宜居",
@@ -1123,6 +1127,7 @@ var CNZ_MAP = {
     "Alien 2 System": "第五星系",
 
     // 资源
+    /*
     "Orichalcum": "奥利哈刚",
     "Vitreloy": "金属玻璃",
     "Bolognium": "钋",
@@ -1164,7 +1169,7 @@ var CNZ_MAP = {
     "Nanoweave": "纳米织物",
     "Scarletite": "绯绯色金",
     "Quantium": "量子",
-/*
+    
     // 建筑物
     // 郊外
     "Slave Market": "奴隶市场",

@@ -12437,25 +12437,25 @@
 
         addSettingsNumber(currentNode, "tickRate", "脚本运算频率", "每达到相应时刻后脚本就进行一次运算。游戏每250毫秒达到一个时刻，因此设为4以后脚本将每秒运算一次。您可以将此值调低以使脚本更快运行，也可以将此值调高来避免卡顿。时刻数值需要为正整数。");
 
-        addSettingsHeader1(currentNode, "Prioritization");
-        let priority = [{val: "ignore", label: "Ignore", hint: "Does nothing"},
-                        {val: "save", label: "Save", hint: "Missing resources preserved from using."},
-                        {val: "req", label: "Request", hint: "Production and buying of missing resources will be prioritized."},
-                        {val: "savereq", label: "Request & Save", hint: "Missing resources will be prioritized, and preserved from using."}];
+        addSettingsHeader1(currentNode, "优先级");
+        let priority = [{val: "ignore", label: "忽略", hint: "什么都不做"},
+                        {val: "save", label: "保留", hint: "缺失的资源保留下来不使用。"},
+                        {val: "req", label: "请求", hint: "优先生产和购买缺失的资源。"},
+                        {val: "savereq", label: "保留及请求", hint: "优先生产和购买缺失的资源，并保留它们不使用。"}];
 
-        addSettingsToggle(currentNode, "useDemanded", "Allow using prioritized resources for crafting", "When disabled script won't make craftables out of prioritized resources in foundry and factory.");
-        addSettingsToggle(currentNode, "researchRequest", "Prioritize resources for Pre-MAD researches", "Readjust trade routes and production to resources required for unlocked and affordable researches. Works only with no active triggers, or queue. Missing resources will have 100 priority where applicable(autoMarket, autoGalaxyMarket, autoFactory, autoMiningDroid), or just 'top priority' where not(autoTax, autoCraft, autoCraftsmen, autoQuarry, autoSmelter).");
-        addSettingsToggle(currentNode, "researchRequestSpace", "Prioritize resources for Space+ researches", "Readjust trade routes and production to resources required for unlocked and affordable researches. Works only with no active triggers, or queue. Missing resources will have 100 priority where applicable(autoMarket, autoGalaxyMarket, autoFactory, autoMiningDroid), or just 'top priority' where not(autoTax, autoCraft, autoCraftsmen, autoQuarry, autoSmelter).");
-        addSettingsToggle(currentNode, "missionRequest", "Prioritize resources for missions", "Readjust trade routes and production to resources required for unlocked and affordable missions. Missing resources will have 100 priority where applicable(autoMarket, autoGalaxyMarket, autoFactory, autoMiningDroid), or just 'top priority' where not(autoTax, autoCraft, autoCraftsmen, autoQuarry, autoSmelter).");
+        addSettingsToggle(currentNode, "useDemanded", "允许使用优先生产和购买的资源进行锻造和生产", "如果关闭此项，则脚本不会使用优先的资源来制造锻造物和工厂产品。");
+        addSettingsToggle(currentNode, "researchRequest", "资源是否优先分配给相互毁灭前的研究", "将贸易路线和生产资源调整为已解锁且上限足够的研究所需要的资源。只在触发器和队列中没有内容激活时生效。缺少的资源对于自动贸易、自动银河贸易、自动工厂和自动采矿机器人来说权重为100，对于自动税率、自动锻造、自动温石棉控制、自动冶炼来说为最高优先级。");
+        addSettingsToggle(currentNode, "researchRequestSpace", "资源是否优先分配给太空后的研究", "将贸易路线和生产资源调整为已解锁且上限足够的研究所需要的资源。只在触发器和队列中没有内容激活时生效。缺少的资源对于自动贸易、自动银河贸易、自动工厂和自动采矿机器人来说权重为100，对于自动税率、自动锻造、自动温石棉控制、自动冶炼来说为最高优先级。");
+        addSettingsToggle(currentNode, "missionRequest", "资源是否优先分配给任务", "将贸易路线和生产资源调整为已解锁且上限足够的任务所需要的资源。缺少的资源对于自动贸易、自动银河贸易、自动工厂和自动采矿机器人来说权重为100，对于自动税率、自动锻造、自动温石棉控制、自动冶炼来说为最高优先级。");
 
-        addSettingsSelect(currentNode, "prioritizeQueue", "Queue", "Alter script behaviour to speed up queued items, prioritizing missing resources.", priority);
-        addSettingsSelect(currentNode, "prioritizeTriggers", "Triggers", "Alter script behaviour to speed up triggers, prioritizing missing resources.", priority);
-        addSettingsSelect(currentNode, "prioritizeUnify", "Unification", "Alter script behaviour to speed up unification, prioritizing money required to purchase foreign cities.", priority);
-        addSettingsSelect(currentNode, "prioritizeOuterFleet", "Ship (The True Path)", "Alter script behaviour to assist fleet building, prioritizing resources required for current design of ship.", priority);
+        addSettingsSelect(currentNode, "prioritizeQueue", "队列", "调整脚本处理队列中项目的方式，优先缺失的资源。", priority);
+        addSettingsSelect(currentNode, "prioritizeTriggers", "触发器", "调整脚本处理触发器中项目的方式，优先缺失的资源。", priority);
+        addSettingsSelect(currentNode, "prioritizeUnify", "统一", "调整脚本处理统一的方式，优先使用资金来收购周边国家。", priority);
+        addSettingsSelect(currentNode, "prioritizeOuterFleet", "舰船(智械黎明模式)", "调整脚本分配舰队建筑的方式，优先舰船缺失的资源。", priority);
 
-        addSettingsHeader1(currentNode, "Auto clicker");
-        addSettingsToggle(currentNode, "buildingAlwaysClick", "Always autoclick resources", "By default script will click only during early stage of autoBuild, to bootstrap production. With this toggled on it will continue clicking forever");
-        addSettingsNumber(currentNode, "buildingClickPerTick", "Maximum clicks per tick", "Number of clicks performed at once, each script tick. Will not ever click more than needed to fill storage.");
+        addSettingsHeader1(currentNode, "自动点击");
+        addSettingsToggle(currentNode, "buildingAlwaysClick", "是否总是自动收集资源", "默认情况下脚本只在游戏初期自动收集资源，开启此项后将一直自动收集资源");
+        addSettingsNumber(currentNode, "buildingClickPerTick", "每时刻最高点击次数", "每时刻自动收集资源的点击次数。只在库存未满的范围内有效。");
 
         document.documentElement.scrollTop = document.body.scrollTop = currentScrollPosition;
     }
