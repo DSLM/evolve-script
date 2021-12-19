@@ -12840,15 +12840,15 @@
         currentNode.empty().off("*");
 
         currentNode.append(`
-          <span>Planet Weighting = Biome Weighting + Trait Weighting + (Extras Intensity * Extras Weightings)</span>
+          <span>星球权重 = 群系权重 + 特性权重 + (其他项数值 * 其他项权重)</span>
           <table style="width:100%">
             <tr>
-              <th class="has-text-warning" style="width:20%">Biome</th>
-              <th class="has-text-warning" style="width:calc(40% / 3)">Weighting</th>
-              <th class="has-text-warning" style="width:20%">Trait</th>
-              <th class="has-text-warning" style="width:calc(40% / 3)">Weighting</th>
-              <th class="has-text-warning" style="width:20%">Extra</th>
-              <th class="has-text-warning" style="width:calc(40% / 3)">Weighting</th>
+              <th class="has-text-warning" style="width:20%">群系</th>
+              <th class="has-text-warning" style="width:calc(40% / 3)">权重</th>
+              <th class="has-text-warning" style="width:20%">特性</th>
+              <th class="has-text-warning" style="width:calc(40% / 3)">权重</th>
+              <th class="has-text-warning" style="width:20%">其他</th>
+              <th class="has-text-warning" style="width:calc(40% / 3)">权重</th>
             </tr>
             <tbody id="script_planetTableBody"></tbody>
           </table>`);
@@ -12875,7 +12875,7 @@
             tableElement = tableElement.next();
 
             if (i < traitList.length) {
-                tableElement.append(buildTableLabel(i == 0 ? "None" : game.loc("planet_" + traitList[i])));
+                tableElement.append(buildTableLabel(i == 0 ? "无" : game.loc("planet_" + traitList[i])));
                 tableElement = tableElement.next();
                 addTableInput(tableElement, "trait_w_" + traitList[i]);
             } else {
@@ -12884,7 +12884,7 @@
             tableElement = tableElement.next();
 
             if (i < extraList.length) {
-                tableElement.append(buildTableLabel(extraList[i]));
+                tableElement.append(buildTableLabel(i == 0 ? "成就" : game.loc("resource_" + extraList[i] + "_name")));
                 tableElement = tableElement.next();
                 addTableInput(tableElement, "extra_w_" + extraList[i]);
             }
@@ -13398,7 +13398,7 @@
           <table style="width:100%">
             <tr>
               <th class="has-text-warning" style="width:55%">Region</th>
-              <th class="has-text-warning" style="width:20%">Weighting</th>
+              <th class="has-text-warning" style="width:20%">权重</th>
               <th style="width:25%"></th>
             </tr>
             <tbody id="script_${secondaryPrefix}fleetOuterTable"></tbody>
@@ -13758,7 +13758,7 @@
               <th class="has-text-warning" style="width:10%">Ratio</th>
               <th class="has-text-warning" style="width:10%">In</th>
               <th class="has-text-warning" style="width:10%">Away</th>
-              <th class="has-text-warning" style="width:10%">Weighting</th>
+              <th class="has-text-warning" style="width:10%">权重</th>
               <th class="has-text-warning" style="width:10%">Priority</th>
               <th style="width:5%"></th>
             </tr>
@@ -13828,7 +13828,7 @@
             <tr>
               <th class="has-text-warning" style="width:30%">Buy</th>
               <th class="has-text-warning" style="width:30%">Sell</th>
-              <th class="has-text-warning" style="width:20%">Weighting</th>
+              <th class="has-text-warning" style="width:20%">权重</th>
               <th class="has-text-warning" style="width:20%">Priority</th>
             </tr>
             <tbody id="script_marketGalaxyTableBody"></tbody>
@@ -13982,7 +13982,7 @@
             <tr>
               <th class="has-text-warning" style="width:20%">Minor Trait</th>
               <th class="has-text-warning" style="width:20%">Enabled</th>
-              <th class="has-text-warning" style="width:20%">Weighting</th>
+              <th class="has-text-warning" style="width:20%">权重</th>
               <th class="has-text-warning" style="width:40%"></th>
             </tr>
             <tbody id="script_minorTraitTableBody"></tbody>
@@ -14064,7 +14064,7 @@
             <tr>
               <th class="has-text-warning" style="width:20%">Resource</th>
               <th class="has-text-warning" style="width:20%">Enabled</th>
-              <th class="has-text-warning" style="width:20%">Weighting</th>
+              <th class="has-text-warning" style="width:20%">权重</th>
               <th class="has-text-warning" style="width:40%"></th>
             </tr>
             <tbody id="script_alchemyTableBody"></tbody>
@@ -14184,7 +14184,7 @@
             <tr>
               <th class="has-text-warning" style="width:35%">Resource</th>
               <th class="has-text-warning" style="width:20%">Enabled</th>
-              <th class="has-text-warning" style="width:20%">Weighting</th>
+              <th class="has-text-warning" style="width:20%">权重</th>
               <th class="has-text-warning" style="width:20%">Priority</th>
               <th style="width:5%"></th>
             </tr>
@@ -14232,7 +14232,7 @@
             <tr>
               <th class="has-text-warning" style="width:35%">Resource</th>
               <th class="has-text-warning" style="width:20%">Enabled</th>
-              <th class="has-text-warning" style="width:20%" title="Ratio between resources. Script assign craftsmans to resource with lowest 'amount / weighting'. Ignored by manual crafting.">Weighting</th>
+              <th class="has-text-warning" style="width:20%" title="Ratio between resources. Script assign craftsmans to resource with lowest 'amount / weighting'. Ignored by manual crafting.">权重</th>
               <th class="has-text-warning" style="width:20%" title="Only craft resource when storage ratio of all required materials above given number. E.g. bricks with 0.1 min materials will be crafted only when cement storage at least 10% filled.">Min Materials</th>
               <th style="width:5%"></th>
             </tr>
@@ -14279,7 +14279,7 @@
             <tr>
               <th class="has-text-warning" style="width:35%">Resource</th>
               <th class="has-text-warning" style="width:20%"></th>
-              <th class="has-text-warning" style="width:20%">Weighting</th>
+              <th class="has-text-warning" style="width:20%">权重</th>
               <th class="has-text-warning" style="width:20%">Priority</th>
               <th style="width:5%"></th>
             </tr>
@@ -14320,7 +14320,7 @@
           <table style="width:100%">
             <tr>
               <th class="has-text-warning" style="width:55%">Ritual</th>
-              <th class="has-text-warning" style="width:20%">Weighting</th>
+              <th class="has-text-warning" style="width:20%">权重</th>
               <th style="width:25%"></th>
             </tr>
             <tbody id="script_magicTableBodyPylon"></tbody>
@@ -14564,7 +14564,7 @@
               <th class="has-text-warning" style="width:35%">Building</th>
               <th class="has-text-warning" style="width:15%" title="Enables auto building. Triggers ignores this option, allowing to build disabled things.">Auto Build</th>
               <th class="has-text-warning" style="width:15%" title="Maximum amount of buildings to build. Triggers ignores this option, allowing to build above limit. Can be also used to limit amount of enabled buildings, with respective option above.">Max Build</th>
-              <th class="has-text-warning" style="width:15%" title="Script will try to spend 2x amount of resources on building having 2x weighting, and such.">Weighting</th>
+              <th class="has-text-warning" style="width:15%" title="Script will try to spend 2x amount of resources on building having 2x weighting, and such.">权重</th>
               <th class="has-text-warning" style="width:20%" title="First toggle enables basic automation based on priority, power, support, and consumption. Second enables logic made specially for particlular building, their effects are different, but generally it tries to behave smarter than just staying enabled all the time.">Auto Power</th>
             </tr>
             <tbody id="script_buildingTableBody"></tbody>
@@ -14849,7 +14849,7 @@
               <th class="has-text-warning" style="width:25%">Project</th>
               <th class="has-text-warning" style="width:25%">Auto Build</th>
               <th class="has-text-warning" style="width:25%">Max Build</th>
-              <th class="has-text-warning" style="width:25%">Weighting</th>
+              <th class="has-text-warning" style="width:25%">权重</th>
             </tr>
             <tbody id="script_projectTableBody"></tbody>
           </table>`);

@@ -480,11 +480,11 @@ var CNZ_MAP = {
     // 星球权重设置
     // "Planet Weighting Settings": "星球权重设置",
     // "Reset Planet Weighting Settings": "星球权重设置还原",
-    "Planet Weighting = Biome Weighting + Trait Weighting + (Extras Intensity * Extras Weightings)": "星球权重 = 群系权重 + 特性权重 + (其他项数值 * 其他项权重)",
-    "Biome": "群系",
-    "Trait": "特性",
-    "Extra": "其他",
-    "Achievement": "成就",
+    // "Planet Weighting = Biome Weighting + Trait Weighting + (Extras Intensity * Extras Weightings)": "星球权重 = 群系权重 + 特性权重 + (其他项数值 * 其他项权重)",
+    // "Biome": "群系",
+    // "Trait": "特性",
+    // "Extra": "其他",
+    // "Achievement": "成就",
 
     // 特质设置
     // "Traits Settings": "特质设置",
