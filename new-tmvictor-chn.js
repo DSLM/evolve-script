@@ -829,12 +829,12 @@ var CNZ_MAP = {
     // 魔法设置
     // "Magic Settings": "魔法设置",
     // "Reset Magic Settings": "魔法设置还原",
-    "Alchemy": "炼金术",
-    "Mana income used": "法力产量使用的比例",
-    "Ritual": "仪式",
-
-    "Income portion to use on alchemy. Setting to 1 is not recommended, leftover mana will be used for rituals.": "炼金术使用的法力产量比例。不建议设为1。剩余的法力将用于仪式。",
-    "Income portion to use on rituals. Setting to 1 is not recommended, as it will halt mana regeneration. Applied only when mana not capped - with capped mana script will always use all income.": "仪式使用的法力产量比例。不建议设为1，这样会使法力产量为零。只在法力未达到上限时生效，达到上限后将使用所有法力产量。",
+    // "Alchemy": "炼金术",
+    // "Mana income used": "法力产量使用的比例",
+    // "Ritual": "仪式",
+    //
+    // "Income portion to use on alchemy. Setting to 1 is not recommended, leftover mana will be used for rituals.": "炼金术使用的法力产量比例。不建议设为1。剩余的法力将用于仪式。",
+    // "Income portion to use on rituals. Setting to 1 is not recommended, as it will halt mana regeneration. Applied only when mana not capped - with capped mana script will always use all income.": "仪式使用的法力产量比例。不建议设为1，这样会使法力产量为零。只在法力未达到上限时生效，达到上限后将使用所有法力产量。",
 
     // 生产设置
     // "Production Settings": "生产设置",

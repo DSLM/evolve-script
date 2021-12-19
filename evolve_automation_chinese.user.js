@@ -14056,8 +14056,8 @@
     }
 
     function updateMagicAlchemy(currentNode) {
-        addStandardHeading(currentNode, "Alchemy");
-        addSettingsNumber(currentNode, "magicAlchemyManaUse", "Mana income used", "Income portion to use on alchemy. Setting to 1 is not recommended, leftover mana will be used for rituals.");
+        addStandardHeading(currentNode, "炼金术");
+        addSettingsNumber(currentNode, "magicAlchemyManaUse", "法力产量使用的比例", "炼金术使用的法力产量比例。不建议设为1。剩余的法力将用于仪式。");
 
         currentNode.append(`
           <table style="width:100%">
@@ -14313,13 +14313,13 @@
     }
 
     function updateMagicPylon(currentNode) {
-        addStandardHeading(currentNode, "Pylon");
-        addSettingsNumber(currentNode, "productionRitualManaUse", "Mana income used", "Income portion to use on rituals. Setting to 1 is not recommended, as it will halt mana regeneration. Applied only when mana not capped - with capped mana script will always use all income.");
+        addStandardHeading(currentNode, "水晶塔");
+        addSettingsNumber(currentNode, "productionRitualManaUse", "法力产量使用的比例", "仪式使用的法力产量比例。不建议设为1，这样会使法力产量为零。只在法力未达到上限时生效，达到上限后将使用所有法力产量。");
 
         currentNode.append(`
           <table style="width:100%">
             <tr>
-              <th class="has-text-warning" style="width:55%">Ritual</th>
+              <th class="has-text-warning" style="width:55%">仪式</th>
               <th class="has-text-warning" style="width:20%">权重</th>
               <th style="width:25%"></th>
             </tr>
