@@ -12,62 +12,6 @@ replaceLsit = {
 // @match        https://likexia.gitee.io/evolve/''',
     '// This script forked from TMVictor\'s script version 3.3.1. Original script: https://gist.github.com/TMVictor/3f24e27a21215414ddc68842057482da':'// This script forked from TMVictor\'s script version 3.3.1. Original script: https://gist.github.com/TMVictor/3f24e27a21215414ddc68842057482da\n// Removed downloadURL in case that script got screwed up. Original downloadURL: @downloadURL  https://gist.github.com/Vollch/b1a5eec305558a48b7f4575d317d7dd1/raw/evolve_automation.user.js',
 
-     # NOTE: 资源
-    'Population: new Population("Population", "Population")':'Population: new Population("人口", "Population")',
-    'Antiplasmid: new AntiPlasmid("Anti-Plasmid", "Antiplasmid")':'Antiplasmid: new AntiPlasmid("反质粒", "Antiplasmid")',
-    'Power: new Power("Power", "Power")':'Power: new Power("电力", "Power")',
-    'StarPower: new StarPower("Star Power", "StarPower")':'StarPower: new StarPower("星", "StarPower")',
-    'Morale: new Morale("Morale", "Morale")':'Morale: new Morale("士气", "Morale")',
-    '"Moon Support"':'"月球支持"',
-    '"Red Support"':'"红色行星支持"',
-    '"Sun Support"':'"蜂群支持"',
-    '"Belt Support"':'"小行星带支持"',
-    '"Titan Support"':'"最大卫星支持"',
-    '"Electrolysis Plant"':'"电解工厂"',
-    '"Enceladus Support"':'"第六大卫星支持"',
-    '"Eris Support"':'"矮行星支持"',
-    '"Alpha Support"':'"半人马座α星系支持"',
-    '"Nebula Support"':'"螺旋星云支持"',
-    '"Gateway Support"':'"星门支持"',
-    '"Alien Support"':'"第五星系支持"',
-    '"Lake Support"':'"湖泊支持"',
-    '"Spire Support"':'"尖塔支持"',
-
-     # NOTE: 种族警告
-    '>This race have special requirements:':'>此种族的特殊要求为：',
-    '. This condition is met.':'。当前满足此条件。',
-    '>Warning! This race have special requirements:':'>警告！此种族的特殊要求为：',
-    '. This condition is not met.':'。当前不满足此条件。',
-    '. This condition is bypassed. Race will have ${100 - suited * 100}% penalty.':'。当前可使用此种族，但受到 ${100 - suited * 100}% 的产量惩罚。',
-    '''case "aquatic":
-        return "Oceanic planet";
-    case "fey":
-        return "Forest planet";
-    case "sand":
-        return "Desert planet";
-    case "heat":
-        return "Volcanic planet";
-    case "polar":
-        return "Tundra planet";
-    case "demonic":
-        return "Hellscape planet";
-    case "angelic":
-        return "Eden planet";''':
-        '''case "aquatic":
-            return "海洋星球";
-        case "fey":
-            return "森林星球";
-        case "sand":
-            return "沙漠星球";
-        case "heat":
-            return "火山星球";
-        case "polar":
-            return "苔原星球";
-        case "demonic":
-            return "地狱星球";
-        case "angelic":
-            return "伊甸园星球";''',
-
      # NOTE: 侧边栏高级设置
     ">Variable 1<": ">变量1<",
     ">Check<": ">运算<",
@@ -211,6 +155,58 @@ replaceLsit = {
     'let sectionName = "A.R.P.A.";':'let sectionName = "ARPA";',
     'let sectionName = "Logging";':'let sectionName = "日志";',
 
+    # NOTE: 威望重置设置
+    '<span>Prestige Type</span>':'<span>威望重置类型：</span>',
+    '{val: "none", label: "None", hint: "Endless game"},':'{val: "none", label: "无", hint: "不会自动重置"},',
+    '{val: "mad", label: "Mutual Assured Destruction", hint: "MAD prestige once MAD has been researched and all soldiers are home"},':'{val: "mad", label: "核弹重置", hint: "当研究相互毁灭，且士兵全部存活时，进行核弹重置"},',
+    '{val: "bioseed", label: "Bioseed", hint: "Launches the bioseeder ship to perform prestige when required probes have been constructed"},':'{val: "bioseed", label: "播种重置", hint: "当太空探测器数量达到指定值以后，进行播种重置"},',
+    '{val: "cataclysm", label: "Cataclysm", hint: "Perform cataclysm reset by researching Dial It To 11 once available"},':'{val: "cataclysm", label: "大灾变重置", hint: "自动研究把刻度盘拨到11，触发大灾变重置"},',
+    '{val: "whitehole", label: "Whitehole", hint: "Infuses the blackhole with exotic materials to perform prestige"},':'{val: "whitehole", label: "黑洞重置", hint: "自动选择奇异灌输，触发黑洞重置"},',
+    '{val: "vacuum", label: "Vacuum Collapse", hint: "Build Mana Syphons until the end"},':'{val: "vacuum", label: "真空坍缩", hint: "自动建造法力虹吸，触发真空坍缩"},',
+    '{val: "apocalypse", label: "AI Apocalypse", hint: "Perform AI Apocalypse reset by researching Protocol 66 once available"},':'{val: "apocalypse", label: "人工智能觉醒", hint: "自动研究《第66号技术协议》，触发人工智能觉醒"},',
+    '{val: "ascension", label: "Ascension", hint: "Allows research of Incorporeal Existence and Ascension. Ascension Machine managed by autoPower. User input still required to trigger reset, and create custom race."},':'{val: "ascension", label: "飞升重置", hint: "允许研究无形存在和飞升。飞升装置由自动供能进行管理。仍然需要玩家手动触发飞升并创建自建种族。"},',
+    '{val: "demonic", label: "Demonic Infusion", hint: "Sacrifice your entire civilization to absorb the essence of a greater demon lord"}]);':'{val: "demonic", label: "恶魔灌注", hint: "注入恶魔之力，牺牲整个文明，成为恶魔领主"}]);',
+    'addSettingsToggle(currentNode, "prestigeWaitAT", "Use all Accelerated Time", "Delay reset until all accelerated time will be used");':'addSettingsToggle(currentNode, "prestigeWaitAT", "是否在重置前用完所有的加速时间", "直到用完所有的加速时间才进行重置");',
+    'addSettingsToggle(currentNode, "prestigeBioseedConstruct", "Ignore useless buildings", "Space Dock, Bioseeder Ship and Probes will be constructed only when Bioseed prestige enabled. World Collider won\'t be constructed during Bioseed. Jump Ship won\'t be constructed during Whitehole. Stellar Engine won\'t be constucted during Vacuum Collapse.");':'addSettingsToggle(currentNode, "prestigeBioseedConstruct", "忽略无用的建筑", "只在需要进行播种重置时建造星际船坞、生命播种飞船和星际探测器，并且不建造世界超级对撞机。进行黑洞重置时不建造跃迁飞船。进行真空坍缩时不建造恒星引擎。");',
+    'addSettingsNumber(currentNode, "prestigeEnabledBarracks", "Percent of active barracks after unification", "Percent of barracks to keep enabled after unification, disabling some of them can reduce stress. All barracks will be enabled back when Bioseeder Ship will be at 90%, or after building World Collider");':'addSettingsNumber(currentNode, "prestigeEnabledBarracks", "研究统一后的兵营比例", "研究统一后进行供能的兵营比例，取消供能可以提升士气。当生命播种飞船达到90段分项工程，或者是建造世界超级对撞机后，所有兵营将全部恢复供能。");',
+    'addSettingsHeader1(currentNode, "Mutual Assured Destruction");':'addSettingsHeader1(currentNode, "核弹重置");',
+    'addSettingsToggle(currentNode, "prestigeMADIgnoreArpa", "Pre-MAD: Ignore A.R.P.A.", "Disables building A.R.P.A. projects until MAD is researched");':'addSettingsToggle(currentNode, "prestigeMADIgnoreArpa", "是否在研究相互毁灭前不建造ARPA项目", "直到研究相互毁灭之前，不建造ARPA项目");',
+    'addSettingsToggle(currentNode, "prestigeMADWait", "Wait for maximum population", "Wait for maximum population and soldiers to maximize plasmids gain");':'addSettingsToggle(currentNode, "prestigeMADWait", "是否等待人口达到最大", "等待市民和士兵达到最大以后再进行重置，以尽可能多地获得质粒");',
+    'addSettingsNumber(currentNode, "prestigeMADPopulation", "Required population", "Required number of workers and soldiers before performing MAD reset");':'addSettingsNumber(currentNode, "prestigeMADPopulation", "人口阈值", "达到相应数量的市民和士兵后，才进行核弹重置");',
+    'addSettingsHeader1(currentNode, "Bioseed");':'addSettingsHeader1(currentNode, "播种重置");',
+    'addSettingsNumber(currentNode, "prestigeBioseedProbes", "Required probes", "Required number of probes before launching bioseeder ship");':'addSettingsNumber(currentNode, "prestigeBioseedProbes", "播种前至少需要的太空探测器数量", "达到太空探测器所需数量后，才进行播种重置");',
+    'addSettingsHeader1(currentNode, "Whitehole");':'addSettingsHeader1(currentNode, "黑洞重置");',
+    'addSettingsToggle(currentNode, "prestigeWhiteholeSaveGems", "Save up Soul Gems for reset", "Save up enough Soul Gems for reset, only excess gems will be used. This option does not affect triggers.");':'addSettingsToggle(currentNode, "prestigeWhiteholeSaveGems", "是否保留重置所需数量的灵魂宝石", "保留重置所需数量的灵魂宝石，只使用超过相应数量的灵魂宝石。不影响触发器。");',
+    'addSettingsNumber(currentNode, "prestigeWhiteholeMinMass", "Minimum solar mass for reset", "Required minimum solar mass of blackhole before prestiging. Script do not stabilize on blackhole run, this number will need to be reached naturally");':'addSettingsNumber(currentNode, "prestigeWhiteholeMinMass", "太阳质量阈值，达到后才会进行黑洞重置", "达到太阳质量阈值后，才进行黑洞重置。脚本不会在威望重置类型为黑洞重置时稳定黑洞，需要自然达到此质量");',
+    'addSettingsHeader1(currentNode, "Ascension");':'addSettingsHeader1(currentNode, "飞升重置");',
+    'addSettingsToggle(currentNode, "prestigeAscensionSkipCustom", "Skip Custom Race", "Perform reset without making any changes to custom. This option is required, script won\'t ascend automatically without it enabled.");':'addSettingsToggle(currentNode, "prestigeAscensionSkipCustom", "是否忽略自建种族", "不对自建种族进行任何修改就进行重置。只有开启此项才能自动进行飞升重置。");',
+    'addSettingsToggle(currentNode, "prestigeAscensionPillar", "Wait for Pillar", "Wait for Pillar before ascending, unless it was done earlier");':'addSettingsToggle(currentNode, "prestigeAscensionPillar", "是否等待永恒之柱", "直到永恒之柱上嵌入水晶后才进行重置");',
+    'addSettingsHeader1(currentNode, "Demonic Infusion");':'addSettingsHeader1(currentNode, "恶魔灌注");',
+    'addSettingsNumber(currentNode, "prestigeDemonicFloor", "Minimum spire floor for reset", "Perform reset after climbing up to this spire floor");':'addSettingsNumber(currentNode, "prestigeDemonicFloor", "进行恶魔灌注的层数阈值", "到达相应层数后才进行恶魔灌注");',
+    'addSettingsNumber(currentNode, "prestigeDemonicPotential", "Maximum mech potential for reset", "Perform reset only if current mech team potential below given amount. Full bay of best mechs will have `1` potential. This allows to postpone reset if your team is still good after reaching target floor, and can quickly clear another floor");':'addSettingsNumber(currentNode, "prestigeDemonicPotential", "进行恶魔灌注的最大机甲潜力", "只在当前机甲潜力低于相应数值后才进行恶魔灌注。机甲舱充满最好设计的机甲时潜力为1。这样就可以在机甲战斗力还较高的时候延迟恶魔灌注，同时也可以更快地通过一些楼层。");',
+    'addSettingsToggle(currentNode, "prestigeDemonicBomb", "Use Dark Energy Bomb", "Kill Demon Lord with Dark Energy Bomb");':'addSettingsToggle(currentNode, "prestigeDemonicBomb", "是否使用暗能量炸弹", "用暗能量炸弹送恶魔领主上西天");',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+
+
+    # NOTE: 常规设置
+    'addSettingsNumber(currentNode, "tickRate", "Script tick rate", "Script runs once per this amount of game ticks. Game tick every 250ms, thus with rate 4 script will run once per second. You can set it lower to make script act faster, or increase it if you have performance issues. Tick rate should be a positive integer.");':'addSettingsNumber(currentNode, "tickRate", "脚本运算频率", "每达到相应时刻后脚本就进行一次运算。游戏每250毫秒达到一个时刻，因此设为4以后脚本将每秒运算一次。您可以将此值调低以使脚本更快运行，也可以将此值调高来避免卡顿。时刻数值需要为正整数。");',
     '':'',
     '':'',
     '':'',
@@ -231,16 +227,62 @@ replaceLsit = {
     '':'',
     '':'',
     '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
+
+     # NOTE: 资源
+    'Population: new Population("Population", "Population")':'Population: new Population("人口", "Population")',
+    'Antiplasmid: new AntiPlasmid("Anti-Plasmid", "Antiplasmid")':'Antiplasmid: new AntiPlasmid("反质粒", "Antiplasmid")',
+    'Power: new Power("Power", "Power")':'Power: new Power("电力", "Power")',
+    'StarPower: new StarPower("Star Power", "StarPower")':'StarPower: new StarPower("星", "StarPower")',
+    'Morale: new Morale("Morale", "Morale")':'Morale: new Morale("士气", "Morale")',
+    '"Moon Support"':'"月球支持"',
+    '"Red Support"':'"红色行星支持"',
+    '"Sun Support"':'"蜂群支持"',
+    '"Belt Support"':'"小行星带支持"',
+    '"Titan Support"':'"最大卫星支持"',
+    '"Electrolysis Plant"':'"电解工厂"',
+    '"Enceladus Support"':'"第六大卫星支持"',
+    '"Eris Support"':'"矮行星支持"',
+    '"Alpha Support"':'"半人马座α星系支持"',
+    '"Nebula Support"':'"螺旋星云支持"',
+    '"Gateway Support"':'"星门支持"',
+    '"Alien Support"':'"第五星系支持"',
+    '"Lake Support"':'"湖泊支持"',
+    '"Spire Support"':'"尖塔支持"',
+
+     # NOTE: 种族警告
+    '>This race have special requirements:':'>此种族的特殊要求为：',
+    '. This condition is met.':'。当前满足此条件。',
+    '>Warning! This race have special requirements:':'>警告！此种族的特殊要求为：',
+    '. This condition is not met.':'。当前不满足此条件。',
+    '. This condition is bypassed. Race will have ${100 - suited * 100}% penalty.':'。当前可使用此种族，但受到 ${100 - suited * 100}% 的产量惩罚。',
+    '''case "aquatic":
+        return "Oceanic planet";
+    case "fey":
+        return "Forest planet";
+    case "sand":
+        return "Desert planet";
+    case "heat":
+        return "Volcanic planet";
+    case "polar":
+        return "Tundra planet";
+    case "demonic":
+        return "Hellscape planet";
+    case "angelic":
+        return "Eden planet";''':
+        '''case "aquatic":
+            return "海洋星球";
+        case "fey":
+            return "森林星球";
+        case "sand":
+            return "沙漠星球";
+        case "heat":
+            return "火山星球";
+        case "polar":
+            return "苔原星球";
+        case "demonic":
+            return "地狱星球";
+        case "angelic":
+            return "伊甸园星球";''',
 
     # NOTE: 硬编码汉化部分
     '() => "Locked",':'() => "未解锁",',
