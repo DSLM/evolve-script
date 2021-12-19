@@ -572,6 +572,25 @@ replaceLsit = {
     '>Project<':'>项目<',
 
     # NOTE: 日志设置
+    'addSettingsHeader1(currentNode, "Script Messages");':'addSettingsHeader1(currentNode, "脚本信息");',
+    'special: "Specials",':'special: "特殊",',
+    'construction: "Construction",':'construction: "建造",',
+    'multi_construction: "Multi-part Construction",':'multi_construction: "分项工程",',
+    'arpa: "A.R.P.A Progress",':'arpa: "ARPA项目",',
+    'research: "Research",':'research: "研究",',
+    'spying: "Spying",':'spying: "间谍",',
+    'attack: "Attack",':'attack: "进攻",',
+    'mercenary: "Mercenaries",':'mercenary: "雇佣兵",',
+    'mech_build: "Mech Build",':'mech_build: "制造机甲",',
+    'mech_scrap: "Mech Scrap",':'mech_scrap: "解体机甲",',
+    'outer_fleet: "True Path Fleet"':'outer_fleet: "智械黎明舰队"',
+    'addSettingsToggle(currentNode, "logEnabled", "Enable logging", "Master switch to enable logging of script actions in the game message queue");':'addSettingsToggle(currentNode, "logEnabled", "是否启用日志，下方设置为相关日志类型", "日志记录的主开关");',
+    'Object.entries(GameLog.Types).forEach(([id, label]) => addSettingsToggle(currentNode, "log_" + id, label, `If logging is enabled then logs ${label} actions`));':'Object.entries(GameLog.Types).forEach(([id, label]) => addSettingsToggle(currentNode, "log_" + id, label, `启用后，记录${label}操作`));',
+    'addSettingsHeader1(currentNode, "Game Messages");':'addSettingsHeader1(currentNode, "游戏信息");',
+    'addSettingsToggle(currentNode, "hellTurnOffLogMessages", "Turn off patrol and surveyor log messages", "Automatically turns off the hell patrol and surveyor log messages");':'addSettingsToggle(currentNode, "hellTurnOffLogMessages", "关闭巡逻队和勘探者相关的日志", "自动关闭巡逻队和勘探者相关的日志");',
+    '<span>List of message IDs to filter, all game messages can be found <a href="${stringsUrl}" target="_blank">here</a>.</span><br>':'<span>下方输入需要屏蔽的信息ID，ID列表如下：<a href="${stringsUrl}" target="_blank">点击此处</a>.</span><br>',
+
+
     '':'',
     '':'',
     '':'',
