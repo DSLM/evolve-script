@@ -13886,19 +13886,19 @@
         let currentNode = $('#script_storageContent');
         currentNode.empty().off("*");
 
-        addSettingsToggle(currentNode, "storageLimitPreMad", "Limit Pre-MAD Storage", "Saves resources and shortens run time by limiting storage pre-MAD");
-        addSettingsToggle(currentNode, "storageSafeReassign", "Reassign only empty storages", "Wait until storage is empty before reassigning containers to another resource, to prevent overflowing and wasting resources");
-        addSettingsToggle(currentNode, "storageAssignExtra", "Assign buffer storage", "Assigns 3% extra strorage above required amounts, ensuring that required quantity will be actually reached, even if other part of script trying to sell\\eject\\switch production, etc. When manual trades enabled applies additional adjust derieved from selling threshold.");
-        addSettingsToggle(currentNode, "storagePrioritizedOnly", "Assign per buildings", "Assign storage based on individual costs of each enabled buildings, instead of going for maximums. Allows to prioritize storages for queue and trigger, and skip assigning for unaffordable expensive buildings. Experimental feature.");
+        addSettingsToggle(currentNode, "storageLimitPreMad", "限制核弹重置之前阶段的存储", "限制核弹重置之前阶段的存储来节省资源和相应时间");
+        addSettingsToggle(currentNode, "storageSafeReassign", "只在板条箱或集装箱有空余时进行重新分配", "直到相应的板条箱或集装箱未装有相应资源时才考虑将它重新分配给其他资源，以防止资源溢出浪费");
+        addSettingsToggle(currentNode, "storageAssignExtra", "是否分配缓冲用的存储", "以超过需要数值的3%进行分配，以保证能达到所需要的数值，以避免脚本其他功能的干扰。");
+        addSettingsToggle(currentNode, "storagePrioritizedOnly", "根据每种建筑分配存储", "根据启用的建筑每一个的花费来分配存储，而不是考虑总量来分配。可以优先对触发器或队列等所需要的资源分配存储，并可以跳过超过储量上限的建筑。实验性的功能。");
 
         currentNode.append(`
           <table style="width:100%">
             <tr>
               <th class="has-text-warning" style="width:35%">资源名称</th>
               <th class="has-text-warning" style="width:15%">是否启用</th>
-              <th class="has-text-warning" style="width:15%">Store Overflow</th>
-              <th class="has-text-warning" style="width:15%">Max Crates</th>
-              <th class="has-text-warning" style="width:15%">Max Containers</th>
+              <th class="has-text-warning" style="width:15%">是否对溢出部分分配存储</th>
+              <th class="has-text-warning" style="width:15%">最大板条箱</th>
+              <th class="has-text-warning" style="width:15%">最大集装箱</th>
               <th style="width:5%"></th>
             </tr>
             <tbody id="script_storageTableBody"></tbody>

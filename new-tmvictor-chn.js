@@ -813,18 +813,18 @@ var CNZ_MAP = {
     // 存储设置
     // "Storage Settings": "存储设置",
     // "Reset Storage Settings": "存储设置还原",
-    "Limit Pre-MAD Storage": "限制核弹重置之前阶段的存储",
-    "Reassign only empty storages": "只在板条箱或集装箱有空余时进行重新分配",
-    "Assign buffer storage": "是否分配缓冲用的存储",
-    "Assign per buildings": "根据每种建筑分配存储",
-    "Store Overflow": "是否对溢出部分分配存储",
-    "Max Crates": "最大板条箱",
-    "Max Containers": "最大集装箱",
-
-    "Saves resources and shortens run time by limiting storage pre-MAD": "限制核弹重置之前阶段的存储来节省资源和相应时间",
-    "Wait until storage is empty before reassigning containers to another resource, to prevent overflowing and wasting resources": "直到相应的板条箱或集装箱未装有相应资源时才考虑将它重新分配给其他资源，以防止资源溢出浪费",
-    "Assigns 3% extra strorage above required amounts, ensuring that required quantity will be actually reached, even if other part of script trying to sell\\eject\\switch production, etc. When manual trades enabled applies additional adjust derieved from selling threshold.": "以超过需要数值的3%进行分配，以保证能达到所需要的数值，以避免脚本其他功能的干扰。",
-    "Assign storage based on individual costs of each enabled buildings, instead of going for maximums. Allows to prioritize storages for queue and trigger, and skip assigning for unaffordable expensive buildings. Experimental feature.": "根据启用的建筑每一个的花费来分配存储，而不是考虑总量来分配。可以优先对触发器或队列等所需要的资源分配存储，并可以跳过超过储量上限的建筑。实验性的功能。",
+    // "Limit Pre-MAD Storage": "限制核弹重置之前阶段的存储",
+    // "Reassign only empty storages": "只在板条箱或集装箱有空余时进行重新分配",
+    // "Assign buffer storage": "是否分配缓冲用的存储",
+    // "Assign per buildings": "根据每种建筑分配存储",
+    // "Store Overflow": "是否对溢出部分分配存储",
+    // "Max Crates": "最大板条箱",
+    // "Max Containers": "最大集装箱",
+    //
+    // "Saves resources and shortens run time by limiting storage pre-MAD": "限制核弹重置之前阶段的存储来节省资源和相应时间",
+    // "Wait until storage is empty before reassigning containers to another resource, to prevent overflowing and wasting resources": "直到相应的板条箱或集装箱未装有相应资源时才考虑将它重新分配给其他资源，以防止资源溢出浪费",
+    // "Assigns 3% extra strorage above required amounts, ensuring that required quantity will be actually reached, even if other part of script trying to sell\\eject\\switch production, etc. When manual trades enabled applies additional adjust derieved from selling threshold.": "以超过需要数值的3%进行分配，以保证能达到所需要的数值，以避免脚本其他功能的干扰。",
+    // "Assign storage based on individual costs of each enabled buildings, instead of going for maximums. Allows to prioritize storages for queue and trigger, and skip assigning for unaffordable expensive buildings. Experimental feature.": "根据启用的建筑每一个的花费来分配存储，而不是考虑总量来分配。可以优先对触发器或队列等所需要的资源分配存储，并可以跳过超过储量上限的建筑。实验性的功能。",
 
     // 魔法设置
     // "Magic Settings": "魔法设置",
