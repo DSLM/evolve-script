@@ -489,13 +489,13 @@ var CNZ_MAP = {
     // 特质设置
     // "Traits Settings": "特质设置",
     // "Reset Traits Settings": "次要特质设置还原",
-    "Mimic genus": "拟态种群",
-    "Minor Trait": "次要特质",
-    "Enabled": "是否启用",
-    "Weighting": "权重",
+    // "Mimic genus": "拟态种群",
+    // "Minor Trait": "次要特质",
+    // "Enabled": "是否启用",
+    // "Weighting": "权重",
 
-    "Do not shift genus": "不变换种群",
-    "Mimic selected genus, if avaialble. If you want to add some conditional overrides to this setting, keep in mind changing genus redraws game page, too frequent(every tick or few) changes can drastically harm game performance.": "拟态特质选择相应种群。如果您想要对此项进行进阶设置，请注意切换拟态特质将刷新游戏页面，切换过于频繁将影响游戏运行。",
+    // "Do not shift genus": "不变换种群",
+    // "Mimic selected genus, if avaialble. If you want to add some conditional overrides to this setting, keep in mind changing genus redraws game page, too frequent(every tick or few) changes can drastically harm game performance.": "拟态特质选择相应种群。如果您想要对此项进行进阶设置，请注意切换拟态特质将刷新游戏页面，切换过于频繁将影响游戏运行。",
 
     // 触发器设置
     // "Trigger Settings": "触发器设置",

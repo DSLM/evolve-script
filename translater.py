@@ -259,14 +259,19 @@ replaceLsit = {
     '>Extra<':'>其他<',
     'buildTableLabel(extraList[i])':'buildTableLabel(i == 0 ? "成就" : game.loc("resource_" + extraList[i] + "_name"))',
     '>Weighting<':'>权重<',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
+
+    # NOTE: 特质设置
+    '[{val: "ignore", label: "Ignore", hint: "Do not shift genus"},':'[{val: "ignore", label: "忽略", hint: "不变换种群"},',
+    'addSettingsSelect(currentNode, "shifterGenus", "Mimic genus", "Mimic selected genus, if avaialble. If you want to add some conditional overrides to this setting, keep in mind changing genus redraws game page, too frequent(every tick or few) changes can drastically harm game performance.", genusOptions);':'addSettingsSelect(currentNode, "shifterGenus", "拟态种群", "拟态特质选择相应种群。如果您想要对此项进行进阶设置，请注意切换拟态特质将刷新游戏页面，切换过于频繁将影响游戏运行。", genusOptions);',
+    '>Minor Trait<':'>次要特质<',
+    '>Enabled<':'>是否启用<',
+
+    # NOTE: 触发器设置
+    '>Add New Trigger<':'>添加新触发器<',
+    '>Requirement<':'>需求<',
+    '>Action<':'>行动<',
+    '>Id<':'>Id<',
+    '>Count<':'>计数<',
     '':'',
     '':'',
     '':'',

@@ -1,0 +1,9 @@
+*~
+*#
+update.*.json
+strings/last-strings.json
+node_modules/*
+docs
+temp_in.txt
+temp_out.txt
+temp.py

@@ -13895,7 +13895,7 @@
           <table style="width:100%">
             <tr>
               <th class="has-text-warning" style="width:35%">Resource</th>
-              <th class="has-text-warning" style="width:15%">Enabled</th>
+              <th class="has-text-warning" style="width:15%">是否启用</th>
               <th class="has-text-warning" style="width:15%">Store Overflow</th>
               <th class="has-text-warning" style="width:15%">Max Crates</th>
               <th class="has-text-warning" style="width:15%">Max Containers</th>
@@ -13971,17 +13971,17 @@
         let currentNode = $('#script_minorTraitContent');
         currentNode.empty().off("*");
 
-        let genusOptions = [{val: "ignore", label: "Ignore", hint: "Do not shift genus"},
+        let genusOptions = [{val: "ignore", label: "忽略", hint: "不变换种群"},
                             {val: "none", label: game.loc(`genelab_genus_none`)},
                             ...Object.values(game.races).map(r => r.type).filter((g, i, a) => g && g !== "organism" && g !== "synthetic" && a.indexOf(g) === i).map(g => (
                             {val: g, label: game.loc(`genelab_genus_${g}`)}))];
-        addSettingsSelect(currentNode, "shifterGenus", "Mimic genus", "Mimic selected genus, if avaialble. If you want to add some conditional overrides to this setting, keep in mind changing genus redraws game page, too frequent(every tick or few) changes can drastically harm game performance.", genusOptions);
+        addSettingsSelect(currentNode, "shifterGenus", "拟态种群", "拟态特质选择相应种群。如果您想要对此项进行进阶设置，请注意切换拟态特质将刷新游戏页面，切换过于频繁将影响游戏运行。", genusOptions);
 
         currentNode.append(`
           <table style="width:100%">
             <tr>
-              <th class="has-text-warning" style="width:20%">Minor Trait</th>
-              <th class="has-text-warning" style="width:20%">Enabled</th>
+              <th class="has-text-warning" style="width:20%">次要特质</th>
+              <th class="has-text-warning" style="width:20%">是否启用</th>
               <th class="has-text-warning" style="width:20%">权重</th>
               <th class="has-text-warning" style="width:40%"></th>
             </tr>
@@ -14063,7 +14063,7 @@
           <table style="width:100%">
             <tr>
               <th class="has-text-warning" style="width:20%">Resource</th>
-              <th class="has-text-warning" style="width:20%">Enabled</th>
+              <th class="has-text-warning" style="width:20%">是否启用</th>
               <th class="has-text-warning" style="width:20%">权重</th>
               <th class="has-text-warning" style="width:40%"></th>
             </tr>
@@ -14183,7 +14183,7 @@
           <table style="width:100%">
             <tr>
               <th class="has-text-warning" style="width:35%">Resource</th>
-              <th class="has-text-warning" style="width:20%">Enabled</th>
+              <th class="has-text-warning" style="width:20%">是否启用</th>
               <th class="has-text-warning" style="width:20%">权重</th>
               <th class="has-text-warning" style="width:20%">Priority</th>
               <th style="width:5%"></th>
@@ -14231,7 +14231,7 @@
           <table style="width:100%">
             <tr>
               <th class="has-text-warning" style="width:35%">Resource</th>
-              <th class="has-text-warning" style="width:20%">Enabled</th>
+              <th class="has-text-warning" style="width:20%">是否启用</th>
               <th class="has-text-warning" style="width:20%" title="Ratio between resources. Script assign craftsmans to resource with lowest 'amount / weighting'. Ignored by manual crafting.">权重</th>
               <th class="has-text-warning" style="width:20%" title="Only craft resource when storage ratio of all required materials above given number. E.g. bricks with 0.1 min materials will be crafted only when cement storage at least 10% filled.">Min Materials</th>
               <th style="width:5%"></th>
