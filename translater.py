@@ -6,13 +6,13 @@ newFile = open("evolve_automation_chinese.user.js", "w", encoding="utf-8")
 content = oldFile.read()
 
 replaceLsit = {
-    #开头
+     # NOTE: 开头
     'https://gist.github.com/Vollch/b1a5eec305558a48b7f4575d317d7dd1/raw/evolve_automation.user.js':'https://github.com/DSLM/evolve-script/raw/master/evolve_automation_chinese.user.js',
     '// @match        https://pmotschmann.github.io/Evolve/':'''// @match        https://pmotschmann.github.io/Evolve/
 // @match        https://likexia.gitee.io/evolve/''',
     '// This script forked from TMVictor\'s script version 3.3.1. Original script: https://gist.github.com/TMVictor/3f24e27a21215414ddc68842057482da':'// This script forked from TMVictor\'s script version 3.3.1. Original script: https://gist.github.com/TMVictor/3f24e27a21215414ddc68842057482da\n// Removed downloadURL in case that script got screwed up. Original downloadURL: @downloadURL  https://gist.github.com/Vollch/b1a5eec305558a48b7f4575d317d7dd1/raw/evolve_automation.user.js',
 
-    #资源
+     # NOTE: 资源
     'Population: new Population("Population", "Population")':'Population: new Population("人口", "Population")',
     'Antiplasmid: new AntiPlasmid("Anti-Plasmid", "Antiplasmid")':'Antiplasmid: new AntiPlasmid("反质粒", "Antiplasmid")',
     'Power: new Power("Power", "Power")':'Power: new Power("电力", "Power")',
@@ -33,7 +33,7 @@ replaceLsit = {
     '"Lake Support"':'"湖泊支持"',
     '"Spire Support"':'"尖塔支持"',
 
-    #种族警告
+     # NOTE: 种族警告
     '>This race have special requirements:':'>此种族的特殊要求为：',
     '. This condition is met.':'。当前满足此条件。',
     '>Warning! This race have special requirements:':'>警告！此种族的特殊要求为：',
@@ -68,7 +68,7 @@ replaceLsit = {
         case "angelic":
             return "伊甸园星球";''',
 
-    #侧边栏高级设置
+     # NOTE: 侧边栏高级设置
     ">Variable 1<": ">变量1<",
     ">Check<": ">运算<",
     ">Variable 2<": ">变量2<",
@@ -76,14 +76,6 @@ replaceLsit = {
     ">Value<": ">值<",
     '>Type<':'>类型<',
     'let types = Object.entries(checkCompare).map(([id, fn]) => `<option value="${id}" title="${fn.toString().substr(10)}">${id}</option>`).join();':'let translateCondition = {"AND":"与", "OR":"或", "NOR":"或非", "NAND":"与非", "XOR":"异或", "XNOR":"同或", "AND!":"与(变量2取非)", "OR!":"或(变量2取非)"}; let types = Object.entries(checkCompare).map(([id, fn]) => `<option value="${id}" title="${fn.toString().substr(10)}">${typeof(translateCondition[id])!="undefined"?translateCondition[id]:id}</option>`).join();',
-    #'"AND": (a, b) => a && b,':'"与": (a, b) => a && b,',
-    #'"OR": (a, b) => a || b,':'"或": (a, b) => a || b,',
-    #'"NOR": (a, b) => !(a || b),':'"或非": (a, b) => !(a || b),',
-    #'"NAND": (a, b) => !(a && b),':'"与非": (a, b) => !(a && b),',
-    #'"XOR": (a, b) => !a != !b,':'"异或": (a, b) => !a != !b,',
-    #'"XNOR": (a, b) => !a == !b,':'"同或": (a, b) => !a == !b,',
-    #'"AND!": (a, b) => a && !b,':'"与(变量2取非)": (a, b) => a && !b,',
-    #'"OR!": (a, b) => a || !b,':'"或(变量2取非)": (a, b) => a || !b,',
     'let types = Object.entries(checkTypes).map(([id, type]) => `<option value="${id}" title="${type.desc}">${id.replace(/([A-Z])/g, \' $1\').trim()}</option>`).join();':'let types = Object.entries(checkTypes).map(([id, type]) => `<option value="${id}" title="${type.desc}">${type.title}</option>`).join();',
     'desc: "Returns string"':'desc: "返回字符串的值", title:"字符串"',
     'desc: "Returns number"':'desc: "返回数值的值", title:"数值"',
@@ -155,7 +147,7 @@ replaceLsit = {
     "All values passed checks will be added or removed from list": "所有满足条件的数值将添加入列表，或者从列表中移除",
     "First value passed check will be used. Default value:": "从上往下，首个条件满足时，将使用相应数值。默认值为：",
 
-    #侧边栏按钮
+     # NOTE: 侧边栏按钮
     'function createSettingToggle(node, settingKey, title':'function createSettingToggle(node, settingKey, label, title',
     '<span class="check"></span><span>${settingKey}</span>':'<span class="check"></span><span>${label}</span>',
     'scriptNode.append(`<label id="autoScriptInfo">More script options available in Settings tab<br>Ctrl+click options to open <span class="inactive-row">advanced configuration</span></label><br>`);':'scriptNode.append(`<label id="autoScriptInfo">设置选项卡中可以进行更详细的设置<br>按住Ctrl键再点击选项，可以开启<span class="inactive-row">进阶设置</span></label><br>`);',
@@ -193,6 +185,38 @@ replaceLsit = {
     '$(`<div style="cursor: pointer;" id="${optionsElementId}">${optionsDisplayName} Options</div>`);':'$(`<div style="cursor: pointer;" id="${optionsElementId}">${optionsDisplayName}选项</div>`);',
     "createQuickOptions(scriptNode, \"s-quick-prestige-options\", \"Prestige\", buildPrestigeSettings);":"createQuickOptions(scriptNode, \"s-quick-prestige-options\", \"威望重置\", buildPrestigeSettings);",
 
+    # NOTE: 栏目标题
+    '>${sectionName} Settings<':'>${sectionName}设置<',
+    '>Reset ${sectionName} Settings<':'>${sectionName}设置还原<',
+    'let sectionName = "General";':'let sectionName = "常规";',
+    'let sectionName = "Prestige";':'let sectionName = "威望重置";',
+    'let sectionName = "Government";':'let sectionName = "政府";',
+    'let sectionName = "Evolution";':'let sectionName = "进化";',
+    'let sectionName = "Planet Weighting";':'let sectionName = "星球权重";',
+    'let sectionName = "Trigger";':'let sectionName = "触发器";',
+    'let sectionName = "Research";':'let sectionName = "研究";',
+    'let sectionName = "Foreign Affairs";':'let sectionName = "外交事务";',
+    'let sectionName = "Hell";':'let sectionName = "地狱维度";',
+    'let sectionName = "Fleet";':'let sectionName = "舰队";',
+    'let sectionName = "Mech & Spire";':'let sectionName = "机甲及尖塔";',
+    'let sectionName = "Ejector, Supply & Nanite";':'let sectionName = "质量喷射、补给及纳米体";',
+    'let sectionName = "Market";':'let sectionName = "市场";',
+    'let sectionName = "Storage";':'let sectionName = "存储";',
+    'let sectionName = "Traits";':'let sectionName = "次要特质";',
+    'let sectionName = "Magic";':'let sectionName = "魔法";',
+    'let sectionName = "Production";':'let sectionName = "生产";',
+    'let sectionName = "Job";':'let sectionName = "工作";',
+    'let sectionName = "AutoBuild Weighting";':'let sectionName = "自动建筑权重";',
+    'let sectionName = "Building";':'let sectionName = "建筑";',
+    'let sectionName = "A.R.P.A.";':'let sectionName = "ARPA";',
+    'let sectionName = "Logging";':'let sectionName = "日志";',
+
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
     '':'',
     '':'',
     '':'',
@@ -218,7 +242,7 @@ replaceLsit = {
     '':'',
     '':'',
 
-    #硬编码汉化部分
+    # NOTE: 硬编码汉化部分
     '() => "Locked",':'() => "未解锁",',
     '() => "Queued building, processing...",':'() => "处理建筑队列……",',
     '() => "Active trigger, processing...",':'() => "处理触发器……",',
@@ -359,7 +383,7 @@ replaceLsit = {
     '':'',
     '':'',
 
-    #将翻译代码注入脚本
+     # NOTE: 将翻译代码注入脚本
     """'use strict';""":"""'use strict';
     var translateFinish = false;""",
     """// Make sure we have jQuery UI even if script was injected without *monkey""":"""
