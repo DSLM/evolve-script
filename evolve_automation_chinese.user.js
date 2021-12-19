@@ -14840,13 +14840,13 @@
         let currentNode = $('#script_projectContent');
         currentNode.empty().off("*");
 
-        addSettingsToggle(currentNode, "arpaScaleWeighting", "Scale weighting with progress", "Projects weighting scales  with current progress, making script more eager to spend resources on finishing nearly constructed projects.");
-        addSettingsNumber(currentNode, "arpaStep", "Preferred progress step", "Projects will be weighted and build in this steps. Increasing number can speed up constructing. Step will be adjusted down when preferred step above remaining amount, or surpass storage caps. Weightings below will be multiplied by current step. Projects builded by triggers will always have maximum possible step.");
+        addSettingsToggle(currentNode, "arpaScaleWeighting", "进度权重", "随着项目接近完成而提高权重，使脚本更优先进行接近完成的项目。");
+        addSettingsNumber(currentNode, "arpaStep", "每次建造进度百分比", "每次建造时建造相应百分比的项目。触发器永远使用100%的百分比。");
 
         currentNode.append(`
           <table style="width:100%">
             <tr>
-              <th class="has-text-warning" style="width:25%">Project</th>
+              <th class="has-text-warning" style="width:25%">项目</th>
               <th class="has-text-warning" style="width:25%">是否自动建造</th>
               <th class="has-text-warning" style="width:25%">建造上限</th>
               <th class="has-text-warning" style="width:25%">权重</th>

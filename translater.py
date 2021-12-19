@@ -567,6 +567,10 @@ replaceLsit = {
     'addWeightingRule(tableBodyNode, "Housing", "Less than 90% of houses are used", "buildingWeightingUselessHousing");':'addWeightingRule(tableBodyNode, "住房", "有市民居住的住房没有超过90%", "buildingWeightingUselessHousing");',
 
     # NOTE: ARPA设置
+    'addSettingsToggle(currentNode, "arpaScaleWeighting", "Scale weighting with progress", "Projects weighting scales  with current progress, making script more eager to spend resources on finishing nearly constructed projects.");':'addSettingsToggle(currentNode, "arpaScaleWeighting", "进度权重", "随着项目接近完成而提高权重，使脚本更优先进行接近完成的项目。");',
+    'addSettingsNumber(currentNode, "arpaStep", "Preferred progress step", "Projects will be weighted and build in this steps. Increasing number can speed up constructing. Step will be adjusted down when preferred step above remaining amount, or surpass storage caps. Weightings below will be multiplied by current step. Projects builded by triggers will always have maximum possible step.");':'addSettingsNumber(currentNode, "arpaStep", "每次建造进度百分比", "每次建造时建造相应百分比的项目。触发器永远使用100%的百分比。");',
+    '>Project<':'>项目<',
+
     # NOTE: 日志设置
     '':'',
     '':'',
