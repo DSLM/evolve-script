@@ -1434,18 +1434,18 @@ var CNZ_MAP = {
 */
 
     // 杂项
-    "Auto Eject": "是否自动喷射",
-    "Auto Supply": "是否自动补给",
-    "Enable ejecting of this resource. When to eject is set in the Prestige Settings tab.": "允许喷射此项资源。进行喷射的时机在威望重置设置下。",
-    "Enable supply of this resource.": "允许使用此项资源进行补给。",
-    "Enable buying of this resource.": "允许购买此项资源。",
-    "Enable selling of this resource.": "允许出售此项资源。",
-    "Enable trading for this resource.": "允许使用贸易路线购买此项资源。",
-    "Enable trading this resource away.": "允许使用贸易路线出售此项资源。",
-    "Enable storing of this resource.": "允许此项资源的存储分配。",
-    "Enable storing overflow of this resource.": "允许此项资源对溢出部分的存储分配。",
+    // "Auto Eject": "是否自动喷射",
+    // "Auto Supply": "是否自动补给",
+    // "Enable ejecting of this resource. When to eject is set in the Prestige Settings tab.": "允许喷射此项资源。进行喷射的时机在威望重置设置下。",
+    // "Enable supply of this resource.": "允许使用此项资源进行补给。",
+    // "Enable buying of this resource.": "允许购买此项资源。",
+    // "Enable selling of this resource.": "允许出售此项资源。",
+    // "Enable trading for this resource.": "允许使用贸易路线购买此项资源。",
+    // "Enable trading this resource away.": "允许使用贸易路线出售此项资源。",
+    // "Enable storing of this resource.": "允许此项资源的存储分配。",
+    // "Enable storing overflow of this resource.": "允许此项资源对溢出部分的存储分配。",
 };
-console.log(Object.keys(CNZ_MAP).length)
+console.log(CNZ_MAP)
 /*
 (function() {
 

@@ -15317,13 +15317,13 @@
     function createEjectToggles() {
         removeEjectToggles();
 
-        $('#eject').append('<span id="script_eject_top_row" style="margin-left: auto; margin-right: 0.2rem; float: right;" class="has-text-danger">Auto Eject</span>');
+        $('#eject').append('<span id="script_eject_top_row" style="margin-left: auto; margin-right: 0.2rem; float: right;" class="has-text-danger">是否自动喷射</span>');
         for (let resource of EjectManager.priorityList) {
             let ejectElement = $('#eject' + resource.id);
             if (ejectElement.length) {
                 let settingKey = 'res_eject' + resource.id;
                 ejectElement.append(addToggleCallbacks($(`
-                  <label tabindex="0" title="Enable ejecting of this resource. When to eject is set in the Prestige Settings tab." class="switch ea-eject-toggle" style="margin-left:auto; margin-right:0.2rem;">
+                  <label tabindex="0" title="允许喷射此项资源。进行喷射的时机在威望重置设置下。" class="switch ea-eject-toggle" style="margin-left:auto; margin-right:0.2rem;">
                     <input class="script_${settingKey}" type="checkbox"${settingsRaw[settingKey] ? " checked" : ""}>
                     <span class="check" style="height:5px;"></span>
                     <span class="state"></span>
@@ -15340,13 +15340,13 @@
     function createSupplyToggles() {
         removeSupplyToggles();
 
-        $('#spireSupply').append('<span id="script_supply_top_row" style="margin-left: auto; margin-right: 0.2rem; float: right;" class="has-text-danger">Auto Supply</span>');
+        $('#spireSupply').append('<span id="script_supply_top_row" style="margin-left: auto; margin-right: 0.2rem; float: right;" class="has-text-danger">是否自动补给</span>');
         for (let resource of SupplyManager.priorityList) {
             let supplyElement = $('#supply' + resource.id);
             if (supplyElement.length) {
                 let settingKey = 'res_supply' + resource.id;
                 supplyElement.append(addToggleCallbacks($(`
-                  <label tabindex="0" title="Enable supply of this resource."  class="switch ea-supply-toggle" style="margin-left:auto; margin-right:0.2rem;">
+                  <label tabindex="0" title="允许使用此项资源进行补给。"  class="switch ea-supply-toggle" style="margin-left:auto; margin-right:0.2rem;">
                     <input class="script_${settingKey}" type="checkbox"${settingsRaw[settingKey] ? " checked" : ""}>
                     <span class="check" style="height:5px;"></span>
                     <span class="state"></span>
@@ -15394,15 +15394,15 @@
                     let buyKey = 'buy' + resource.id;
                     let sellKey = 'sell' + resource.id;
                     marketRow.append(
-                      addToggleCallbacks($(`<label tabindex="0" title="Enable buying of this resource." class="switch"><input class="script_${buyKey}" type="checkbox"${settingsRaw[buyKey] ? " checked" : ""}><span class="check" style="height:5px;"></span><span class="state"></span></label>`), buyKey),
-                      addToggleCallbacks($(`<label tabindex="0" title="Enable selling of this resource." class="switch"><input class="script_${sellKey}" type="checkbox"${settingsRaw[sellKey] ? " checked" : ""}><span class="check" style="height:5px;"></span><span class="state"></span></label>`), sellKey));
+                      addToggleCallbacks($(`<label tabindex="0" title="允许购买此项资源。" class="switch"><input class="script_${buyKey}" type="checkbox"${settingsRaw[buyKey] ? " checked" : ""}><span class="check" style="height:5px;"></span><span class="state"></span></label>`), buyKey),
+                      addToggleCallbacks($(`<label tabindex="0" title="允许出售此项资源。" class="switch"><input class="script_${sellKey}" type="checkbox"${settingsRaw[sellKey] ? " checked" : ""}><span class="check" style="height:5px;"></span><span class="state"></span></label>`), sellKey));
                 }
 
                 let tradeBuyKey = 'res_trade_buy_' + resource.id;
                 let tradeSellKey = 'res_trade_sell_' + resource.id;
                 marketRow.append(
-                  addToggleCallbacks($(`<label tabindex="0" title="Enable trading for this resource." class="switch"><input class="script_${tradeBuyKey}" type="checkbox"${settingsRaw[tradeBuyKey] ? " checked" : ""}><span class="check" style="height:5px;"></span><span class="state"></span></label>`), tradeBuyKey),
-                  addToggleCallbacks($(`<label tabindex="0" title="Enable trading this resource away." class="switch"><input class="script_${tradeSellKey}" type="checkbox"${settingsRaw[tradeSellKey] ? " checked" : ""}><span class="check" style="height:5px;"></span><span class="state"></span></label>`), tradeSellKey));
+                  addToggleCallbacks($(`<label tabindex="0" title="允许使用贸易路线购买此项资源。" class="switch"><input class="script_${tradeBuyKey}" type="checkbox"${settingsRaw[tradeBuyKey] ? " checked" : ""}><span class="check" style="height:5px;"></span><span class="state"></span></label>`), tradeBuyKey),
+                  addToggleCallbacks($(`<label tabindex="0" title="允许使用贸易路线出售此项资源。" class="switch"><input class="script_${tradeSellKey}" type="checkbox"${settingsRaw[tradeSellKey] ? " checked" : ""}><span class="check" style="height:5px;"></span><span class="state"></span></label>`), tradeSellKey));
 
                 marketRow.appendTo(marketElement);
             }
@@ -15440,8 +15440,8 @@
                 let overKey = "res_storage_o_" + resource.id;
                 $(`<span class="ea-storage-toggle" style="margin-left: auto; margin-right: 0.2rem; float:right;"></span>`)
                   .append(
-                    addToggleCallbacks($(`<label tabindex="0" title="Enable storing of this resource." class="switch"><input class="script_${storeKey}" type="checkbox"${settingsRaw[storeKey] ? " checked" : ""}><span class="check" style="height:5px;"></span><span class="state"></span></label>`), storeKey),
-                    addToggleCallbacks($(`<label tabindex="0" title="Enable storing overflow of this resource." class="switch"><input class="script_${overKey}" type="checkbox"${settingsRaw[overKey] ? " checked" : ""}><span class="check" style="height:5px;"></span><span class="state"></span></label>`), overKey))
+                    addToggleCallbacks($(`<label tabindex="0" title="允许此项资源的存储分配。" class="switch"><input class="script_${storeKey}" type="checkbox"${settingsRaw[storeKey] ? " checked" : ""}><span class="check" style="height:5px;"></span><span class="state"></span></label>`), storeKey),
+                    addToggleCallbacks($(`<label tabindex="0" title="允许此项资源对溢出部分的存储分配。" class="switch"><input class="script_${overKey}" type="checkbox"${settingsRaw[overKey] ? " checked" : ""}><span class="check" style="height:5px;"></span><span class="state"></span></label>`), overKey))
                   .appendTo(storageElement);
             }
         }

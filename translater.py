@@ -590,6 +590,17 @@ replaceLsit = {
     'addSettingsToggle(currentNode, "hellTurnOffLogMessages", "Turn off patrol and surveyor log messages", "Automatically turns off the hell patrol and surveyor log messages");':'addSettingsToggle(currentNode, "hellTurnOffLogMessages", "关闭巡逻队和勘探者相关的日志", "自动关闭巡逻队和勘探者相关的日志");',
     '<span>List of message IDs to filter, all game messages can be found <a href="${stringsUrl}" target="_blank">here</a>.</span><br>':'<span>下方输入需要屏蔽的信息ID，ID列表如下：<a href="${stringsUrl}" target="_blank">点击此处</a>.</span><br>',
 
+    # NOTE: 杂项
+    '>Auto Eject<':'>是否自动喷射<',
+    '>Auto Supply<':'>是否自动补给<',
+    '"Enable ejecting of this resource. When to eject is set in the Prestige Settings tab." class="switch ea-eject-toggle"':'"允许喷射此项资源。进行喷射的时机在威望重置设置下。" class="switch ea-eject-toggle"',
+    '"Enable supply of this resource."':'"允许使用此项资源进行补给。"',
+    '"Enable buying of this resource."':'"允许购买此项资源。"',
+    '"Enable selling of this resource."':'"允许出售此项资源。"',
+    '"Enable trading for this resource."':'"允许使用贸易路线购买此项资源。"',
+    '"Enable trading this resource away."':'"允许使用贸易路线出售此项资源。"',
+    '"Enable storing of this resource."':'"允许此项资源的存储分配。"',
+    '"Enable storing overflow of this resource."':'"允许此项资源对溢出部分的存储分配。"',
 
     '':'',
     '':'',
