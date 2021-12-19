@@ -457,6 +457,27 @@ replaceLsit = {
     '>Ritual<':'>仪式<',
 
     # NOTE: 生产设置
+    'addSettingsNumber(currentNode, "productionChrysotileWeight", "Chrysotile weighting", "Chrysotile weighting for autoQuarry, applies after adjusting to difference between current amounts of Stone and Chrysotile");':'addSettingsNumber(currentNode, "productionChrysotileWeight", "温石棉权重", "自动温石棉控制使用的权重，根据当前的石头和温石棉差值来应用权重");',
+    'addStandardHeading(currentNode, "Smelter");':'addStandardHeading(currentNode, "冶炼厂");',
+    '[{val: "iron", label: "Prioritize Iron", hint: "Produce only Iron, untill storage capped, and switch to Steel after that"},':'[{val: "iron", label: "优先熔炼铁", hint: "只冶炼铁，直到铁达到存储上限，再切换为冶炼钢"},',
+    '{val: "steel", label: "Prioritize Steel", hint: "Produce as much Steel as possible, untill storage capped, and switch to Iron after that"},':'{val: "steel", label: "优先熔炼钢", hint: "只冶炼钢，直到钢达到存储上限，再切换为冶炼铁"},',
+    '{val: "storage", label: "Up to full storages", hint: "Produce both Iron and Steel at ratio which will fill both storages at same time for both"},':'{val: "storage", label: "直到达到上限", hint: "以一定的比例同时冶炼铁和钢，保证它们同时达到存储上限"},',
+    '{val: "required", label: "Up to required amounts", hint: "Produce both Iron and Steel at ratio which will produce maximum amount of resources required for buildings at same time for both"}];':'{val: "required", label: "直到达到需求数量", hint: "以一定的比例同时冶炼铁和钢，保证它们同时达到建筑的需求"}];',
+    'addSettingsSelect(currentNode, "productionSmelting", "Smelters production", "Distribution of smelters between iron and steel", smelterOptions);':'addSettingsSelect(currentNode, "productionSmelting", "冶炼厂生产", "冶炼厂冶炼铁和钢的方式", smelterOptions);',
+    'addSettingsNumber(currentNode, "productionSmeltingIridium", "Iridium ratio (The True Path)", "Share of smelters dedicated to Iridium");':'addSettingsNumber(currentNode, "productionSmeltingIridium", "铱冶炼比例(智械黎明模式)", "用于冶炼铱的比例");',
+    '>Fuel<':'>燃料使用顺序<',
+    'productionElement.append(buildTableLabel(fuel.id));':'productionElement.append(buildTableLabel({"Oil":"石油","Coal":"煤","Wood":"木材","Star":"星辰","Inferno":"地狱燃料"}[fuel.id]));',
+    'addStandardHeading(currentNode, "Foundry");':'addStandardHeading(currentNode, "铸造厂");',
+    '[{val: "none", label: "None", hint: "Use configured weightings with no additional adjustments, craftables with x2 weighting will be crafted two times more intense than with x1, etc."},':'[{val: "none", label: "None", hint: "按照正常的权重制造。2倍权重的锻造物将比1倍权重的锻造物多制造1倍，以此类推。"},',
+    '{val: "demanded", label: "Prioritize demanded", hint: "Ignore craftables once stored amount surpass cost of most expensive building, until all missing resources will be crafted. After that works as with \'none\' adjustments."},':'{val: "demanded", label: "优先制造需要的", hint: "当锻造物储量超过花费最高的建筑时忽略相应锻造物，直到所有锻造物都超过了相应数值。之后与上方“无”选项效果相同。"},',
+    '{val: "buildings", label: "Buildings weightings", hint: "Uses weightings of buildings which are waiting for craftables, as multipliers to craftables weighting. This option requires autoBuild."}];':'{val: "buildings", label: "按建筑权重", hint: "使用需要锻造物建筑的权重，计入锻造物的权重。需要开启自动建筑此项才能生效。"}];',
+    'addSettingsSelect(currentNode, "productionFoundryWeighting", "Weightings adjustments", "Configures how exactly craftables will be weighted against each other", weightingOptions);':'addSettingsSelect(currentNode, "productionFoundryWeighting", "锻造物权重", "控制锻造物与其他资源相比的权重", weightingOptions);',
+    '>Min Materials<':'>Min Materials<',
+    'addStandardHeading(currentNode, "Factory");':'addStandardHeading(currentNode, "工厂");',
+    'addSettingsNumber(currentNode, "productionFactoryMinIngredients", "Minimum materials to preserve", "Factory will craft resources only when all required materials above given ratio");':'addSettingsNumber(currentNode, "productionFactoryMinIngredients", "原料保底产量", "工厂只在所有需要的材料都高于保底产量时制造相应产品");',
+    'addStandardHeading(currentNode, "Mining Drone");':'addStandardHeading(currentNode, "采矿机器人");',
+    '<span>Managed</span>':'<span>脚本自动管理</span>',
+
     # NOTE: 工作设置
     # NOTE: 建筑设置
     # NOTE: 自动建筑权重设置
@@ -490,7 +511,7 @@ replaceLsit = {
     'Population: new Population("Population", "Population")':'Population: new Population("人口", "Population")',
     'Antiplasmid: new AntiPlasmid("Anti-Plasmid", "Antiplasmid")':'Antiplasmid: new AntiPlasmid("反质粒", "Antiplasmid")',
     'Power: new Power("Power", "Power")':'Power: new Power("电力", "Power")',
-    'StarPower: new StarPower("Star Power", "StarPower")':'StarPower: new StarPower("星", "StarPower")',
+    'StarPower: new StarPower("Star Power", "StarPower")':'StarPower: new StarPower("星辰", "StarPower")',
     'Morale: new Morale("Morale", "Morale")':'Morale: new Morale("士气", "Morale")',
     '"Moon Support"':'"月球支持"',
     '"Red Support"':'"红色行星支持"',
