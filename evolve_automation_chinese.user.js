@@ -1822,39 +1822,39 @@
     }
 
     var jobs = {
-        Unemployed: new Job("unemployed", "Unemployed"),
-        Hunter: new Job("hunter", "Hunter"),
-        Farmer: new Job("farmer", "Farmer"),
+        Unemployed: new Job("unemployed", "失业人口"),
+        Hunter: new Job("hunter", "猎人"),
+        Farmer: new Job("farmer", "农民"),
         //Forager: new Job("forager", "Forager"),
-        Lumberjack: new Job("lumberjack", "Lumberjack"),
-        QuarryWorker: new Job("quarry_worker", "Quarry Worker"),
-        CrystalMiner: new Job("crystal_miner", "Crystal Miner"),
-        Scavenger: new Job("scavenger", "Scavenger"),
+        Lumberjack: new Job("lumberjack", "伐木工人"),
+        QuarryWorker: new Job("quarry_worker", "石工"),
+        CrystalMiner: new Job("crystal_miner", "水晶矿工"),
+        Scavenger: new Job("scavenger", "清道夫"),
 
-        Colonist: new Job("colonist", "Colonist"),
-        TitanColonist: new Job("titan_colonist", "Titan Colonist"),
-        Miner: new Job("miner", "Miner"),
-        CoalMiner: new Job("coal_miner", "Coal Miner"),
-        CementWorker: new Job("cement_worker", "Cement Worker"),
-        Professor: new Job("professor", "Professor"),
-        Scientist: new Job("scientist", "Scientist"),
-        Entertainer: new Job("entertainer", "Entertainer"),
-        HellSurveyor: new Job("hell_surveyor", "Hell Surveyor"),
-        SpaceMiner: new Job("space_miner", "Space Miner"),
-        Archaeologist: new Job("archaeologist", "Archaeologist"),
-        Banker: new Job("banker", "Banker"),
-        Priest: new Job("priest", "Priest"),
+        Colonist: new Job("colonist", "行星居民"),
+        TitanColonist: new Job("titan_colonist", "卫星行星居民"),
+        Miner: new Job("miner", "矿工"),
+        CoalMiner: new Job("coal_miner", "煤矿工人"),
+        CementWorker: new Job("cement_worker", "水泥工人"),
+        Professor: new Job("professor", "教授"),
+        Scientist: new Job("scientist", "科学家"),
+        Entertainer: new Job("entertainer", "艺人"),
+        HellSurveyor: new Job("hell_surveyor", "勘探者"),
+        SpaceMiner: new Job("space_miner", "太空矿工"),
+        Archaeologist: new Job("archaeologist", "考古学家"),
+        Banker: new Job("banker", "银行家"),
+        Priest: new Job("priest", "牧师"),
 
         // Crafting jobs
-        Plywood: new CraftingJob("Plywood", "Plywood Crafter", resources.Plywood),
-        Brick: new CraftingJob("Brick", "Brick Crafter", resources.Brick),
-        WroughtIron: new CraftingJob("Wrought_Iron", "Wrought Iron Crafter", resources.Wrought_Iron),
-        SheetMetal: new CraftingJob("Sheet_Metal", "Sheet Metal Crafter", resources.Sheet_Metal),
-        Mythril: new CraftingJob("Mythril", "Mythril Crafter", resources.Mythril),
-        Aerogel: new CraftingJob("Aerogel", "Aerogel Crafter", resources.Aerogel),
-        Nanoweave: new CraftingJob("Nanoweave", "Nanoweave Crafter", resources.Nanoweave),
-        Scarletite: new CraftingJob("Scarletite", "Scarletite Crafter", resources.Scarletite),
-        Quantium: new CraftingJob("Quantium", "Quantium Crafter", resources.Quantium),
+        Plywood: new CraftingJob("Plywood", "胶合板工匠", resources.Plywood),
+        Brick: new CraftingJob("Brick", "砌砖工匠", resources.Brick),
+        WroughtIron: new CraftingJob("Wrought_Iron", "锻铁工匠", resources.Wrought_Iron),
+        SheetMetal: new CraftingJob("Sheet_Metal", "金属板工匠", resources.Sheet_Metal),
+        Mythril: new CraftingJob("Mythril", "秘银工匠", resources.Mythril),
+        Aerogel: new CraftingJob("Aerogel", "气凝胶工匠", resources.Aerogel),
+        Nanoweave: new CraftingJob("Nanoweave", "纳米织物工匠", resources.Nanoweave),
+        Scarletite: new CraftingJob("Scarletite", "绯绯色金工匠", resources.Scarletite),
+        Quantium: new CraftingJob("Quantium", "量子工匠", resources.Quantium),
     }
 
     var buildings = {
@@ -14370,21 +14370,21 @@
         let currentNode = $('#script_jobContent');
         currentNode.empty().off("*");
 
-        addSettingsToggle(currentNode, "jobSetDefault", "Set default job", "Automatically sets the default job in order of Quarry Worker -> Lumberjack -> Crystal Miner -> Scavenger -> Hunter -> Farmer");
-        addSettingsNumber(currentNode, "jobLumberWeighting", "Final Lumberjack Weighting", "AFTER allocating breakpoints this weighting will be used to split lumberjacks, quarry workers, crystal miners and scavengers");
-        addSettingsNumber(currentNode, "jobQuarryWeighting", "Final Quarry Worker Weighting", "AFTER allocating breakpoints this weighting will be used to split lumberjacks, quarry workers, crystal miners and scavengers");
-        addSettingsNumber(currentNode, "jobCrystalWeighting", "Final Crystal Miner Weighting", "AFTER allocating breakpoints this weighting will be used to split lumberjacks, quarry workers, crystal miners and scavengers");
-        addSettingsNumber(currentNode, "jobScavengerWeighting", "Final Scavenger Weighting", "AFTER allocating breakpoints this weighting will be used to split lumberjacks, quarry workers, crystal miners and scavengers");
-        addSettingsToggle(currentNode, "jobDisableMiners", "Disable miners in Andromeda", "Disable Miners and Coal Miners after reaching Andromeda");
-        addSettingsToggle(currentNode, "jobDisableCraftsmans", "Craft manually when possible", "Disable foundry crafters when manual craft is allowed");
+        addSettingsToggle(currentNode, "jobSetDefault", "设置默认工作", "自动以石工->伐木工人->水晶矿工->清道夫->猎人->农民的顺序设置默认工作");
+        addSettingsNumber(currentNode, "jobLumberWeighting", "最终伐木工人权重", "用于分配伐木工人，石工，水晶矿工和清道夫的数量");
+        addSettingsNumber(currentNode, "jobQuarryWeighting", "最终石工权重", "用于分配伐木工人，石工，水晶矿工和清道夫的数量");
+        addSettingsNumber(currentNode, "jobCrystalWeighting", "最终水晶矿工权重", "用于分配伐木工人，石工，水晶矿工和清道夫的数量");
+        addSettingsNumber(currentNode, "jobScavengerWeighting", "最终清道夫权重", "用于分配伐木工人，石工，水晶矿工和清道夫的数量");
+        addSettingsToggle(currentNode, "jobDisableMiners", "到达仙女座星系以后禁用矿工", "到达仙女座星系以后禁用矿工和煤矿工人");
+        addSettingsToggle(currentNode, "jobDisableCraftsmans", "如果可以的话，手动进行锻造", "如果可以手动进行锻造，则禁用可手动锻造资源的所有工匠");
 
         currentNode.append(`
           <table style="width:100%">
             <tr>
-              <th class="has-text-warning" style="width:35%">Job</th>
-              <th class="has-text-warning" style="width:20%">1st Pass Max</th>
-              <th class="has-text-warning" style="width:20%">2nd Pass Max</th>
-              <th class="has-text-warning" style="width:20%">Final Max</th>
+              <th class="has-text-warning" style="width:35%">工作</th>
+              <th class="has-text-warning" style="width:20%">第一阈值</th>
+              <th class="has-text-warning" style="width:20%">第二阈值</th>
+              <th class="has-text-warning" style="width:20%">最终阈值</th>
               <th style="width:5%"></th>
             </tr>
             <tbody id="script_jobTableBody"></tbody>
