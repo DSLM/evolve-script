@@ -367,57 +367,57 @@ var CNZ_MAP = {
     // 政府设置
     //"Government Settings": "政府设置",
     //"Reset Government Settings": "政府设置还原",
-    "Minimum allowed tax rate": "最低允许税率",
-    "Minimum allowed morale": "最低允许士气",
-    "Maximum allowed morale": "最高允许士气",
-    "Manage changes of government": "是否管理社会体制变化",
-    "Interim Government": "临时社会体制",
-    "Second Government": "第二社会体制",
-    "Space Government": "太空社会体制",
-    "Governor": "总督",
-
-    "Minimum tax rate for autoTax. Will still go below this amount if money storage is full": "自动税率使用的最低税率。如果资金满了，将可能低于此数值。",
-    "Use this to set a minimum allowed morale. Remember that less than 100% can cause riots and weather can cause sudden swings": "设置最低允许的士气。少于100%士气可能引起税收抵制，请尽量不要设置到100%以下。另外请记得天气的影响",
-    "Use this to set a maximum allowed morale. The tax rate will be raised to lower morale to this maximum": "设置最高允许的士气。如果士气超过此数值，将提高税率",
-    "Manage changes of government when they become available": "当可能的时候，自动改变社会体制",
-    "Temporary low tier government until you research other governments": "当研究其他社会体制之前，用于过渡的临时社会体制",
-    "Second government choice, chosen once becomes available. Can be the same as above": "第二社会体制，当此社会体制可用后立刻进行切换。可以与上面的社会体制相同。",
-    "Government for bioseed+. Chosen once you researched Quantum Manufacturing. Can be the same as above": "用于播种之后的社会体制，当研究量子制造以后立刻进行切换。可以与上面的社会体制相同。",
-    "Do not select governor": "不选择总督",
-    "Chosen governor will be appointed.": "将使用选中的总督。",
+    // "Minimum allowed tax rate": "最低允许税率",
+    // "Minimum allowed morale": "最低允许士气",
+    // "Maximum allowed morale": "最高允许士气",
+    // "Manage changes of government": "是否管理社会体制变化",
+    // "Interim Government": "临时社会体制",
+    // "Second Government": "第二社会体制",
+    // "Space Government": "太空社会体制",
+    // "Governor": "总督",
+    //
+    // "Minimum tax rate for autoTax. Will still go below this amount if money storage is full": "自动税率使用的最低税率。如果资金满了，将可能低于此数值。",
+    // "Use this to set a minimum allowed morale. Remember that less than 100% can cause riots and weather can cause sudden swings": "设置最低允许的士气。少于100%士气可能引起税收抵制，请尽量不要设置到100%以下。另外请记得天气的影响",
+    // "Use this to set a maximum allowed morale. The tax rate will be raised to lower morale to this maximum": "设置最高允许的士气。如果士气超过此数值，将提高税率",
+    // "Manage changes of government when they become available": "当可能的时候，自动改变社会体制",
+    // "Temporary low tier government until you research other governments": "当研究其他社会体制之前，用于过渡的临时社会体制",
+    // "Second government choice, chosen once becomes available. Can be the same as above": "第二社会体制，当此社会体制可用后立刻进行切换。可以与上面的社会体制相同。",
+    // "Government for bioseed+. Chosen once you researched Quantum Manufacturing. Can be the same as above": "用于播种之后的社会体制，当研究量子制造以后立刻进行切换。可以与上面的社会体制相同。",
+    // "Do not select governor": "不选择总督",
+    // "Chosen governor will be appointed.": "将使用选中的总督。",
 
     // 进化设置
     // "Evolution Settings": "进化设置",
-    // "Reset Evolution Settings": "进化设置还原",
-    "Target Universe": "欲选择的宇宙",
-    "Target Planet": "欲选择的星球",
-    "Target Race": "欲进化的种族",
-    "Soft Reset": "是否进行软重置",
-    "Evolution Queue": "进化队列",
-    "Queue Enabled": "是否开启进化队列",
-    "Repeat Queue": "是否重复队列",
-    "Prestige for new evolutions:": "新一轮进化使用的威望重置类型：",
-    "Current Prestige": "当前的威望重置类型",
-    "Add New Evolution": "添加进化队列",
-    "Race": "种族",
-    "Settings": "设置",
-    "Auto Achievements (Extinction)": "自动成就(毁灭类)",
-    "Auto Achievements (Greatness)": "自动成就(伟大类)",
-    "Auto Achievements (Pillars)": "自动成就(永恒立柱)",
-
-    "Chosen universe will be automatically selected after appropriate reset": "在特定重置后自动选择相应的宇宙",
-    "Chosen planet will be automatically selected after appropriate reset": "在特定重置后自动选择相应的星球",
-    "Wait for user selection": "等待玩家选择",
-    "Picks most habitable planet, based on biome and trait": "根据生物群系和星球特性，选择最佳的星球",
-    "Picks planet with most unearned achievements. Takes in account extinction achievements for planet exclusive races, and greatness achievements for planet biome, trait, and exclusive genus.": "选择可以尽可能多完成成就的星球。将考虑毁灭类成就中星球特有的种族，以及伟大类成就中生物群系，星球特征和特有的种群。",
-    "Picks planet with highest weighting. Should be configured in Planet Weighting Settings section.": "选择星球权重最高的星球。可以在下面的星球权重设置中进行更进一步的设置。",
-    "Picks race giving most achievements upon completing run. Tracks all achievements limited to specific races and resets. Races unique to current planet biome are prioritized, when available.": "优先选择可以获得更多成就的种族，会将所有种族和种群限定，或是重置方式限定的成就纳入考虑。生物群系特有的种族如果可以选择，将优先进行选择。",
-    "Chosen race will be automatically selected during next evolution": "下个进化阶段自动选择相应的种族",
-    "Perform soft resets until you'll get chosen race. Useless after getting mass exintion perk.": "直到选中想要选择的种族之前一直进行软重置。在获得大灭绝特权后就没有必要选择了。",
-    "When enabled script with evolve with queued settings, from top to bottom. During that script settings will be overriden with settings stored in queue. Queued target will be removed from list after evolution.": "按照队列从上至下进行进化。队列中有项目存在时，优先于脚本的进化设置生效。在完成进化后，相应的队列项目将被移除。",
-    "When enabled applied evolution targets will be moved to the end of queue, instead of being removed": "开启后，队列中的项目在完成进化后将回到队列末尾，而不是被移除",
-    "Inherited from current Prestige Settings": "与当前的威望重置类型一致",
-    "Settings applied before evolution. Changed settings not limited to initial template, you can manually add any script options to JSON.": "进化之前生效的设置。不仅限于模板，您还可以将其他的脚本设置以JSON形式输入。",
+    // // "Reset Evolution Settings": "进化设置还原",
+    // "Target Universe": "欲选择的宇宙",
+    // "Target Planet": "欲选择的星球",
+    // "Target Race": "欲进化的种族",
+    // "Soft Reset": "是否进行软重置",
+    // "Evolution Queue": "进化队列",
+    // "Queue Enabled": "是否开启进化队列",
+    // "Repeat Queue": "是否重复队列",
+    // "Prestige for new evolutions:": "新一轮进化使用的威望重置类型：",
+    // "Current Prestige": "当前的威望重置类型",
+    // "Add New Evolution": "添加进化队列",
+    // "Race": "种族",
+    // "Settings": "设置",
+    // "Auto Achievements (Extinction)": "自动成就(毁灭类)",
+    // "Auto Achievements (Greatness)": "自动成就(伟大类)",
+    // "Auto Achievements (Pillars)": "自动成就(永恒立柱)",
+    //
+    // "Chosen universe will be automatically selected after appropriate reset": "在特定重置后自动选择相应的宇宙",
+    // "Chosen planet will be automatically selected after appropriate reset": "在特定重置后自动选择相应的星球",
+    // "Wait for user selection": "等待玩家选择",
+    // "Picks most habitable planet, based on biome and trait": "根据生物群系和星球特性，选择最佳的星球",
+    // "Picks planet with most unearned achievements. Takes in account extinction achievements for planet exclusive races, and greatness achievements for planet biome, trait, and exclusive genus.": "选择可以尽可能多完成成就的星球。将考虑毁灭类成就中星球特有的种族，以及伟大类成就中生物群系，星球特征和特有的种群。",
+    // "Picks planet with highest weighting. Should be configured in Planet Weighting Settings section.": "选择星球权重最高的星球。可以在下面的星球权重设置中进行更进一步的设置。",
+    // "Picks race giving most achievements upon completing run. Tracks all achievements limited to specific races and resets. Races unique to current planet biome are prioritized, when available.": "优先选择可以获得更多成就的种族，会将所有种族和种群限定，或是重置方式限定的成就纳入考虑。生物群系特有的种族如果可以选择，将优先进行选择。",
+    // "Chosen race will be automatically selected during next evolution": "下个进化阶段自动选择相应的种族",
+    // "Perform soft resets until you'll get chosen race. Useless after getting mass exintion perk.": "直到选中想要选择的种族之前一直进行软重置。在获得大灭绝特权后就没有必要选择了。",
+    // "When enabled script with evolve with queued settings, from top to bottom. During that script settings will be overriden with settings stored in queue. Queued target will be removed from list after evolution.": "按照队列从上至下进行进化。队列中有项目存在时，优先于脚本的进化设置生效。在完成进化后，相应的队列项目将被移除。",
+    // "When enabled applied evolution targets will be moved to the end of queue, instead of being removed": "开启后，队列中的项目在完成进化后将回到队列末尾，而不是被移除",
+    // "Inherited from current Prestige Settings": "与当前的威望重置类型一致",
+    // "Settings applied before evolution. Changed settings not limited to initial template, you can manually add any script options to JSON.": "进化之前生效的设置。不仅限于模板，您还可以将其他的脚本设置以JSON形式输入。",
 
     // 星球独有种族警告
     /*
@@ -463,7 +463,6 @@ var CNZ_MAP = {
     "Warning! This race have special requirements: Tundra planet. This condition is bypassed. Race will have 5% penalty.": "警告！此种族的特殊要求为：苔原星球。当前可使用此种族，但受到5%的产量惩罚。",
     "Warning! This race have special requirements: Desert planet. This condition is bypassed. Race will have 5% penalty.": "警告！此种族的特殊要求为：沙漠星球。当前可使用此种族，但受到5%的产量惩罚。",
     "Warning! This race have special requirements: Custom designed race. This condition is bypassed. Race will have 5% penalty.": "警告！此种族的特殊要求为：已解锁自建种族。当前可使用此种族，但受到5%的产量惩罚。",
-    */
 
     "Challenge mode - no plasmids": "挑战模式-关闭质粒效果",
     "Challenge mode - weak mastery": "挑战模式-弱精通效果",
@@ -476,6 +475,7 @@ var CNZ_MAP = {
     "Challenge mode - electromagnetic field disruption": "挑战模式-E.M.磁场",
     "Challenge mode - shattered world (no homeworld)": "挑战模式-大灾变",
     "Challenge mode - genetic dead end (Valdi)": "挑战模式-遗传绝境(瓦尔迪)",
+    */
 
     // 星球权重设置
     // "Planet Weighting Settings": "星球权重设置",
@@ -1060,7 +1060,7 @@ var CNZ_MAP = {
 
     // 种族
     "Script Managed": "由脚本管理",
-    "Auto Achievements": "自动完成成就",
+    // "Auto Achievements": "自动完成成就",
     /*
     "Antid": "蚂蚁人",
     "Mantis": "螳螂人",
@@ -1118,9 +1118,9 @@ var CNZ_MAP = {
     */
 
     // 星球
-    "Most habitable": "最宜居",
-    "Most achievements": "最多成就",
-    "Highest weighting": "最高权重",
+    // "Most habitable": "最宜居",
+    // "Most achievements": "最多成就",
+    // "Highest weighting": "最高权重",
 
     // 地区
     "Alien 1 System": "第四星系",
@@ -1169,7 +1169,7 @@ var CNZ_MAP = {
     "Nanoweave": "纳米织物",
     "Scarletite": "绯绯色金",
     "Quantium": "量子",
-    
+
     // 建筑物
     // 郊外
     "Slave Market": "奴隶市场",

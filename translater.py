@@ -206,16 +206,51 @@ replaceLsit = {
     'addSettingsToggle(currentNode, "buildingAlwaysClick", "Always autoclick resources", "By default script will click only during early stage of autoBuild, to bootstrap production. With this toggled on it will continue clicking forever");':'addSettingsToggle(currentNode, "buildingAlwaysClick", "是否总是自动收集资源", "默认情况下脚本只在游戏初期自动收集资源，开启此项后将一直自动收集资源");',
     'addSettingsNumber(currentNode, "buildingClickPerTick", "Maximum clicks per tick", "Number of clicks performed at once, each script tick. Will not ever click more than needed to fill storage.");':'addSettingsNumber(currentNode, "buildingClickPerTick", "每时刻最高点击次数", "每时刻自动收集资源的点击次数。只在库存未满的范围内有效。");',
 
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
-    '':'',
+    # NOTE: 政府设置
+    'addSettingsNumber(currentNode, "generalMinimumTaxRate", "Minimum allowed tax rate", "Minimum tax rate for autoTax. Will still go below this amount if money storage is full");':'addSettingsNumber(currentNode, "generalMinimumTaxRate", "最低允许税率", "自动税率使用的最低税率。如果资金满了，将可能低于此数值。");',
+    'addSettingsNumber(currentNode, "generalMinimumMorale", "Minimum allowed morale", "Use this to set a minimum allowed morale. Remember that less than 100% can cause riots and weather can cause sudden swings");':'addSettingsNumber(currentNode, "generalMinimumMorale", "最低允许士气", "设置最低允许的士气。少于100%士气可能引起税收抵制，请尽量不要设置到100%以下。另外请记得天气的影响");',
+    'addSettingsNumber(currentNode, "generalMaximumMorale", "Maximum allowed morale", "Use this to set a maximum allowed morale. The tax rate will be raised to lower morale to this maximum");':'addSettingsNumber(currentNode, "generalMaximumMorale", "最高允许士气", "设置最高允许的士气。如果士气超过此数值，将提高税率");',
+    'addSettingsToggle(currentNode, "govManage", "Manage changes of government", "Manage changes of government when they become available");':'addSettingsToggle(currentNode, "govManage", "是否管理社会体制变化", "当可能的时候，自动改变社会体制");',
+    'addSettingsSelect(currentNode, "govInterim", "Interim Government", "Temporary low tier government until you research other governments", governmentOptions);':'addSettingsSelect(currentNode, "govInterim", "临时社会体制", "当研究其他社会体制之前，用于过渡的临时社会体制", governmentOptions);',
+    'addSettingsSelect(currentNode, "govFinal", "Second Government", "Second government choice, chosen once becomes available. Can be the same as above", governmentOptions);':'addSettingsSelect(currentNode, "govFinal", "第二社会体制", "第二社会体制，当此社会体制可用后立刻进行切换。可以与上面的社会体制相同。", governmentOptions);',
+    'addSettingsSelect(currentNode, "govSpace", "Space Government", "Government for bioseed+. Chosen once you researched Quantum Manufacturing. Can be the same as above", governmentOptions);':'addSettingsSelect(currentNode, "govSpace", "太空社会体制", "用于播种之后的社会体制，当研究量子制造以后立刻进行切换。可以与上面的社会体制相同。", governmentOptions);',
+    'addSettingsSelect(currentNode, "govGovernor", "Governor", "Chosen governor will be appointed.", governorsOptions);':'addSettingsSelect(currentNode, "govGovernor", "总督", "将使用选中的总督。", governorsOptions);',
+    '[{val: "none", label: "None", hint: "Do not select governor"}':'[{val: "none", label: "无", hint: "不选择总督"}',
+
+    # NOTE: 进化设置
+    '[{val: "none", label: "None", hint: "Wait for user selection"},':'[{val: "none", label: "无", hint: "等待玩家选择"},',
+    'addSettingsSelect(currentNode, "userUniverseTargetName", "Target Universe", "Chosen universe will be automatically selected after appropriate reset", universeOptions);':'addSettingsSelect(currentNode, "userUniverseTargetName", "欲选择的宇宙", "在特定重置后自动选择相应的宇宙", universeOptions);',
+    '[{val: "none", label: "None", hint: "Wait for user selection"},':'[{val: "none", label: "无", hint: "等待玩家选择"},',
+    '{val: "habitable", label: "Most habitable", hint: "Picks most habitable planet, based on biome and trait"},':'{val: "habitable", label: "最宜居", hint: "根据生物群系和星球特性，选择最佳的星球"},',
+    '{val: "achieve", label: "Most achievements", hint: "Picks planet with most unearned achievements. Takes in account extinction achievements for planet exclusive races, and greatness achievements for planet biome, trait, and exclusive genus."},':'{val: "achieve", label: "最多成就", hint: "选择可以尽可能多完成成就的星球。将考虑毁灭类成就中星球特有的种族，以及伟大类成就中生物群系，星球特征和特有的种群。"},',
+    '{val: "weighting", label: "Highest weighting", hint: "Picks planet with highest weighting. Should be configured in Planet Weighting Settings section."}];':'{val: "weighting", label: "最高权重", hint: "选择星球权重最高的星球。可以在下面的星球权重设置中进行更进一步的设置。"}];',
+    'addSettingsSelect(currentNode, "userPlanetTargetName", "Target Planet", "Chosen planet will be automatically selected after appropriate reset", planetOptions);':'addSettingsSelect(currentNode, "userPlanetTargetName", "欲选择的星球", "在特定重置后自动选择相应的星球", planetOptions);',
+    '[{val: "auto", label: "Auto Achievements", hint: "Picks race giving most achievements upon completing run. Tracks all achievements limited to specific races and resets. Races unique to current planet biome are prioritized, when available."},':'[{val: "auto", label: "自动完成成就", hint: "优先选择可以获得更多成就的种族，会将所有种族和种群限定，或是重置方式限定的成就纳入考虑。生物群系特有的种族如果可以选择，将优先进行选择。"},',
+    'addSettingsSelect(currentNode, "userEvolutionTarget", "Target Race", "Chosen race will be automatically selected during next evolution", raceOptions)':'addSettingsSelect(currentNode, "userEvolutionTarget", "欲进化的种族", "下个进化阶段自动选择相应的种族", raceOptions)',
+    'addSettingsToggle(currentNode, "evolutionBackup", "Soft Reset", "Perform soft resets until you\'ll get chosen race. Useless after getting mass exintion perk.");':'addSettingsToggle(currentNode, "evolutionBackup", "是否进行软重置", "直到选中想要选择的种族之前一直进行软重置。在获得大灭绝特权后就没有必要选择了。");',
+    'addStandardHeading(currentNode, "Evolution Queue");':'addStandardHeading(currentNode, "进化队列");',
+    'addSettingsToggle(currentNode, "evolutionQueueEnabled", "Queue Enabled", "When enabled script with evolve with queued settings, from top to bottom. During that script settings will be overriden with settings stored in queue. Queued target will be removed from list after evolution.");':'addSettingsToggle(currentNode, "evolutionQueueEnabled", "是否开启进化队列", "按照队列从上至下进行进化。队列中有项目存在时，优先于脚本的进化设置生效。在完成进化后，相应的队列项目将被移除。");',
+    'addSettingsToggle(currentNode, "evolutionQueueRepeat", "Repeat Queue", "When enabled applied evolution targets will be moved to the end of queue, instead of being removed");':'addSettingsToggle(currentNode, "evolutionQueueRepeat", "是否重复队列", "开启后，队列中的项目在完成进化后将回到队列末尾，而不是被移除");',
+    '<label for="script_evolution_prestige">Prestige for new evolutions:</label>':'<label for="script_evolution_prestige">新一轮进化使用的威望重置类型：</label>',
+    '<option value = "auto" title = "Inherited from current Prestige Settings">Current Prestige</option>':'<option value = "auto" title = "与当前的威望重置类型一致">当前的威望重置类型</option>',
+    '<button id="script_evlution_add" class="button">Add New Evolution</button>':'<button id="script_evlution_add" class="button">添加进化队列</button>',
+    '<th class="has-text-warning" style="width:25%">Race</th>':'<th class="has-text-warning" style="width:25%">种族</th>',
+    '<th class="has-text-warning" style="width:70%" title="Settings applied before evolution. Changed settings not limited to initial template, you can manually add any script options to JSON.">Settings</th>':'<th class="has-text-warning" style="width:70%" title="进化之前生效的设置。不仅限于模板，您还可以将其他的脚本设置以JSON形式输入。">设置</th>',
+    'prestigeName = "Unrecognized prestige!";':'prestigeName = " 威望重置类型无法识别！";',
+    '{mad: "MAD", bioseed: "Bioseed", cataclysm: "Cataclysm", vacuum: "Vacuum", whitehole: "Whitehole", apocalypse: "AI Apocalypse", ascension: "Ascension", demonic: "Infusion"};':'{mad: "核弹重置", bioseed: "播种重置", cataclysm: "大灾变重置", vacuum: "真空坍缩", whitehole: "黑洞重置", apocalypse: "人工智能觉醒", ascension: "飞升重置", demonic: "恶魔灌注"};',
+   '>This race have special requirements:':'>此种族的特殊要求为：',
+   '. This condition is met.':'。当前满足此条件。',
+   '>Warning! This race have special requirements:':'>警告！此种族的特殊要求为：',
+   '. This condition is not met.':'。当前不满足此条件。',
+   '. This condition is bypassed. Race will have ${100 - suited * 100}% penalty.':'。当前可使用此种族，但受到 ${100 - suited * 100}% 的产量惩罚。',
+   'return "Oceanic planet";':'return "海洋星球";',
+   'return "Forest planet";':'return "森林星球";',
+   'return "Desert planet";':'return "沙漠星球";',
+   'return "Volcanic planet";':'return "火山星球";',
+   'return "Tundra planet";':'return "苔原星球";',
+   'return "Hellscape planet";':'return "地狱星球";',
+   'return "Eden planet";':'return "伊甸园星球";',
+
     '':'',
     '':'',
     '':'',
@@ -243,40 +278,6 @@ replaceLsit = {
     '"Lake Support"':'"湖泊支持"',
     '"Spire Support"':'"尖塔支持"',
 
-     # NOTE: 种族警告
-    '>This race have special requirements:':'>此种族的特殊要求为：',
-    '. This condition is met.':'。当前满足此条件。',
-    '>Warning! This race have special requirements:':'>警告！此种族的特殊要求为：',
-    '. This condition is not met.':'。当前不满足此条件。',
-    '. This condition is bypassed. Race will have ${100 - suited * 100}% penalty.':'。当前可使用此种族，但受到 ${100 - suited * 100}% 的产量惩罚。',
-    '''case "aquatic":
-        return "Oceanic planet";
-    case "fey":
-        return "Forest planet";
-    case "sand":
-        return "Desert planet";
-    case "heat":
-        return "Volcanic planet";
-    case "polar":
-        return "Tundra planet";
-    case "demonic":
-        return "Hellscape planet";
-    case "angelic":
-        return "Eden planet";''':
-        '''case "aquatic":
-            return "海洋星球";
-        case "fey":
-            return "森林星球";
-        case "sand":
-            return "沙漠星球";
-        case "heat":
-            return "火山星球";
-        case "polar":
-            return "苔原星球";
-        case "demonic":
-            return "地狱星球";
-        case "angelic":
-            return "伊甸园星球";''',
 
     # NOTE: 硬编码汉化部分
     '() => "Locked",':'() => "未解锁",',

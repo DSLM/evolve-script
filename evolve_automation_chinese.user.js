@@ -1391,19 +1391,19 @@
 
             switch (this.genus) {
                 case "aquatic":
-                    return "Oceanic planet";
+                    return "海洋星球";
                 case "fey":
-                    return "Forest planet";
+                    return "森林星球";
                 case "sand":
-                    return "Desert planet";
+                    return "沙漠星球";
                 case "heat":
-                    return "Volcanic planet";
+                    return "火山星球";
                 case "polar":
-                    return "Tundra planet";
+                    return "苔原星球";
                 case "demonic":
-                    return "Hellscape planet";
+                    return "地狱星球";
                 case "angelic":
-                    return "Eden planet";
+                    return "伊甸园星球";
                 case "synthetic":
                     return game.loc('achieve_obsolete_desc');
                 case undefined: // Nonexistent custom
@@ -1661,7 +1661,7 @@
     ];
     const governors = ["soldier", "criminal", "entrepreneur", "educator", "spiritual", "bluecollar", "noble", "media", "sports", "bureaucrat"];
     const evolutionSettingsToStore = ["userEvolutionTarget", "prestigeType", ...challenges.map(c => "challenge_" + c[0].id)];
-    const prestigeNames = {mad: "MAD", bioseed: "Bioseed", cataclysm: "Cataclysm", vacuum: "Vacuum", whitehole: "Whitehole", apocalypse: "AI Apocalypse", ascension: "Ascension", demonic: "Infusion"};
+    const prestigeNames = {mad: "核弹重置", bioseed: "播种重置", cataclysm: "大灾变重置", vacuum: "真空坍缩", whitehole: "黑洞重置", apocalypse: "人工智能觉醒", ascension: "飞升重置", demonic: "恶魔灌注"};
     const logIgnore = ["food", "lumber", "stone", "chrysotile", "slaughter", "s_alter", "slave_market", "horseshoe", "assembly"];
     const galaxyRegions = ["gxy_stargate", "gxy_gateway", "gxy_gorddon", "gxy_alien1", "gxy_alien2", "gxy_chthonian"];
     const settingsSections = ["general", "prestige", "evolution", "research", "market", "storage", "production", "war", "hell", "fleet", "job", "building", "project", "government", "logging", "minorTrait", "weighting", "ejector", "planet", "mech", "magic"];
@@ -12574,19 +12574,19 @@
         let currentNode = $(`#script_${secondaryPrefix}governmentContent`);
         currentNode.empty().off("*");
 
-        addSettingsNumber(currentNode, "generalMinimumTaxRate", "Minimum allowed tax rate", "Minimum tax rate for autoTax. Will still go below this amount if money storage is full");
-        addSettingsNumber(currentNode, "generalMinimumMorale", "Minimum allowed morale", "Use this to set a minimum allowed morale. Remember that less than 100% can cause riots and weather can cause sudden swings");
-        addSettingsNumber(currentNode, "generalMaximumMorale", "Maximum allowed morale", "Use this to set a maximum allowed morale. The tax rate will be raised to lower morale to this maximum");
+        addSettingsNumber(currentNode, "generalMinimumTaxRate", "最低允许税率", "自动税率使用的最低税率。如果资金满了，将可能低于此数值。");
+        addSettingsNumber(currentNode, "generalMinimumMorale", "最低允许士气", "设置最低允许的士气。少于100%士气可能引起税收抵制，请尽量不要设置到100%以下。另外请记得天气的影响");
+        addSettingsNumber(currentNode, "generalMaximumMorale", "最高允许士气", "设置最高允许的士气。如果士气超过此数值，将提高税率");
 
-        addSettingsToggle(currentNode, "govManage", "Manage changes of government", "Manage changes of government when they become available");
+        addSettingsToggle(currentNode, "govManage", "是否管理社会体制变化", "当可能的时候，自动改变社会体制");
 
         let governmentOptions = Object.keys(GovernmentManager.Types).filter(id => id !== "anarchy").map(id => ({val: id, label: game.loc(`govern_${id}`), hint: game.loc(`govern_${id}_desc`)}));
-        addSettingsSelect(currentNode, "govInterim", "Interim Government", "Temporary low tier government until you research other governments", governmentOptions);
-        addSettingsSelect(currentNode, "govFinal", "Second Government", "Second government choice, chosen once becomes available. Can be the same as above", governmentOptions);
-        addSettingsSelect(currentNode, "govSpace", "Space Government", "Government for bioseed+. Chosen once you researched Quantum Manufacturing. Can be the same as above", governmentOptions);
+        addSettingsSelect(currentNode, "govInterim", "临时社会体制", "当研究其他社会体制之前，用于过渡的临时社会体制", governmentOptions);
+        addSettingsSelect(currentNode, "govFinal", "第二社会体制", "第二社会体制，当此社会体制可用后立刻进行切换。可以与上面的社会体制相同。", governmentOptions);
+        addSettingsSelect(currentNode, "govSpace", "太空社会体制", "用于播种之后的社会体制，当研究量子制造以后立刻进行切换。可以与上面的社会体制相同。", governmentOptions);
 
-        let governorsOptions = [{val: "none", label: "None", hint: "Do not select governor"}, ...governors.map(id => ({val: id, label: game.loc(`governor_${id}`), hint: game.loc(`governor_${id}_desc`)}))];
-        addSettingsSelect(currentNode, "govGovernor", "Governor", "Chosen governor will be appointed.", governorsOptions);
+        let governorsOptions = [{val: "none", label: "无", hint: "不选择总督"}, ...governors.map(id => ({val: id, label: game.loc(`governor_${id}`), hint: game.loc(`governor_${id}_desc`)}))];
+        addSettingsSelect(currentNode, "govGovernor", "总督", "将使用选中的总督。", governorsOptions);
 
         document.documentElement.scrollTop = document.body.scrollTop = currentScrollPosition;
     }
@@ -12629,22 +12629,22 @@
         currentNode.empty().off("*");
 
         // Target universe
-        let universeOptions = [{val: "none", label: "None", hint: "Wait for user selection"},
+        let universeOptions = [{val: "none", label: "无", hint: "等待玩家选择"},
                                ...universes.map(id => ({val: id, label: game.loc(`universe_${id}`), hint: game.loc(`universe_${id}_desc`)}))];
-        addSettingsSelect(currentNode, "userUniverseTargetName", "Target Universe", "Chosen universe will be automatically selected after appropriate reset", universeOptions);
+        addSettingsSelect(currentNode, "userUniverseTargetName", "欲选择的宇宙", "在特定重置后自动选择相应的宇宙", universeOptions);
 
         // Target planet
-        let planetOptions = [{val: "none", label: "None", hint: "Wait for user selection"},
-                             {val: "habitable", label: "Most habitable", hint: "Picks most habitable planet, based on biome and trait"},
-                             {val: "achieve", label: "Most achievements", hint: "Picks planet with most unearned achievements. Takes in account extinction achievements for planet exclusive races, and greatness achievements for planet biome, trait, and exclusive genus."},
-                             {val: "weighting", label: "Highest weighting", hint: "Picks planet with highest weighting. Should be configured in Planet Weighting Settings section."}];
-        addSettingsSelect(currentNode, "userPlanetTargetName", "Target Planet", "Chosen planet will be automatically selected after appropriate reset", planetOptions);
+        let planetOptions = [{val: "none", label: "无", hint: "等待玩家选择"},
+                             {val: "habitable", label: "最宜居", hint: "根据生物群系和星球特性，选择最佳的星球"},
+                             {val: "achieve", label: "最多成就", hint: "选择可以尽可能多完成成就的星球。将考虑毁灭类成就中星球特有的种族，以及伟大类成就中生物群系，星球特征和特有的种群。"},
+                             {val: "weighting", label: "最高权重", hint: "选择星球权重最高的星球。可以在下面的星球权重设置中进行更进一步的设置。"}];
+        addSettingsSelect(currentNode, "userPlanetTargetName", "欲选择的星球", "在特定重置后自动选择相应的星球", planetOptions);
 
         // Target evolution
-        let raceOptions = [{val: "auto", label: "Auto Achievements", hint: "Picks race giving most achievements upon completing run. Tracks all achievements limited to specific races and resets. Races unique to current planet biome are prioritized, when available."},
+        let raceOptions = [{val: "auto", label: "自动完成成就", hint: "优先选择可以获得更多成就的种族，会将所有种族和种群限定，或是重置方式限定的成就纳入考虑。生物群系特有的种族如果可以选择，将优先进行选择。"},
                            ...Object.values(races).map(race => (
                            {val: race.id, label: race.name, hint: race.desc}))];
-        addSettingsSelect(currentNode, "userEvolutionTarget", "Target Race", "Chosen race will be automatically selected during next evolution", raceOptions)
+        addSettingsSelect(currentNode, "userEvolutionTarget", "欲进化的种族", "下个进化阶段自动选择相应的种族", raceOptions)
           .on('change', 'select', function() {
             state.evolutionTarget = null;
             updateRaceWarning();
@@ -12657,7 +12657,7 @@
         currentNode.append(`<div><span id="script_race_warning"></span></div>`);
         updateRaceWarning();
 
-        addSettingsToggle(currentNode, "evolutionBackup", "Soft Reset", "Perform soft resets until you'll get chosen race. Useless after getting mass exintion perk.");
+        addSettingsToggle(currentNode, "evolutionBackup", "是否进行软重置", "直到选中想要选择的种族之前一直进行软重置。在获得大灭绝特权后就没有必要选择了。");
 
         // Challenges
         for (let i = 0; i < challenges.length; i++) {
@@ -12667,29 +12667,29 @@
               set.map(c => game.loc(`evo_challenge_${c.id}_effect`)).join("&#xA;"));
         }
 
-        addStandardHeading(currentNode, "Evolution Queue");
-        addSettingsToggle(currentNode, "evolutionQueueEnabled", "Queue Enabled", "When enabled script with evolve with queued settings, from top to bottom. During that script settings will be overriden with settings stored in queue. Queued target will be removed from list after evolution.");
-        addSettingsToggle(currentNode, "evolutionQueueRepeat", "Repeat Queue", "When enabled applied evolution targets will be moved to the end of queue, instead of being removed");
+        addStandardHeading(currentNode, "进化队列");
+        addSettingsToggle(currentNode, "evolutionQueueEnabled", "是否开启进化队列", "按照队列从上至下进行进化。队列中有项目存在时，优先于脚本的进化设置生效。在完成进化后，相应的队列项目将被移除。");
+        addSettingsToggle(currentNode, "evolutionQueueRepeat", "是否重复队列", "开启后，队列中的项目在完成进化后将回到队列末尾，而不是被移除");
 
 
         currentNode.append(`
           <div style="margin-top: 5px; display: inline-block; width: 90%; text-align: left;">
-            <label for="script_evolution_prestige">Prestige for new evolutions:</label>
+            <label for="script_evolution_prestige">新一轮进化使用的威望重置类型：</label>
             <select id="script_evolution_prestige" style="height: 18px; width: 150px; float: right;">
-              <option value = "auto" title = "Inherited from current Prestige Settings">Current Prestige</option>
+              <option value = "auto" title = "与当前的威望重置类型一致">当前的威望重置类型</option>
               ${prestigeOptions}
             </select>
           </div>
           <div style="margin-top: 10px;">
-            <button id="script_evlution_add" class="button">Add New Evolution</button>
+            <button id="script_evlution_add" class="button">添加进化队列</button>
           </div>`);
 
         $("#script_evlution_add").on("click", addEvolutionSetting);
         currentNode.append(`
           <table style="width:100%">
             <tr>
-              <th class="has-text-warning" style="width:25%">Race</th>
-              <th class="has-text-warning" style="width:70%" title="Settings applied before evolution. Changed settings not limited to initial template, you can manually add any script options to JSON.">Settings</th>
+              <th class="has-text-warning" style="width:25%">种族</th>
+              <th class="has-text-warning" style="width:70%" title="进化之前生效的设置。不仅限于模板，您还可以将其他的脚本设置以JSON形式输入。">设置</th>
               <th style="width:5%"></th>
             </tr>
             <tbody id="script_evolutionQueueTable"></tbody>
@@ -12753,7 +12753,7 @@
                 prestigeName = `(${prestigeNames[queuedEvolution.prestigeType]})`;
                 prestigeClass = "has-text-info";
             } else {
-                prestigeName = "Unrecognized prestige!";
+                prestigeName = " 威望重置类型无法识别！";
                 prestigeClass = "has-text-danger";
             }
         }
