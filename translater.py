@@ -624,7 +624,6 @@ replaceLsit = {
     '':'',
     '':'',
     '':'',
-    '':'',
 
      # NOTE: 资源
     'Population: new Population("Population", "Population")':'Population: new Population("人口", "Population")',
