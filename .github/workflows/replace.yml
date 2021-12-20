@@ -1,15 +1,14 @@
-name: Python
+name: Replace
 
 on:
   push:
-    branches:
-    - master
+    paths:
+    - "translater.py"
     workflow_dispatch:
 
 jobs:
-
-  qa:
-    name: Quality check
+  build:
+    name: Build
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
@@ -17,13 +16,14 @@ jobs:
         uses: actions/setup-python@master
         with:
           python-version: 3.8
-      - name: Run
+
+      - name: Rplace
         run: |
           python translater.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: commit
+          
+      - name: Commit
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'actions@users.noreply.github.com'
