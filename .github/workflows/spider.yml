@@ -33,7 +33,6 @@ jobs:
           fi
 
       - name: Push changes
-        if: ! git diff-index --quiet HEAD
         uses: ad-m/github-push-action@master
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
