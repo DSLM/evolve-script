@@ -2008,7 +2008,7 @@
         EnceladusBase: new Action("Enceladus Operational Base", "space", "operating_base", "spc_enceladus"),
         EnceladusMunitions: new Action("Enceladus Munitions Depot", "space", "munitions_depot", "spc_enceladus"),
         TritonMission: new Action("Triton Mission", "space", "triton_mission", "spc_triton"),
-        TritonFOB: new Action("Triton Foward Base", "space", "fob", "spc_triton"),
+        TritonFOB: new Action("Triton Forward Base", "space", "fob", "spc_triton"),
         TritonLander: new Action("Triton Troop Lander", "space", "lander", "spc_triton", {smart: true}),
         TritonCrashedShip: new Action("Triton Derelict Ship", "space", "crashed_ship", "spc_triton"),
         KuiperMission: new Action("Kuiper Mission", "space", "kuiper_mission", "spc_kuiper"),
@@ -2457,7 +2457,7 @@
           () => true,
           (building) => {
               if (building._tab !== "city" && building.stateOffCount > 0) {
-                  if (building === buildings.RuinsGuardPost && building.isSmartManaged() && !isHellSupressUseful()
+                  if (building === buildings.RuinsGuardPost && building.isSmartManaged() && !isHellSupressUseful() 
                     && building.count < Math.ceil(5000 / (game.armyRating(1, "hellArmy", 0) * traitVal('holy', 1, '+')))) { return false; }
                   if (building === buildings.BadlandsAttractor && building.isSmartManaged()) { return false; }
                   if (building === buildings.SpireMechBay && building.isSmartManaged()) { return false; }
@@ -2496,7 +2496,7 @@
           () => 0
       ],[
           () => settings.prestigeType === "mad" && (haveTech("mad") || (techIds['tech-mad'].isUnlocked() && techIds['tech-mad'].isAffordable(true))),
-          (building) => !building.is.housing && !building.is.garrison && !building.cost["Knowledge"] && (building !== buildings.OilWell || !game.global.race.terrifying), // Terrifying can't buy oil, keep building rigs
+          (building) => !building.is.housing && !building.is.garrison && !building.cost["Knowledge"] && building !== buildings.OilWell,
           () => "等待核爆重置",
           () => settings.buildingWeightingMADUseless
       ],[
@@ -4081,9 +4081,6 @@
                 let missingRes = Object.entries(buildings.PitAssaultForge.cost).find(([id, amount]) => resources[id].currentQuantity < amount);
                 if (!missingRes) {
                     soldiers = Math.round(650 / game.armyRating(1, "hellArmy"));
-                    if (game.global.race['smoldering']) {
-                        soldiers = Math.round(soldiers * 0.9);
-                    }
                 }
             }
 
@@ -4260,30 +4257,16 @@
         _fleetVue: undefined,
 
         nextShipCost: null,
+        nextShipAffordable: false,
+        nextShipExpandable: false,
 
         WeaponPower: {railgun: 36, laser: 64, p_laser: 54, plasma: 90, phaser: 114, disruptor: 156},
         SensorRange: {visual: 1, radar: 20, lidar: 35, quantum: 60},
         ClassPower: {corvette: 1, frigate: 1.5, destroyer: 2.75, cruiser: 5.5, battlecruiser: 10, dreadnought: 22},
         ClassCrew: {corvette: 2, frigate: 3, destroyer: 4, cruiser: 6, battlecruiser: 8, dreadnought: 10},
 
-        Regions: [
-            {id: "spc_home", dist: 1, orbit: -1, dest: false},
-            {id: "spc_moon", dist: 1.01, orbit: -1, dest: true, moon: true},
-            {id: "spc_red", dist: 1.524, orbit: 687, dest: true},
-            {id: "spc_hell", dist: 0.4, orbit: 88, dest: true},
-            {id: "spc_gas", dist: 5.203, orbit: 4330, dest: true},
-            {id: "spc_gas_moon", dist: 5.204, orbit: 4330, dest: true, moon: true},
-            {id: "spc_belt", dist: 2.7, orbit: 1642, dest: true},
-            {id: "spc_dwarf", dist: 2.77, orbit: 1682, dest: true},
-            {id: "spc_saturn", dist: 9.539, orbit: 10751, dest: false},
-            {id: "spc_titan", dist: 9.536, orbit: 10751, dest: true, moon: true},
-            {id: "spc_enceladus", dist: 9.542, orbit: 10751, dest: true, moon: true},
-            {id: "spc_neptune", dist: 30.08, orbit: 60152, dest: false},
-            {id: "spc_triton", dist: 30.1, orbit: 60152, dest: true, moon: true},
-            {id: "spc_kuiper", dist: 39.5, orbit: 90498, dest: true},
-            {id: "spc_eris", dist: 68, orbit: 204060, dest: true},
-          //{id: "tauceti", dist: 752568.8, orbit: -2, dest: true},
-        ],
+        // spc_dwarf is ignored, never having any syndicate
+        Regions: ["spc_moon", "spc_red", "spc_gas", "spc_gas_moon", "spc_belt", "spc_titan", "spc_enceladus", "spc_triton", "spc_kuiper", "spc_eris"],
 
         ShipConfig: {
             class: ['corvette','frigate','destroyer','cruiser','battlecruiser','dreadnought'],
@@ -4303,15 +4286,23 @@
         },
 
         updateShipCost() {
-            this.nextShipCost = null;
             if (game.global.space.shipyard?.hasOwnProperty('blueprint')) {
                 let cost = poly.shipCosts(game.global.space.shipyard.blueprint);
+                this.nextShipCost = cost;
+                this.nextShipAffordable = true;
+                this.nextShipExpandable = true;
                 for (let res in cost) {
                     if (resources[res].maxQuantity < cost[res]) {
-                        return false;
+                        this.nextShipAffordable = false;
+                        if (!resources[res].hasStorage()) {
+                            this.nextShipExpandable = false;
+                        }
                     }
                 }
-                this.nextShipCost = cost;
+            } else {
+                this.nextShipCost = null;
+                this.nextShipAffordable = null;
+                this.nextShipExpandable = null;
             }
         },
 
@@ -4364,11 +4355,11 @@
 
             if (yard.sort) {
                 $("#shipPlans .b-checkbox").eq(1).click()
-                this._fleetVue.build();
+                this._fleetVue.build();  
                 getVueById('shipReg0')?.setLoc(region, yard.ships.length);
                 $("#shipPlans .b-checkbox").eq(1).click()
             } else {
-                this._fleetVue.build();
+                this._fleetVue.build();  
                 getVueById('shipReg0')?.setLoc(region, yard.ships.length);
             }
             return true;
@@ -4432,7 +4423,7 @@
                     patrol += 500;
                     sensor += 10;
                 }
-
+                
                 if (sensor > 100){
                     sensor = Math.round((sensor - 100) / ((sensor - 100) + 200) * 100) + 100;
                 }
@@ -6330,11 +6321,9 @@
             // Default outer regions weighting
             fleet_outer_pr_spc_moon: 1, // Iridium
             fleet_outer_pr_spc_red: 3, // Titanium
-            fleet_outer_pr_spc_hell: 0,
             fleet_outer_pr_spc_gas: 0,
             fleet_outer_pr_spc_gas_moon: 0,
             fleet_outer_pr_spc_belt: 1, // Iridium
-            fleet_outer_pr_spc_dwarf: 0,
             fleet_outer_pr_spc_titan: 5, // Adamantite
             fleet_outer_pr_spc_enceladus: 3, // Quantium
             fleet_outer_pr_spc_triton: 10, // Encrypted data
@@ -6560,7 +6549,7 @@
             settingsRaw.overrides.ejectMode.push({"type1":"BuildingCount","arg1":"interstellar-mass_ejector","type2":"Number","arg2":settingsRaw.prestigeWhiteholeEjectAllCount,"cmp":">=","ret":"all"});
         }
         // Remove deprecated post-overrides settings
-        ["prestigeWhiteholeEjectAllCount", "prestigeWhiteholeDecayRate", "genesAssembleGeneAlways", "buildingsConflictQueue", "buildingsConflictRQueue", "buildingsConflictPQueue"]
+        ["prestigeWhiteholeEjectAllCount", "prestigeWhiteholeDecayRate", "genesAssembleGeneAlways", "buildingsConflictQueue", "buildingsConflictRQueue", "buildingsConflictPQueue", "fleet_outer_pr_spc_hell", "fleet_outer_pr_spc_dwarf"]
           .forEach(id => { delete settingsRaw[id], delete settingsRaw.overrides[id] });
     }
 
@@ -7873,7 +7862,7 @@
                 smeltAdjust.Steel += steelRemoved;
             } else {
                 smeltAdjust.Steel += smelterSteelCount;
-                //smeltAdjust.Iridium += steelRemoved - smelterSteelCount;
+                smeltAdjust.Iridium += steelRemoved - smelterSteelCount;
             }
         }
 
@@ -9404,6 +9393,9 @@
 
         addList(state.queuedTargetsAll);
         addList(state.triggerTargets);
+        if (FleetManagerOuter.nextShipExpandable && settings.prioritizeOuterFleet !== "ignore") {
+            addList([{cost: FleetManagerOuter.nextShipCost}]);
+        }
         addList(state.unlockedTechs);
         addList(ProjectManager.priorityList.filter(b => b.isUnlocked() && b.autoBuildEnabled));
         addList(BuildingManager.priorityList.filter(p => p.isUnlocked() && p.autoBuildEnabled));
@@ -9980,16 +9972,16 @@
         }
 
         let regionsToProtect = m.Regions
-          .filter(reg => reg.dest && m.isUnlocked(reg.id) && m.getWeighting(reg.id) > 0 && m.syndicate(reg.id, false, true) < (1 - settings.fleetOuterMinSyndicate))
-          .sort((a, b) => ((1 - m.syndicate(b.id, false, true)) * m.getWeighting(b.id))
-                        - ((1 - m.syndicate(a.id, false, true)) * m.getWeighting(a.id)));
+          .filter(reg => m.isUnlocked(reg) && m.getWeighting(reg) > 0 && m.syndicate(reg, false, true) < (1 - settings.fleetOuterMinSyndicate))
+          .sort((a, b) => ((1 - m.syndicate(b, false, true)) * m.getWeighting(b))
+                        - ((1 - m.syndicate(a, false, true)) * m.getWeighting(a)));
         if (regionsToProtect.length < 1) {
             return;
         }
 
-        if (m.build(newShip, regionsToProtect[0].id)) {
+        if (m.build(newShip, regionsToProtect[0])) {
             let name = game.loc(`outer_shipyard_class_${newShip.class}`);
-            let targetRef = game.actions.space[regionsToProtect[0].id].info.name;
+            let targetRef = game.actions.space[regionsToProtect[0]].info.name;
             let targetName = typeof targetRef === 'function' ? targetRef() : targetRef;
             GameLog.logSuccess("outer_fleet", `${name}已建造，并派往${targetName}。`, ['combat']);
         }
@@ -10458,8 +10450,8 @@
         state.knowledgeRequiredByTechs = Math.max(0, ...state.unlockedTechs.map(tech => tech.cost["Knowledge"] ?? 0));
 
         // Get list of all objects and techs, and find biggest numbers for each resource
-        if (settings.prioritizeOuterFleet !== "ignore" && game.global.space.shipyard?.hasOwnProperty('blueprint')) {
-            requestStorageFor([{cost: poly.shipCosts(game.global.space.shipyard.blueprint)}]);
+        if (FleetManagerOuter.nextShipExpandable && settings.prioritizeOuterFleet !== "ignore") {
+            requestStorageFor([{cost: FleetManagerOuter.nextShipCost}]);
         }
         requestStorageFor(state.unlockedTechs);
         requestStorageFor(state.queuedTargetsAll);
@@ -10523,10 +10515,10 @@
             resources.Money.requestedQuantity = Math.max(resources.Money.requestedQuantity, SpyManager.purchaseMoney);
         }
 
-        if (FleetManagerOuter.nextShipCost && settings.prioritizeOuterFleet.includes("req")) {
+        if (FleetManagerOuter.nextShipAffordable && settings.prioritizeOuterFleet.includes("req")) {
             for (let res in FleetManagerOuter.nextShipCost) {
                 let resource = resources[res];
-                resource.requestedQuantity = Math.max(resource.requestedQuantity, FleetManagerOuter.nextShipCost[res]);
+                resource.requestedQuantity = Math.max(resource.requestedQuantity, FleetManagerOuter.nextShipCost[res]);              
             }
         }
 
@@ -10595,7 +10587,7 @@
             state.conflictTargets.push({name: techIds["tech-unification"].title, cause: "收购", cost: {Money: SpyManager.purchaseMoney}});
         }
 
-        if (FleetManagerOuter.nextShipCost && settings.prioritizeOuterFleet.includes("save")) {
+        if (FleetManagerOuter.nextShipAffordable && settings.prioritizeOuterFleet.includes("save")) {
             state.conflictTargets.push({name: game.global.space.shipyard.blueprint.name ?? "无名舰船", cause: "舰船", cost: FleetManagerOuter.nextShipCost});
         }
 
@@ -12462,7 +12454,7 @@
         addSettingsSelect(currentNode, "prioritizeQueue", "队列", "调整脚本处理队列中项目的方式，优先缺失的资源。", priority);
         addSettingsSelect(currentNode, "prioritizeTriggers", "触发器", "调整脚本处理触发器中项目的方式，优先缺失的资源。", priority);
         addSettingsSelect(currentNode, "prioritizeUnify", "统一", "调整脚本处理统一的方式，优先使用资金来收购周边国家。", priority);
-        addSettingsSelect(currentNode, "prioritizeOuterFleet", "舰船(智械黎明模式)", "调整脚本分配舰队建筑的方式，优先舰船缺失的资源。", priority);
+        addSettingsSelect(currentNode, "prioritizeOuterFleet", "Ship Yard Blueprint (The True Path)", "Alter script behaviour to assist fleet building, prioritizing resources required for current design of ship.", priority);
 
         addSettingsHeader1(currentNode, "自动点击");
         addSettingsToggle(currentNode, "buildingAlwaysClick", "是否总是自动收集资源", "默认情况下脚本只在游戏初期自动收集资源，开启此项后将一直自动收集资源");
@@ -12532,12 +12524,12 @@
         .on('click', {label: "Prestige Type (prestigeType)", name: "prestigeType", type: "select", options: prestigeOptions}, openOverrideModal);
 
         addSettingsToggle(currentNode, "prestigeWaitAT", "是否在重置前用完所有的加速时间", "直到用完所有的加速时间才进行重置");
+        addSettingsToggle(currentNode, "prestigeMADIgnoreArpa", "Ignore early game A.R.P.A.", "Disables building any A.R.P.A. projects until MAD is researched, or rival have appeared");
         addSettingsToggle(currentNode, "prestigeBioseedConstruct", "忽略无用的建筑", "只在需要进行播种重置时建造星际船坞、生命播种飞船和星际探测器，并且不建造世界超级对撞机。进行黑洞重置时不建造跃迁飞船。进行真空坍缩时不建造恒星引擎。");
         addSettingsNumber(currentNode, "prestigeEnabledBarracks", "研究统一后的兵营比例", "研究统一后进行供能的兵营比例，取消供能可以提升士气。当生命播种飞船达到90段分项工程，或者是建造世界超级对撞机后，所有兵营将全部恢复供能。");
 
         // MAD
         addSettingsHeader1(currentNode, "核弹重置");
-        addSettingsToggle(currentNode, "prestigeMADIgnoreArpa", "是否在研究相互毁灭前不建造ARPA项目", "直到研究相互毁灭之前，不建造ARPA项目");
         addSettingsToggle(currentNode, "prestigeMADWait", "是否等待人口达到最大", "等待市民和士兵达到最大以后再进行重置，以尽可能多地获得质粒");
         addSettingsNumber(currentNode, "prestigeMADPopulation", "人口阈值", "达到相应数量的市民和士兵后，才进行核弹重置");
 
@@ -13418,20 +13410,18 @@
         let tableBodyNode = $(`#script_${secondaryPrefix}fleetOuterTable`);
         let newTableBodyText = "";
 
-        let outerRegions = FleetManagerOuter.Regions.filter(r => r.dest);
-
-        for (let reg of outerRegions) {
-            newTableBodyText += `<tr><td id="script_fleet_${reg.id}" style="width:55%"></td><td style="width:20%"></td><td style="width:25%"></td></tr>`;
+        for (let reg of FleetManagerOuter.Regions) {
+            newTableBodyText += `<tr><td id="script_fleet_${reg}" style="width:55%"></td><td style="width:20%"></td><td style="width:25%"></td></tr>`;
         }
         tableBodyNode.append($(newTableBodyText));
 
         // Build all other productions settings rows
-        for (let reg of outerRegions) {
-            let fleetElement = $('#script_fleet_' + reg.id);
+        for (let reg of FleetManagerOuter.Regions) {
+            let fleetElement = $('#script_fleet_' + reg);
 
-            let nameRef = game.actions.space[reg.id].info.name;
+            let nameRef = game.actions.space[reg].info.name;
             let gameName = typeof nameRef === 'function' ? nameRef() : nameRef;
-            let label = reg.id.split("_").slice(1)
+            let label = reg.split("_").slice(1)
               .map(n => n.charAt(0).toUpperCase() + n.slice(1)).join(" ");
             if (label !== gameName) {
                 label = `${gameName}`;  //label += ` (${gameName})`;
@@ -13440,7 +13430,7 @@
             fleetElement.append(buildTableLabel(label));
 
             fleetElement = fleetElement.next();
-            addTableInput(fleetElement, "fleet_outer_pr_" + reg.id);
+            addTableInput(fleetElement, "fleet_outer_pr_" + reg);
         }
     }
 
@@ -14511,7 +14501,7 @@
         addWeightingRule(tableBodyNode, "需要花费支持的建筑", "缺少支持，无法正常运转", "buildingWeightingMissingSupport");
         addWeightingRule(tableBodyNode, "提供支持的建筑", "提供的支持超过了目前的需求", "buildingWeightingUselessSupport");
         addWeightingRule(tableBodyNode, "所有燃料存储", "进行研究或任务需要的石油或氦-3超过存储上限", "buildingWeightingMissingFuel");
-        addWeightingRule(tableBodyNode, "提升人口、士兵或知识上限以外的建筑", "进行核爆重置，且已研究相互毁灭", "buildingWeightingMADUseless");
+        addWeightingRule(tableBodyNode, "Not housing, barrack, oil derrick, or knowledge building", "MAD prestige enabled, and affordable", "buildingWeightingMADUseless");
         addWeightingRule(tableBodyNode, "质量喷射器", "存在未完全运作的质量喷射器", "buildingWeightingUnusedEjectors");
         addWeightingRule(tableBodyNode, "货场、集装箱港口与弹药库", "有未使用的板条箱或集装箱", "buildingWeightingCrateUseless");
         addWeightingRule(tableBodyNode, "马蹄铁", "暂时不需要马蹄铁", "buildingWeightingHorseshoeUseless");
