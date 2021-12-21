@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Rplace
+      - name: Download
         run: |
           pip install requests
           python downloader.py
