@@ -12743,7 +12743,7 @@
             raceName = "自动完成成就";
             raceClass = "has-text-advanced";
         } else {
-            raceName = "种族无法识别！;
+            raceName = "种族无法识别！";
             raceClass = "has-text-danger";
         }
 
