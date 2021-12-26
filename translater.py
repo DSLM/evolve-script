@@ -772,7 +772,7 @@ replaceLsit = {
     'state.conflictTargets.push({name: obj.title, cause: "Fleet", cost: obj.cost});':'state.conflictTargets.push({name: obj.title, cause: "战舰", cost: obj.cost});',
     'state.conflictTargets.push({name: obj.title, cause: "Trigger", cost: obj.cost});':'state.conflictTargets.push({name: obj.title, cause: "触发器", cost: obj.cost});',
     'raceName = "Auto Achievements"':'raceName = "自动完成成就"',
-    'raceName = "Unrecognized race!"':'raceName = "种族无法识别！',
+    'raceName = "Unrecognized race!"':'raceName = "种族无法识别！"',
 
      # NOTE: 将翻译代码注入脚本
     """'use strict';""":"""'use strict';
