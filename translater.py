@@ -158,7 +158,7 @@ replaceLsit = {
     # NOTE: 威望重置设置
     '<span>Prestige Type</span>':'<span>威望重置类型：</span>',
     '{val: "none", label: "None", hint: "Endless game"},':'{val: "none", label: "无", hint: "不会自动重置"},',
-    '{val: "mad", label: "Mutual Assured Destruction", hint: "MAD prestige once MAD has been researched and all soldiers are home"},':'{val: "mad", label: "核弹重置", hint: "当研究相互毁灭，且士兵全部存活时，进行核弹重置"},',
+    '{val: "mad", label: "Mutual Assured Destruction", hint: "MAD prestige once MAD has been researched and all soldiers are home"},':'{val: "mad", label: "核爆重置", hint: "当研究相互毁灭，且士兵全部存活时，进行核爆重置"},',
     '{val: "bioseed", label: "Bioseed", hint: "Launches the bioseeder ship to perform prestige when required probes have been constructed"},':'{val: "bioseed", label: "播种重置", hint: "当太空探测器数量达到指定值以后，进行播种重置"},',
     '{val: "cataclysm", label: "Cataclysm", hint: "Perform cataclysm reset by researching Dial It To 11 once available"},':'{val: "cataclysm", label: "大灾变重置", hint: "自动研究把刻度盘拨到11，触发大灾变重置"},',
     '{val: "whitehole", label: "Whitehole", hint: "Infuses the blackhole with exotic materials to perform prestige"},':'{val: "whitehole", label: "黑洞重置", hint: "自动选择奇异灌输，触发黑洞重置"},',
@@ -169,10 +169,10 @@ replaceLsit = {
     'addSettingsToggle(currentNode, "prestigeWaitAT", "Use all Accelerated Time", "Delay reset until all accelerated time will be used");':'addSettingsToggle(currentNode, "prestigeWaitAT", "是否在重置前用完所有的加速时间", "直到用完所有的加速时间才进行重置");',
     'addSettingsToggle(currentNode, "prestigeBioseedConstruct", "Ignore useless buildings", "Space Dock, Bioseeder Ship and Probes will be constructed only when Bioseed prestige enabled. World Collider won\'t be constructed during Bioseed. Jump Ship won\'t be constructed during Whitehole. Stellar Engine won\'t be constucted during Vacuum Collapse.");':'addSettingsToggle(currentNode, "prestigeBioseedConstruct", "忽略无用的建筑", "只在需要进行播种重置时建造星际船坞、生命播种飞船和星际探测器，并且不建造世界超级对撞机。进行黑洞重置时不建造跃迁飞船。进行真空坍缩时不建造恒星引擎。");',
     'addSettingsNumber(currentNode, "prestigeEnabledBarracks", "Percent of active barracks after unification", "Percent of barracks to keep enabled after unification, disabling some of them can reduce stress. All barracks will be enabled back when Bioseeder Ship will be at 90%, or after building World Collider");':'addSettingsNumber(currentNode, "prestigeEnabledBarracks", "研究统一后的兵营比例", "研究统一后进行供能的兵营比例，取消供能可以提升士气。当生命播种飞船达到90段分项工程，或者是建造世界超级对撞机后，所有兵营将全部恢复供能。");',
-    'addSettingsHeader1(currentNode, "Mutual Assured Destruction");':'addSettingsHeader1(currentNode, "核弹重置");',
+    'addSettingsHeader1(currentNode, "Mutual Assured Destruction");':'addSettingsHeader1(currentNode, "核爆重置");',
     'addSettingsToggle(currentNode, "prestigeMADIgnoreArpa", "Ignore early game A.R.P.A.", "Disables building any A.R.P.A. projects until MAD is researched, or rival have appeared");':'addSettingsToggle(currentNode, "prestigeMADIgnoreArpa", "是否不建造ARPA项目", "直到研究相互毁灭或者竞争国家出现之前，不建造ARPA项目");',
     'addSettingsToggle(currentNode, "prestigeMADWait", "Wait for maximum population", "Wait for maximum population and soldiers to maximize plasmids gain");':'addSettingsToggle(currentNode, "prestigeMADWait", "是否等待人口达到最大", "等待市民和士兵达到最大以后再进行重置，以尽可能多地获得质粒");',
-    'addSettingsNumber(currentNode, "prestigeMADPopulation", "Required population", "Required number of workers and soldiers before performing MAD reset");':'addSettingsNumber(currentNode, "prestigeMADPopulation", "人口阈值", "达到相应数量的市民和士兵后，才进行核弹重置");',
+    'addSettingsNumber(currentNode, "prestigeMADPopulation", "Required population", "Required number of workers and soldiers before performing MAD reset");':'addSettingsNumber(currentNode, "prestigeMADPopulation", "人口阈值", "达到相应数量的市民和士兵后，才进行核爆重置");',
     'addSettingsHeader1(currentNode, "Bioseed");':'addSettingsHeader1(currentNode, "播种重置");',
     'addSettingsNumber(currentNode, "prestigeBioseedProbes", "Required probes", "Required number of probes before launching bioseeder ship");':'addSettingsNumber(currentNode, "prestigeBioseedProbes", "播种前至少需要的太空探测器数量", "达到太空探测器所需数量后，才进行播种重置");',
     'addSettingsHeader1(currentNode, "Whitehole");':'addSettingsHeader1(currentNode, "黑洞重置");',
@@ -237,7 +237,7 @@ replaceLsit = {
     '<th class="has-text-warning" style="width:25%">Race</th>':'<th class="has-text-warning" style="width:25%">种族</th>',
     '<th class="has-text-warning" style="width:70%" title="Settings applied before evolution. Changed settings not limited to initial template, you can manually add any script options to JSON.">Settings</th>':'<th class="has-text-warning" style="width:70%" title="进化之前生效的设置。不仅限于模板，您还可以将其他的脚本设置以JSON形式输入。">设置</th>',
     'prestigeName = "Unrecognized prestige!";':'prestigeName = " 威望重置类型无法识别！";',
-    '{mad: "MAD", bioseed: "Bioseed", cataclysm: "Cataclysm", vacuum: "Vacuum", whitehole: "Whitehole", apocalypse: "AI Apocalypse", ascension: "Ascension", demonic: "Infusion"};':'{mad: "核弹重置", bioseed: "播种重置", cataclysm: "大灾变重置", vacuum: "真空坍缩", whitehole: "黑洞重置", apocalypse: "人工智能觉醒", ascension: "飞升重置", demonic: "恶魔灌注"};',
+    '{mad: "MAD", bioseed: "Bioseed", cataclysm: "Cataclysm", vacuum: "Vacuum", whitehole: "Whitehole", apocalypse: "AI Apocalypse", ascension: "Ascension", demonic: "Infusion"};':'{mad: "核爆重置", bioseed: "播种重置", cataclysm: "大灾变重置", vacuum: "真空坍缩", whitehole: "黑洞重置", apocalypse: "人工智能觉醒", ascension: "飞升重置", demonic: "恶魔灌注"};',
     '>This race have special requirements:':'>此种族的特殊要求为：',
     '. This condition is met.':'。当前满足此条件。',
     '>Warning! This race have special requirements:':'>警告！此种族的特殊要求为：',
@@ -280,7 +280,7 @@ replaceLsit = {
     '<option value = "arpa" title = "Build projects up to \'count\' amount">A.R.P.A.</option>':'<option value = "arpa" title = "建造ARPA项目，数量上限为计数">A.R.P.A.</option>',
 
     # NOTE: 研究设置
-    '[{val: "auto", label: "Script Managed", hint: "Picks Anthropology for MAD prestige, and Fanaticism for others. Achieve-worthy combos are exception, on such runs Fanaticism will be always picked."},':'[{val: "auto", label: "由脚本管理", hint: "进行核弹重置时选择人类学，其余情况下选择狂热信仰。需要狂热信仰祖先才能完成成就时例外，此时将一直选择狂热信仰。"},',
+    '[{val: "auto", label: "Script Managed", hint: "Picks Anthropology for MAD prestige, and Fanaticism for others. Achieve-worthy combos are exception, on such runs Fanaticism will be always picked."},':'[{val: "auto", label: "由脚本管理", hint: "进行核爆重置时选择人类学，其余情况下选择狂热信仰。需要狂热信仰祖先才能完成成就时例外，此时将一直选择狂热信仰。"},',
     'addSettingsSelect(currentNode, "userResearchTheology_1", "Target Theology 1", "Theology 1 technology to research, have no effect after getting Transcendence perk", theology1Options);':'addSettingsSelect(currentNode, "userResearchTheology_1", "神学研究分支1", "神学研究分支1的选择，获得超越特权以后失效", theology1Options);',
     '[{val: "auto", label: "Script Managed", hint: "Picks Deify for Ascension prestige, and Study for others"},':'[{val: "auto", label: "由脚本管理", hint: "进行飞升重置时选择神化先祖，其余情况下选择研究先祖"},',
     'addSettingsSelect(currentNode, "userResearchTheology_2", "Target Theology 2", "Theology 2 technology to research", theology2Options);':'addSettingsSelect(currentNode, "userResearchTheology_2", "神学研究分支2", "神学研究分支2的选择", theology2Options);',
@@ -441,7 +441,7 @@ replaceLsit = {
     'addSettingsNumber(currentNode, "marketMinIngredients", "Minimum materials to preserve", "Galaxy Market will buy resources only when all selling materials above given ratio");':'addSettingsNumber(currentNode, "marketMinIngredients", "原料保底产量", "星际贸易只在所有出售的材料都高于保底产量时购买相应资源");',
 
     # NOTE: 存储设置
-    'addSettingsToggle(currentNode, "storageLimitPreMad", "Limit Pre-MAD Storage", "Saves resources and shortens run time by limiting storage pre-MAD");':'addSettingsToggle(currentNode, "storageLimitPreMad", "限制核弹重置之前阶段的存储", "限制核弹重置之前阶段的存储来节省资源和相应时间");',
+    'addSettingsToggle(currentNode, "storageLimitPreMad", "Limit Pre-MAD Storage", "Saves resources and shortens run time by limiting storage pre-MAD");':'addSettingsToggle(currentNode, "storageLimitPreMad", "限制核爆重置之前阶段的存储", "限制核爆重置之前阶段的存储来节省资源和相应时间");',
     'addSettingsToggle(currentNode, "storageSafeReassign", "Reassign only empty storages", "Wait until storage is empty before reassigning containers to another resource, to prevent overflowing and wasting resources");':'addSettingsToggle(currentNode, "storageSafeReassign", "只在板条箱或集装箱有空余时进行重新分配", "直到相应的板条箱或集装箱未装有相应资源时才考虑将它重新分配给其他资源，以防止资源溢出浪费");',
     'addSettingsToggle(currentNode, "storageAssignExtra", "Assign buffer storage", "Assigns 3% extra strorage above required amounts, ensuring that required quantity will be actually reached, even if other part of script trying to sell\\\\eject\\\\switch production, etc. When manual trades enabled applies additional adjust derieved from selling threshold.");':'addSettingsToggle(currentNode, "storageAssignExtra", "是否分配缓冲用的存储", "以超过需要数值的3%进行分配，以保证能达到所需要的数值，以避免脚本其他功能的干扰。");',
     'addSettingsToggle(currentNode, "storagePrioritizedOnly", "Assign per buildings", "Assign storage based on individual costs of each enabled buildings, instead of going for maximums. Allows to prioritize storages for queue and trigger, and skip assigning for unaffordable expensive buildings. Experimental feature.");':'addSettingsToggle(currentNode, "storagePrioritizedOnly", "根据每种建筑分配存储", "根据启用的建筑每一个的花费来分配存储，而不是考虑总量来分配。可以优先对触发器或队列等所需要的资源分配存储，并可以跳过超过储量上限的建筑。实验性的功能。");',
@@ -773,6 +773,16 @@ replaceLsit = {
     'state.conflictTargets.push({name: obj.title, cause: "Trigger", cost: obj.cost});':'state.conflictTargets.push({name: obj.title, cause: "触发器", cost: obj.cost});',
     'raceName = "Auto Achievements"':'raceName = "自动完成成就"',
     'raceName = "Unrecognized race!"':'raceName = "种族无法识别！"',
+    '<span>Disabled</span>':'<span>未启用</span>',
+    '>Contaminated in [${poly.timeFormat(missingExotics / massPerSec)}]<':'>[${poly.timeFormat(missingExotics / massPerSec)}]后可进行奇异灌输<',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
+    '':'',
 
      # NOTE: 将翻译代码注入脚本
     """'use strict';""":"""'use strict';
