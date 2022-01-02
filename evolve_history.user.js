@@ -3,10 +3,9 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.2
 // @description  try to take over the world!
+// @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_automation.user.js
 // @author       DSLM
 // @match        https://likexia.gitee.io/evolve/
-// @match        https://wdjwxh.github.io/Evolve-Scripting-Edition/
-// @match        https://wdjwxh.gitee.io/evolve-scripting-edition/
 // @match        https://pmotschmann.github.io/Evolve/
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
