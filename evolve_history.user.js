@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_automation.user.js
 // @author       DSLM
@@ -124,15 +124,15 @@
 
     function spireTimeDataFunc()
     {
-        var spireTimeData, nowRecord
+        var spireTimeData, nowRecord;
         //显示
         //evolve.global.stats.spire["h"]['dlstr']
 
-        let spireTimeDataTitle = $("#spireTimeDataText");
-        if(spireTimeDataTitle.length === 0)
+        let spireTimeDataText = $("#spireTimeDataText");
+        if(spireTimeDataText.length === 0)
         {
-            spireTimeDataTitle = $(`<div class='has-text-warning' style='margin-top:32px' onclick=\"(function (){if($('#spireTimeDataText').css('display')!='none'){$('#spireTimeDataText').hide();$('#hiddenTip2').show();}else{$('#spireTimeDataText').show();$('#hiddenTip2').hide();}})()\"><span>地狱尖塔数据（保存${HIST_SPIRE_LIMIT}条数据，点击隐藏/显示）:</span></div>`)
-            let spireTimeDataText = $("<div id='spireTimeDataText' style='display: none;'></div>");
+            let spireTimeDataTitle = $(`<div class='has-text-warning' style='margin-top:32px' onclick=\"(function (){if($('#spireTimeDataText').css('display')!='none'){$('#spireTimeDataText').hide();$('#hiddenTip2').show();}else{$('#spireTimeDataText').show();$('#hiddenTip2').hide();}})()\"><span>地狱尖塔数据（保存${HIST_SPIRE_LIMIT}条数据，点击隐藏/显示）:</span></div>`)
+            spireTimeDataText = $("<div id='spireTimeDataText' style='display: none;'></div>");
             let hiddenTip2 = $("<div id='hiddenTip2'>已隐藏</div>");
             $('#stats').append(spireTimeDataTitle);
             $('#stats').append(hiddenTip2);
@@ -187,7 +187,7 @@
         {
             spireTimeData["record"].unshift({"floor":evolve.global.portal.spire.count,"day":evolve.global.stats.days, "effi":evolve.global.stats.days/(evolve.global.portal.spire.count - 1), "stone":evolve.alevel()*((evolve.global.genes['blood'] >= 2)?2:1),});
             spireTimeData["now"] = evolve.global.portal.spire.count;
-            if(spireTimeData["record"].length > 100)
+            if(spireTimeData["record"].length > HIST_SPIRE_LIMIT)
             {
                 spireTimeData["record"].pop();
             }
