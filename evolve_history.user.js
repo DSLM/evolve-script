@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.3
 // @description  try to take over the world!
-// @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_automation.user.js
+// @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_history.user.js
 // @author       DSLM
 // @match        https://likexia.gitee.io/evolve/
 // @match        https://pmotschmann.github.io/Evolve/
