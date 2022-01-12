@@ -13,7 +13,7 @@
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // ==/UserScript==
-炼钢、冶炼和石墨烯厂会在需求资源储量大于10万时继续运作而非关闭
+//炼钢、冶炼和石墨烯厂会在需求资源储量大于10万时继续运作而非关闭
 //
 // This script forked from TMVictor's script version 3.3.1. Original script: https://gist.github.com/TMVictor/3f24e27a21215414ddc68842057482da
 // Removed downloadURL in case that script got screwed up. Original downloadURL: @downloadURL  https://gist.github.com/Vollch/b1a5eec305558a48b7f4575d317d7dd1/raw/evolve_automation.user.js
