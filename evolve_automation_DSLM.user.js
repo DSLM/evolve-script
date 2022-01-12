@@ -2458,7 +2458,7 @@
           () => true,
           (building) => {
               if (building._tab !== "city" && building.stateOffCount > 0) {
-                  if (building === buildings.RuinsGuardPost && building.isSmartManaged() && !isHellSupressUseful()
+                  if (building === buildings.RuinsGuardPost && building.isSmartManaged() && !isHellSupressUseful() 
                     && building.count < Math.ceil(5000 / (game.armyRating(1, "hellArmy", 0) * traitVal('holy', 1, '+')))) { return false; }
                   if (building === buildings.BadlandsAttractor && building.isSmartManaged()) { return false; }
                   if (building === buildings.SpireMechBay && building.isSmartManaged()) { return false; }
@@ -4356,11 +4356,11 @@
 
             if (yard.sort) {
                 $("#shipPlans .b-checkbox").eq(1).click()
-                this._fleetVue.build();
+                this._fleetVue.build();  
                 getVueById('shipReg0')?.setLoc(region, yard.ships.length);
                 $("#shipPlans .b-checkbox").eq(1).click()
             } else {
-                this._fleetVue.build();
+                this._fleetVue.build();  
                 getVueById('shipReg0')?.setLoc(region, yard.ships.length);
             }
             return true;
@@ -4424,7 +4424,7 @@
                     patrol += 500;
                     sensor += 10;
                 }
-
+                
                 if (sensor > 100){
                     sensor = Math.round((sensor - 100) / ((sensor - 100) + 200) * 100) + 100;
                 }
@@ -10519,7 +10519,7 @@
         if (FleetManagerOuter.nextShipAffordable && settings.prioritizeOuterFleet.includes("req")) {
             for (let res in FleetManagerOuter.nextShipCost) {
                 let resource = resources[res];
-                resource.requestedQuantity = Math.max(resource.requestedQuantity, FleetManagerOuter.nextShipCost[res]);
+                resource.requestedQuantity = Math.max(resource.requestedQuantity, FleetManagerOuter.nextShipCost[res]);              
             }
         }
 
@@ -11295,7 +11295,7 @@
             return;
         }
 
-
+        
         if(!translateFinish)
         {
             //建筑翻译注入
