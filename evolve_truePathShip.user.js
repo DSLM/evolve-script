@@ -27,7 +27,7 @@
     "engine" : ["ion", "tie", "pulse", "photon", "vacuum"],
     "sensor" : ["visual", "radar", "lidar", "quantum"]};
     //let a = [];Object.keys(evolve.actions.space).forEach(function(location){if (evolve.actions.space[location].info.syndicate() || location === 'spc_dwarf'){a.push(location);}})
-    var shipLocations = ['spc_moon', 'spc_red', 'spc_gas', 'spc_gas_moon', 'spc_belt', 'spc_dwarf', 'spc_titan', 'spc_enceladus', 'spc_triton'];
+    var shipLocations = ['spc_moon', 'spc_red', 'spc_gas', 'spc_gas_moon', 'spc_belt', 'spc_dwarf', 'spc_titan', 'spc_enceladus', 'spc_triton', 'spc_kuiper', 'spc_eris'];
 
     SA = window.setInterval(shipAuto, 1001);
 
