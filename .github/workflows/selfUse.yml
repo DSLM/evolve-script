@@ -1,10 +1,9 @@
-name: Replace
+name: Spider
 
 on:
-  push:
-    paths:
-    - "translater.py"
   workflow_dispatch:
+  schedule:
+    - cron:  '0 * * * *'
 
 jobs:
   build:
@@ -17,19 +16,21 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Rplace
+      - name: Download
         run: |
-          python translater.py
+          pip install requests
+          python downloader_by22dgb.py
+          python selfUse.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Commit
         run: |
           git add .
           if ! git diff-index --quiet HEAD; then
             git config --global user.name 'github-actions[bot]'
             git config --global user.email 'actions@users.noreply.github.com'
-            git commit -m "更新替换脚本" -a
+            git commit -m "更新原脚本" -a
           fi
 
       - name: Push changes
