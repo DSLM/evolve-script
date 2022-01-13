@@ -15126,7 +15126,7 @@
             createSettingToggle(scriptNode, 'autoARPA', '自动ARPA', '自动建造玩家允许建造的ARPA项目。', createArpaToggles, removeArpaToggles);
             createSettingToggle(scriptNode, 'autoPower', '自动供能', '根据建筑的优先级自动管理供能。同时会自动关闭无用的建筑，以节省资源。');
             createSettingToggle(scriptNode, 'autoStorage', '自动存储', '自动分配箱子来管理自动建造、队列中的建筑、研究、以及ARPA项目所需的资源存储。', createStorageToggles, removeStorageToggles);
-            createSettingToggle(scriptNode, 'autoMarket', 'Allows for automatic buying and selling of resources once specific ratios are met. Also allows setting up trade routes until a minimum specified money per second is reached. The will trade in and out in an attempt to maximize your trade routes.', createMarketToggles, removeMarketToggles);
+            createSettingToggle(scriptNode, 'autoMarket', '自动市场', '当资源到达某个比例以后自动买卖相应资源。也可以设置自动使用贸易路线进行交易，并且可以设置交易时最小的资金收入。将尽可能使用所有的贸易路线。', createMarketToggles, removeMarketToggles);
             createSettingToggle(scriptNode, 'autoGalaxyMarket', '自动星际贸易', '自动管理星际贸易路线');
             createSettingToggle(scriptNode, 'autoResearch', '自动研究', '当满足相应条件时自动进行研究。');
             createSettingToggle(scriptNode, 'autoJobs', '自动工作', '以相应优先级和多个阈值来自动分配工作。将先满足第一阈值后，再考虑第二阈值，然后再考虑最终阈值。在考虑其他工作前会先考虑伐木工人和石工数量。');
