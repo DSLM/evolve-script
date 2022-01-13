@@ -11,6 +11,8 @@
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
 // ==/UserScript==
 
+// TODO: 窗口拖动；取消隐藏键；电力显示计算；导入导出配置；压制满了不造
+
 (function($) {
     'use strict';
 

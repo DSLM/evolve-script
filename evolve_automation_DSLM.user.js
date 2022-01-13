@@ -14,6 +14,7 @@
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // ==/UserScript==
 //炼钢、冶炼和石墨烯厂会在需求资源储量大于10万时继续运作而非关闭
+//让部分背景色随主题变化
 //
 // This script forked from TMVictor's script version 3.3.1. Original script: https://gist.github.com/TMVictor/3f24e27a21215414ddc68842057482da
 // Removed downloadURL in case that script got screwed up. Original downloadURL: @downloadURL  https://gist.github.com/Vollch/b1a5eec305558a48b7f4575d317d7dd1/raw/evolve_automation.user.js
@@ -11510,7 +11511,7 @@
             /* Modal Content/Box */
             .script-modal-content {
                 position: relative;
-                background-color: #1f2424;
+                border: #ccc solid 0.0625rem;
                 margin: auto;
                 margin-top: 50px;
                 margin-bottom: 50px;
@@ -11743,7 +11744,7 @@
     function buildSettingsSection(sectionId, sectionName, resetFunction, updateSettingsContentFunction) {
         $("#script_settings").append(`
           <div id="script_${sectionId}Settings" style="margin-top: 10px;">
-            <h3 id="${sectionId}SettingsCollapsed" class="script-collapsible text-center has-text-success">${sectionName}设置</h3>
+            <h3 id="${sectionId}SettingsCollapsed" class="script-collapsible text-center has-text-success resource alt">${sectionName}设置</h3>
             <div class="script-content">
               <div style="margin-top: 10px;"><button id="script_reset${sectionId}" class="button">${sectionName}设置还原</button></div>
               <div style="margin-top: 10px; margin-bottom: 10px;" id="script_${sectionId}Content"></div>
@@ -11767,7 +11768,7 @@
         } else {
             parentNode.append(`
               <div id="script_${sectionId}Settings" style="margin-top: 10px;">
-                <h3 id="${sectionId}SettingsCollapsed" class="script-collapsible text-center has-text-success">${sectionName}设置</h3>
+                <h3 id="${sectionId}SettingsCollapsed" class="script-collapsible text-center has-text-success resource alt">${sectionName}设置</h3>
                 <div class="script-content">
                   <div style="margin-top: 10px;"><button id="script_reset${sectionId}" class="button">${sectionName}设置还原</button></div>
                   <div style="margin-top: 10px; margin-bottom: 10px;" id="script_${sectionId}Content"></div>
@@ -15029,7 +15030,7 @@
         $(document.body).append(`
           <div id="scriptModal" class="script-modal content">
             <span id="scriptModalClose" class="script-modal-close">&times;</span>
-            <div class="script-modal-content">
+            <div class="script-modal-content resource alt">
               <div id="scriptModalHeader" class="script-modal-header has-text-warning">
                 <p>You should never see this modal header...</p>
               </div>

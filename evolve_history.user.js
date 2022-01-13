@@ -45,81 +45,82 @@
         //未完全加载
         if(evolve.global == undefined) return;
 
-        //有了
-        if($("#historyDataText").length > 0) return;
-
-        let historyData = JSON.parse(localStorage.getItem("historyData"));
-        if(historyData == null)
+        //还没有
+        if($("#historyDataText").length == 0)
         {
-            historyData = [];
-        }
+            let historyData = JSON.parse(localStorage.getItem("historyData"));
+            if(historyData == null)
+            {
+                historyData = [];
+            }
 
-        let backupString = LZString.decompressFromUTF16(localStorage.getItem('evolveBak'));
-        if (backupString) {
-            let oldStats = JSON.parse(backupString).stats;
-            //race: JSON.parse(backupString).race.species,
-            let statsData = {/*knowledge_spent: oldStats.know, starved_to_death: oldStats.starved, died_in_combat: oldStats.died, attacks_made: oldStats.attacks,*/ game_days_played: oldStats.days};
-            /*if (oldStats.dkills > 0) {
+            let backupString = LZString.decompressFromUTF16(localStorage.getItem('evolveBak'));
+            if (backupString) {
+                let oldStats = JSON.parse(backupString).stats;
+                //race: JSON.parse(backupString).race.species,
+                let statsData = {/*knowledge_spent: oldStats.know, starved_to_death: oldStats.starved, died_in_combat: oldStats.died, attacks_made: oldStats.attacks,*/ game_days_played: oldStats.days};
+                /*if (oldStats.dkills > 0) {
                 statsData.demons_kills = oldStats.dkills;
             }
             if (oldStats.sac > 0) {
-                statsData.sacrificed = oldStats.sac;
-            }*/
-            if (oldStats.plasmid > 0) {
-                statsData.plasmid_earned = oldStats.plasmid;
-            }
-            if (oldStats.antiplasmid > 0) {
-                statsData.antiplasmid_earned = oldStats.antiplasmid;
-            }
-            if (oldStats.phage > 0) {
-                statsData.phage_earned = oldStats.phage;
-            }
-            if (oldStats.dark > 0) {
-                statsData.dark_earned = oldStats.dark;
-            }
-            if (oldStats.harmony > 0) {
-                statsData.harmony_earned = oldStats.harmony;
-            }
-            if (oldStats.blood > 0) {
-                statsData.blood_earned = oldStats.blood;
-            }
-            if (oldStats.artifact > 0) {
-                statsData.artifact_earned = oldStats.artifact;
-            }
-            if (oldStats.reset > 0) {
-                statsData.total_resets = oldStats.reset;
-            }
-
-            if(historyData.length == 0 || (historyData.length > 0 && historyData[0].total_resets != statsData.total_resets)) historyData.unshift(statsData)
-            if(historyData.length > HIST_RESET_LIMIT) historyData.pop()
-            localStorage.setItem("historyData", JSON.stringify(historyData));
+            statsData.sacrificed = oldStats.sac;
+        }*/
+        if (oldStats.plasmid > 0) {
+            statsData.plasmid_earned = oldStats.plasmid;
+        }
+        if (oldStats.antiplasmid > 0) {
+            statsData.antiplasmid_earned = oldStats.antiplasmid;
+        }
+        if (oldStats.phage > 0) {
+            statsData.phage_earned = oldStats.phage;
+        }
+        if (oldStats.dark > 0) {
+            statsData.dark_earned = oldStats.dark;
+        }
+        if (oldStats.harmony > 0) {
+            statsData.harmony_earned = oldStats.harmony;
+        }
+        if (oldStats.blood > 0) {
+            statsData.blood_earned = oldStats.blood;
+        }
+        if (oldStats.artifact > 0) {
+            statsData.artifact_earned = oldStats.artifact;
+        }
+        if (oldStats.reset > 0) {
+            statsData.total_resets = oldStats.reset;
         }
 
-        let historyDataTitle = $(`<div class='has-text-warning' style='margin-top:32px' onclick=\"(function (){if($('#historyDataText').css('display')!='none'){$('#historyDataText').hide();$('#hiddenTip1').show();}else{$('#historyDataText').show();$('#hiddenTip1').hide();}})()\"><span>历史统计数据（保存${HIST_RESET_LIMIT}组数据，点击隐藏/显示）:</span></div>`);
-        let historyDataText = $("<div id='historyDataText'style='display: none;'></div>");
-        let hiddenTip1 = $("<div id='hiddenTip1'>已隐藏</div>");
-        $('#stats').append(historyDataTitle);
-        $('#stats').append(hiddenTip1);
-        $('#stats').append(historyDataText);
+        if(historyData.length == 0 || (historyData.length > 0 && historyData[0].total_resets != statsData.total_resets)) historyData.unshift(statsData)
+        if(historyData.length > HIST_RESET_LIMIT) historyData.pop()
+        localStorage.setItem("historyData", JSON.stringify(historyData));
+    }
 
-        for(var i = 0; i < historyData.length; i++)
-        {
-            let statsString = `<div><span class="has-text-success">前${i+1}轮：</span></div>`;
-            for (let [label, value] of Object.entries(historyData[i])) {
-                //威望物资
-                if(label.includes("_earned"))
-                {
-                    var calData = (i == 0) ? (evolve.global.stats[label.slice(0,-7)] - value) : (historyData[i-1][label] - value);
-                    if(calData == 0) continue;
-                    statsString += `<div><span class="has-text-warning">${evolve.loc("achieve_stats_" + label)}</span> ${calData.toLocaleString()}</div>`;
-                }
-                else
-                {
-                    statsString += `<div><span class="has-text-warning">${evolve.loc("achieve_stats_" + label)}</span> ${value.toLocaleString()}</div>`;
-                }
+    let historyDataTitle = $(`<div class='has-text-warning' style='margin-top:32px' onclick=\"(function (){if($('#historyDataText').css('display')!='none'){$('#historyDataText').hide();$('#hiddenTip1').show();}else{$('#historyDataText').show();$('#hiddenTip1').hide();}})()\"><span>历史统计数据（保存${HIST_RESET_LIMIT}组数据，点击隐藏/显示）:</span></div>`);
+    let historyDataText = $("<div id='historyDataText'style='display: none;'></div>");
+    let hiddenTip1 = $("<div id='hiddenTip1'>已隐藏</div>");
+    $('#stats').append(historyDataTitle);
+    $('#stats').append(hiddenTip1);
+    $('#stats').append(historyDataText);
+
+    for(var i = 0; i < historyData.length; i++)
+    {
+        let statsString = `<div><span class="has-text-success">前${i+1}轮：</span></div>`;
+        for (let [label, value] of Object.entries(historyData[i])) {
+            //威望物资
+            if(label.includes("_earned"))
+            {
+                var calData = (i == 0) ? (evolve.global.stats[label.slice(0,-7)] - value) : (historyData[i-1][label] - value);
+                if(calData == 0) continue;
+                statsString += `<div><span class="has-text-warning">${evolve.loc("achieve_stats_" + label)}</span> ${calData.toLocaleString()}</div>`;
             }
-            historyDataText.append(statsString);
+            else
+            {
+                statsString += `<div><span class="has-text-warning">${evolve.loc("achieve_stats_" + label)}</span> ${value.toLocaleString()}</div>`;
+            }
         }
+        historyDataText.append(statsString);
+    }
+}
     }
 
     function spireTimeDataFunc()
