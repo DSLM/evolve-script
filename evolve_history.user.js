@@ -14,27 +14,27 @@
 (function() {
     'use strict';
 
-	var histF_times = 0
-	var histF;
+    var histF_times = 0
+    var histF;
     var HIST_RESET_LIMIT = 20
     var HIST_SPIRE_LIMIT = 200
     var spirePrepared = false
 
-	//初始化
-	histF = window.setInterval(checkHist, 3000);
+    //初始化
+    histF = window.setInterval(checkHist, 3000);
 
     function checkHist()
     {
-		histF_times = histF_times + 1;
-		//判断是否需要初始化
-		if(histF_times > 500)
-		{
-			var temp = histF
-			histF_times = 0;
-			histF = window.setInterval(checkHist, 5000);
-			clearInterval(temp)
-			return;
-		}
+        histF_times = histF_times + 1;
+        //判断是否需要初始化
+        if(histF_times > 500)
+        {
+            var temp = histF
+            histF_times = 0;
+            histF = window.setInterval(checkHist, 5000);
+            clearInterval(temp)
+            return;
+        }
         histRecord();
         spireTimeDataFunc();
     }
@@ -121,91 +121,91 @@
         historyDataText.append(statsString);
     }
 }
-    }
+}
 
-    function spireTimeDataFunc()
+function spireTimeDataFunc()
+{
+    var spireTimeData, nowRecord;
+    //显示
+    //evolve.global.stats.spire["h"]['dlstr']
+
+    let spireTimeDataText = $("#spireTimeDataText");
+    if(spireTimeDataText.length === 0)
     {
-        var spireTimeData, nowRecord;
-        //显示
-        //evolve.global.stats.spire["h"]['dlstr']
+        let spireTimeDataTitle = $(`<div class='has-text-warning' style='margin-top:32px' onclick=\"(function (){if($('#spireTimeDataText').css('display')!='none'){$('#spireTimeDataText').hide();$('#hiddenTip2').show();}else{$('#spireTimeDataText').show();$('#hiddenTip2').hide();}})()\"><span>地狱尖塔数据（保存${HIST_SPIRE_LIMIT}条数据，点击隐藏/显示）:</span></div>`)
+        spireTimeDataText = $("<div id='spireTimeDataText' style='display: none;'></div>");
+        let hiddenTip2 = $("<div id='hiddenTip2'>已隐藏</div>");
+        $('#stats').append(spireTimeDataTitle);
+        $('#stats').append(hiddenTip2);
+        $('#stats').append(spireTimeDataText);
 
-        let spireTimeDataText = $("#spireTimeDataText");
-        if(spireTimeDataText.length === 0)
+        spireTimeData = JSON.parse(localStorage.getItem("spireTimeData"));
+        if(spireTimeData == null)
         {
-            let spireTimeDataTitle = $(`<div class='has-text-warning' style='margin-top:32px' onclick=\"(function (){if($('#spireTimeDataText').css('display')!='none'){$('#spireTimeDataText').hide();$('#hiddenTip2').show();}else{$('#spireTimeDataText').show();$('#hiddenTip2').hide();}})()\"><span>地狱尖塔数据（保存${HIST_SPIRE_LIMIT}条数据，点击隐藏/显示）:</span></div>`)
-            spireTimeDataText = $("<div id='spireTimeDataText' style='display: none;'></div>");
-            let hiddenTip2 = $("<div id='hiddenTip2'>已隐藏</div>");
-            $('#stats').append(spireTimeDataTitle);
-            $('#stats').append(hiddenTip2);
-            $('#stats').append(spireTimeDataText);
-
-            spireTimeData = JSON.parse(localStorage.getItem("spireTimeData"));
-            if(spireTimeData == null)
-            {
-                return;
-            }
-
-            for(var i = 0; i < spireTimeData["record"].length - 1; i++)
-            {
-                nowRecord = spireTimeData["record"][i]
-                if(nowRecord["effi"] < spireTimeData["record"][i + 1]["effi"])
-                {
-                    spireTimeDataText.append($("<p class='has-text-success'>抵达 " + nowRecord["floor"] + " 层，花费 " + nowRecord["day"] + " 天，效率 " + nowRecord["effi"].toFixed(4) + " 天/层，鲜血之石 " + nowRecord["stone"] + " 个，效率 " + (nowRecord["effi"] / nowRecord["stone"]).toFixed(4) + " 天/个</p>"))
-                }
-                else
-                {
-                    spireTimeDataText.append($("<p class='has-text-danger'>抵达 " + nowRecord["floor"] + " 层，花费 " + nowRecord["day"] + " 天，效率 " + nowRecord["effi"].toFixed(4) + " 天/层，鲜血之石 " + nowRecord["stone"] + " 个，效率 " + (nowRecord["effi"] / nowRecord["stone"]).toFixed(4) + " 天/个</p>"))
-                }
-            }
-            if(spireTimeData["record"].length > 0)
-            {
-                nowRecord = spireTimeData["record"][spireTimeData["record"].length - 1]
-                    spireTimeDataText.append($("<p class='has-text-success'>抵达 " + nowRecord["floor"] + " 层，花费 " + nowRecord["day"] + " 天，效率 " + nowRecord["effi"].toFixed(4) + " 天/层，鲜血之石 " + nowRecord["stone"] + " 个，效率 " + (nowRecord["effi"] / nowRecord["stone"]).toFixed(4) + " 天/个</p>"))
-            }
-
             return;
         }
 
-        if(evolve.global.portal.spire == undefined) return;
-
-
-        //刷新后初始化
-        if(!spirePrepared && evolve.global.portal.spire.count)
+        for(var i = 0; i < spireTimeData["record"].length - 1; i++)
         {
-            spirePrepared = true;
-            spireTimeData = JSON.parse(localStorage.getItem("spireTimeData"));
-            if(spireTimeData == null)
+            nowRecord = spireTimeData["record"][i]
+            if(nowRecord["effi"] < spireTimeData["record"][i + 1]["effi"])
             {
-                spireTimeData = {"now":evolve.global.portal.spire.count, "record":new Array()};
+                spireTimeDataText.append($("<p class='has-text-success'>抵达 " + nowRecord["floor"] + " 层，花费 " + nowRecord["day"] + " 天，效率 " + nowRecord["effi"].toFixed(4) + " 天/层，鲜血之石 " + nowRecord["stone"] + " 个，效率 " + (nowRecord["effi"] / nowRecord["stone"]).toFixed(4) + " 天/个</p>"))
             }
-            spireTimeData["now"] = evolve.global.portal.spire.count;
-            localStorage.setItem("spireTimeData", JSON.stringify(spireTimeData));
+            else
+            {
+                spireTimeDataText.append($("<p class='has-text-danger'>抵达 " + nowRecord["floor"] + " 层，花费 " + nowRecord["day"] + " 天，效率 " + nowRecord["effi"].toFixed(4) + " 天/层，鲜血之石 " + nowRecord["stone"] + " 个，效率 " + (nowRecord["effi"] / nowRecord["stone"]).toFixed(4) + " 天/个</p>"))
+            }
+        }
+        if(spireTimeData["record"].length > 0)
+        {
+            nowRecord = spireTimeData["record"][spireTimeData["record"].length - 1]
+            spireTimeDataText.append($("<p class='has-text-success'>抵达 " + nowRecord["floor"] + " 层，花费 " + nowRecord["day"] + " 天，效率 " + nowRecord["effi"].toFixed(4) + " 天/层，鲜血之石 " + nowRecord["stone"] + " 个，效率 " + (nowRecord["effi"] / nowRecord["stone"]).toFixed(4) + " 天/个</p>"))
         }
 
-        //通层
+        return;
+    }
+
+    if(evolve.global.portal.spire == undefined) return;
+
+
+    //刷新后初始化
+    if(!spirePrepared && evolve.global.portal.spire.count)
+    {
+        spirePrepared = true;
         spireTimeData = JSON.parse(localStorage.getItem("spireTimeData"));
-        if(evolve.global.portal.spire.count != spireTimeData["now"])
+        if(spireTimeData == null)
         {
-            spireTimeData["record"].unshift({"floor":evolve.global.portal.spire.count,"day":evolve.global.stats.days, "effi":evolve.global.stats.days/(evolve.global.portal.spire.count - 1), "stone":evolve.alevel()*((evolve.global.genes['blood'] >= 2)?2:1),});
-            spireTimeData["now"] = evolve.global.portal.spire.count;
-            if(spireTimeData["record"].length > HIST_SPIRE_LIMIT)
-            {
-                spireTimeData["record"].pop();
-            }
-
-            nowRecord = spireTimeData["record"][0]
-            if(spireTimeData["record"].length > 1)
-            {
-                if(nowRecord["effi"] < spireTimeData["record"][1]["effi"])
-                {
-                    spireTimeDataText.prepend($("<p class='has-text-success'>抵达 " + nowRecord["floor"] + " 层，花费 " + nowRecord["day"] + " 天，效率 " + nowRecord["effi"].toFixed(4) + " 天/层，鲜血之石 " + nowRecord["stone"] + " 个，效率 " + (nowRecord["effi"] / nowRecord["stone"]).toFixed(4) + " 天/个</p>"))
-                }
-                else
-                {
-                    spireTimeDataText.prepend($("<p class='has-text-danger'>抵达 " + nowRecord["floor"] + " 层，花费 " + nowRecord["day"] + " 天，效率 " + nowRecord["effi"].toFixed(4) + " 天/层，鲜血之石 " + nowRecord["stone"] + " 个，效率 " + (nowRecord["effi"] / nowRecord["stone"]).toFixed(4) + " 天/个</p>"))
-                }
-            }
+            spireTimeData = {"now":evolve.global.portal.spire.count, "record":new Array()};
         }
+        spireTimeData["now"] = evolve.global.portal.spire.count;
         localStorage.setItem("spireTimeData", JSON.stringify(spireTimeData));
     }
+
+    //通层
+    spireTimeData = JSON.parse(localStorage.getItem("spireTimeData"));
+    if(evolve.global.portal.spire.count != spireTimeData["now"])
+    {
+        spireTimeData["record"].unshift({"floor":evolve.global.portal.spire.count,"day":evolve.global.stats.days, "effi":evolve.global.stats.days/(evolve.global.portal.spire.count - 1), "stone":evolve.alevel()*((evolve.global.genes['blood'] >= 2)?2:1),});
+        spireTimeData["now"] = evolve.global.portal.spire.count;
+        if(spireTimeData["record"].length > HIST_SPIRE_LIMIT)
+        {
+            spireTimeData["record"].pop();
+        }
+
+        nowRecord = spireTimeData["record"][0]
+        if(spireTimeData["record"].length > 1)
+        {
+            if(nowRecord["effi"] < spireTimeData["record"][1]["effi"])
+            {
+                spireTimeDataText.prepend($("<p class='has-text-success'>抵达 " + nowRecord["floor"] + " 层，花费 " + nowRecord["day"] + " 天，效率 " + nowRecord["effi"].toFixed(4) + " 天/层，鲜血之石 " + nowRecord["stone"] + " 个，效率 " + (nowRecord["effi"] / nowRecord["stone"]).toFixed(4) + " 天/个</p>"))
+            }
+            else
+            {
+                spireTimeDataText.prepend($("<p class='has-text-danger'>抵达 " + nowRecord["floor"] + " 层，花费 " + nowRecord["day"] + " 天，效率 " + nowRecord["effi"].toFixed(4) + " 天/层，鲜血之石 " + nowRecord["stone"] + " 个，效率 " + (nowRecord["effi"] / nowRecord["stone"]).toFixed(4) + " 天/个</p>"))
+            }
+        }
+    }
+    localStorage.setItem("spireTimeData", JSON.stringify(spireTimeData));
+}
 })();

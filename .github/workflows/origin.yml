@@ -1,4 +1,4 @@
-name: Spider
+name: Origin
 
 on:
   workflow_dispatch:
@@ -23,7 +23,7 @@ jobs:
           python translater.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Commit
         run: |
           git add .

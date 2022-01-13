@@ -1,4 +1,4 @@
-name: Spider
+name: SelfUse
 
 on:
   workflow_dispatch:
