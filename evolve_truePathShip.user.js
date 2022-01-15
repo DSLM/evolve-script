@@ -1,17 +1,18 @@
 // ==UserScript==
 // @name         自动智械造船配置
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_truePathShip.user.js
 // @author       DSLM
 // @match        https://likexia.gitee.io/evolve/
 // @match        https://pmotschmann.github.io/Evolve/
 // @grant        none
-// @require      https://code.jquery.com/jquery-3.4.1.min.js
+// @require      https://code.jquery.com/jquery-3.6.0.min.js
+// @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // ==/UserScript==
 
-// TODO: 窗口拖动；取消隐藏键；电力显示计算；导入导出配置；压制满了不造
+// TODO: 导入导出配置；压制满了不造
 
 (function($) {
     'use strict';
@@ -60,43 +61,47 @@
         let shipWindow = $("#shipWindow");
         let smallShipTitle = $("#smallShipTitle");
         let shipContent = $("#shipContent");
-        let shipAdd = $("#traitAdd");
         let shipButton = $("#shipButton");
         let shipSave = $("#shipSave");
-        let shipHide = $("#shipHide");
+        let shipAdd = $("#shipAdd");
+        let shipTotalStatus = $("#shipTotalStatus");
         let shipTable = $("#shipTable");
         let shipTableBody = $("#shipTableBody");
 
         if(shipWindow.length === 0)
         {
-            shipWindow = $("<div id='shipWindow'></div>");
-            smallShipTitle = $("<div id='smallShipTitle' class='resource alt has-text-caution' style='position: absolute; top: 80%; right: 0px;' onclick='(function (){$(\"#smallShipTitle\").hide();$(\"#shipContent\").show();})()'>舰船</div>");
-            shipContent = $("<div id='shipContent' class='resource alt vscroll' style='position: absolute; top: 20%; height: 60%; right: 32px; display: none; z-index: 1;'><div id='longTraitTitle' class='has-text-caution'>智械黎明舰船设置</div></div>");
-            shipButton = $('<div id="shipButton" style="float: top;"></div>');
+            shipWindow = $("<div id='shipWindow' style='position: absolute; top: 20%; height: 60%; right: 0px; display:flex; flex-direction: row; justify-content: flex-end; align-items: flex-end;'></div>");
+            smallShipTitle = $("<div id='smallShipTitle' class='resource alt has-text-caution' onclick='(function (){if($(\"#shipContent\").css(\"display\") == \"none\"){$(\"#shipContent\").show();}else{$(\"#shipContent\").hide();}})()'>舰船</div>");
+            shipContent = $("<div id='shipContent' class='resource alt vscroll' style='height: 100%; display: none;'><div id='longShipTitle' class='has-text-caution'>智械黎明舰船设置</div></div>");
+            shipButton = $('<div id="shipButton" style="float: top; display:flex; flex-direction: row; justify-content: flex-start; align-items: center;"></div>');
             shipSave = $('<button id="shipSave" class="button">保存舰船设置</button>');
-            shipHide = $('<button id="shipHide" class="button" onclick="(function (){$(\'#smallShipTitle\').show();$(\'#shipContent\').hide();})()">隐藏</button>');
-            shipAdd = $('<button id="traitAdd" class="button">添加</button>');
-            shipTable = $(`<table><thead class="has-text-plain"><tr><th>目的地</th><th>${evolve.loc("outer_shipyard_class")}</th><th>${evolve.loc("outer_shipyard_power")}</th><th>${evolve.loc("outer_shipyard_weapon")}</th><th>${evolve.loc("outer_shipyard_armor")}</th><th>${evolve.loc("outer_shipyard_engine")}</th><th>${evolve.loc("outer_shipyard_sensor")}</th><th>数量</th><th>删除</th></tr></thead><tbody id="shipTableBody"></tbody></table>`);
+            shipAdd = $('<button id="shipAdd" class="button">添加</button>');
+            shipTotalStatus = $('<div id="shipTotalStatus"></div>');
+            shipTable = $(`<table><thead class="has-text-plain"><tr><th>目的地</th><th>${evolve.loc("outer_shipyard_class")}</th><th>${evolve.loc("outer_shipyard_power")}</th><th>${evolve.loc("outer_shipyard_weapon")}</th><th>${evolve.loc("outer_shipyard_armor")}</th><th>${evolve.loc("outer_shipyard_engine")}</th><th>${evolve.loc("outer_shipyard_sensor")}</th><th>数量</th><th>状态</th><th>删除</th></tr></thead><tbody id="shipTableBody" class="ui-sortable"></tbody></table>`);
 
             shipSave.click(saveShipList);
             shipAdd.click(function(){addShipList({"location":"spc_moon","class":"corvette","power":"solar","weapon":"railgun","armor":"steel","engine":"ion","sensor":"visual","count":"0"})});
 
             shipButton.append(shipSave);
-            shipButton.append(shipHide);
             shipButton.append(shipAdd);
+            shipButton.append(shipTotalStatus);
             shipContent.append(shipButton);
             shipContent.append(shipTable);
-            shipWindow.append(smallShipTitle);
             shipWindow.append(shipContent);
+            shipWindow.append(smallShipTitle);
             $("body").append(shipWindow);
 
             shipTableBody = $("#shipTableBody");
-
 
             for (let i = 0; i < buildList.length; i++)
             {
                 addShipList(buildList[i]);
             }
+
+            shipTableBody.sortable({
+                items: "tr:not(.unsortable)",
+                helper: sorterHelper,
+            });
 
         }
 
@@ -126,10 +131,15 @@
         //未完全加载
         try
         {
-            if(evolve.global.space.shipyard.ships == undefined) return;
+            if(evolve.global.space.shipyard.ships == undefined)
+            {
+                shipTotalStatus.html("<span class='has-text-danger'>船坞未出现</span>");
+                return;
+            }
         }
         catch(e)
         {
+            shipTotalStatus.html("<span class='has-text-danger'>船坞未出现</span>");
             return;
         }
 
@@ -145,6 +155,7 @@
             //检查配置解锁没
             if(!buildCheck(buildList[i]))
             {
+                shipTableBody.children().eq(i).children().eq(inputName.length).html("<span class='has-text-danger'>舰船部件未解锁</span>");
                 continue;
             }
 
@@ -167,8 +178,10 @@
             //船够了下一个
             if(count <= 0)
             {
+                shipTableBody.children().eq(i).children().eq(inputName.length).html("<span class='has-text-success'>已完成</span>");
                 continue;
             }
+
             //看船坞够不够
             if(count <= yardShips.length)
             {
@@ -186,12 +199,26 @@
                     shipLoc.find(".dropdown-menu-animation").eq(yardShips[j]).find("." + buildList[i]["location"]).get(0).click()
                 }
 
-                if(tryBuild(buildList[i]))
+                switch(tryBuild(buildList[i]))
                 {
-                    return;
+                    case 0://成功构建，结束本轮
+                        shipTotalStatus.text("");
+                        return;
+                        break;
+
+                    case 1://部件没解锁，下一个
+                        shipTableBody.children().eq(i).children().eq(inputName.length).html("<span class='has-text-danger'>舰船部件未解锁</span>");
+                        continue;
+                        break;
+
+                    case 2://电不够，下一个
+                        shipTableBody.children().eq(i).children().eq(inputName.length).html("<span class='has-text-danger'>舰船设计电力不足</span>");
+                        continue;
+                        break;
                 }
             }
         }
+        shipTotalStatus.text("");
 
         try
         {
@@ -202,6 +229,20 @@
         {
             //console.log(e);
         }
+    }
+
+    function sorterHelper(event, ui)
+    {
+        let clone = $(ui).clone();
+        ui.children().each((index, element) => {
+            let copyVal = $(element).children().val();
+            if(copyVal.length > 0)
+            {
+                clone.children().eq(index).children().val($(element).children().val());
+            }
+        });
+        clone.css('position','absolute');
+        return clone.get(0);
     }
 
     function buildCheck(curOne)
@@ -230,8 +271,15 @@
             }
             else
             {
-                return false;
+                //部件没有
+                return 1;
             }
+        }
+
+        //电不够
+        if(parseInt(document.querySelector("#shipPlans > div.stats > div:nth-child(3) > span:nth-child(2)").innerText) < 0)
+        {
+            return 2;
         }
 
         document.querySelector("#shipPlans > div.assemble > button").click();
@@ -245,7 +293,7 @@
         {
             //console.log(e);
         }
-        return true;
+        return 0;
     }
 
     function sameship(obj1, obj2)
@@ -279,7 +327,7 @@
     function addShipList(values)
     {
         let shipTableBody = $("#shipTableBody");
-        let tempTR = $(`<tr></tr>`);
+        let tempTR = $(`<tr class="ui-sortable-handle"></tr>`);
 
         //目的地
         let tempTD = $(`<td></td>`);
@@ -308,11 +356,15 @@
 
         //数量
         tempTD = $(`<td></td>`);
-        let tempInput = $(`<input class="count" type="text" pattern="[0-9]" value="${values['count']}">`);
+        let tempInput = $(`<input class="count" type="text" pattern="[0-9]" style="width: 100px;" value="${values['count']}">`);
         tempInput.on("change", function() {
             tempInput.val($.trim(tempInput.val()).replace(/\b(0+)/gi,""));
         });
         tempTD.append(tempInput);
+        tempTR.append(tempTD);
+
+        //状态
+        tempTD = $(`<td></td>`);
         tempTR.append(tempTD);
 
         //删除
