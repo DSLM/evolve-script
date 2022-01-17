@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         自动增删特质
 // @namespace    http://tampermonkey.net/
-// @version      1.1.2
+// @version      1.1.3
 // @description  适配游戏版本1.2.0+
 // @downloadURL
 // @author       DSLM
@@ -2839,33 +2839,39 @@
             return;
         }
 
-        let traitWindow = $("#traitWindow");
+        //共用窗口
+        let sideWindow = $("#sideWindow");
+        if(sideWindow.length === 0)
+        {
+            sideWindow = $("<div id='sideWindow' style='position: absolute; top: 20%; height: 60%; right: 0px; display:flex; flex-direction: row; justify-content: flex-end; align-items: flex-end;'><div id='titleListWindow' style='display:flex; flex-direction: column; justify-content: flex-end; align-items: flex-end;'></div></div>");
+            $("body").append(sideWindow);
+        }
+
+        //独有窗口
         let smallTraitTitle = $("#smallTraitTitle");
         let traitContent = $("#traitContent");
         let traitAdd = $("#traitAdd");
         let traitRemove = $("#traitRemove");
         let traitButton = $("#traitButton");
         let traitSave = $("#traitSave");
-        let traitHide = $("#traitHide");
 
-        if(traitWindow.length === 0)
+        if(smallTraitTitle.length === 0)
         {
-            traitWindow = $("<div id='traitWindow'></div>");
-            smallTraitTitle = $("<div id='smallTraitTitle' class='resource alt has-text-caution' style='position: absolute; top: 75%; right: 0px;' onclick='(function (){$(\"#smallTraitTitle\").hide();$(\"#traitContent\").show();})()'>特质</div>");
-            traitContent = $("<div id='traitContent' class='resource alt vscroll' style='position: absolute; top: 20%; height: 60%; right: 0px; display: none; z-index: 1;'><div id='longTraitTitle' class='has-text-caution'>自动删减特质</div></div>");
+            smallTraitTitle = $("<div id='smallTraitTitle' class='resource alt has-text-caution' onclick='(function (){if($(\"#traitContent\").css(\"display\") == \"none\"){$(\".sideContentWindow\").hide();$(\"#traitContent\").show();}else{$(\"#traitContent\").hide();}})()'>特质</div>");
+            traitContent = $("<div id='traitContent' class='resource alt vscroll sideContentWindow' style='height: 100%; display: none;'><div id='longTraitTitle' class='has-text-caution'>自动删减特质</div></div>");
             traitAdd = $("<div id='traitAdd' style='float: right;'></div>");
             traitRemove = $("<div id='traitRemove' style='float: right;'></div>");
             traitButton = $('<div id="traitButton" style="float: top;"></div>');
             traitSave = $('<button id="traitSave" class="button">保存特质设置</button>');
-            traitHide = $('<button id="traitHide" class="button" onclick="(function (){$(\'#smallTraitTitle\').show();$(\'#traitContent\').hide();})()">隐藏</button>');
 
             traitSave.click(saveTraitList);
 
             traitButton.append(traitSave);
-            traitButton.append(traitHide);
+
             traitContent.append(traitButton);
             traitContent.append(traitRemove);
             traitContent.append(traitAdd);
+
             Object.keys(traits).sort().forEach(function (trait){
                 if (traits[trait].type === 'major' || traits[trait].type === 'genus'){
                     if (traits[trait].val >= 0){
@@ -2888,10 +2894,16 @@
                 }
             });
 
-            traitWindow.append(smallTraitTitle);
-            traitWindow.append(traitContent);
-            $("body").append(traitWindow);
+            sideWindow.prepend(traitContent);
+            $("#titleListWindow").append(smallTraitTitle);
         }
+
+        //软泥怪不运作
+        if(evolve.global.race.species == "sludge")
+        {
+            return;
+        }
+
         //删的特质
         removeTr.forEach(function(element) {
             if(document.querySelector(".remove" + element) != null)

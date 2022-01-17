@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         自动智械造船配置
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.1.1
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_truePathShip.user.js
 // @author       DSLM
@@ -57,8 +57,15 @@
             buildList = [{}];
         }
 
+        //共用窗口
+        let sideWindow = $("#sideWindow");
+        if(sideWindow.length === 0)
+        {
+            sideWindow = $("<div id='sideWindow' style='position: absolute; top: 20%; height: 60%; right: 0px; display:flex; flex-direction: row; justify-content: flex-end; align-items: flex-end;'><div id='titleListWindow' style='display:flex; flex-direction: column; justify-content: flex-end; align-items: flex-end;'></div></div>");
+            $("body").append(sideWindow);
+        }
 
-        let shipWindow = $("#shipWindow");
+        //独有窗口
         let smallShipTitle = $("#smallShipTitle");
         let shipContent = $("#shipContent");
         let shipButton = $("#shipButton");
@@ -68,11 +75,10 @@
         let shipTable = $("#shipTable");
         let shipTableBody = $("#shipTableBody");
 
-        if(shipWindow.length === 0)
+        if(smallShipTitle.length === 0)
         {
-            shipWindow = $("<div id='shipWindow' style='position: absolute; top: 20%; height: 60%; right: 0px; display:flex; flex-direction: row; justify-content: flex-end; align-items: flex-end;'></div>");
-            smallShipTitle = $("<div id='smallShipTitle' class='resource alt has-text-caution' onclick='(function (){if($(\"#shipContent\").css(\"display\") == \"none\"){$(\"#shipContent\").show();}else{$(\"#shipContent\").hide();}})()'>舰船</div>");
-            shipContent = $("<div id='shipContent' class='resource alt vscroll' style='height: 100%; display: none;'><div id='longShipTitle' class='has-text-caution'>智械黎明舰船设置</div></div>");
+            smallShipTitle = $("<div id='smallShipTitle' class='resource alt has-text-caution' onclick='(function (){if($(\"#shipContent\").css(\"display\") == \"none\"){$(\".sideContentWindow\").hide();$(\"#shipContent\").show();}else{$(\"#shipContent\").hide();}})()'>舰船</div>");
+            shipContent = $("<div id='shipContent' class='resource alt vscroll sideContentWindow' style='height: 100%; display: none;'><div id='longShipTitle' class='has-text-caution'>智械黎明舰船设置</div></div>");
             shipButton = $('<div id="shipButton" style="float: top; display:flex; flex-direction: row; justify-content: flex-start; align-items: center;"></div>');
             shipSave = $('<button id="shipSave" class="button">保存舰船设置</button>');
             shipAdd = $('<button id="shipAdd" class="button">添加</button>');
@@ -85,11 +91,12 @@
             shipButton.append(shipSave);
             shipButton.append(shipAdd);
             shipButton.append(shipTotalStatus);
+
             shipContent.append(shipButton);
             shipContent.append(shipTable);
-            shipWindow.append(shipContent);
-            shipWindow.append(smallShipTitle);
-            $("body").append(shipWindow);
+
+            sideWindow.prepend(shipContent);
+            $("#titleListWindow").append(smallShipTitle);
 
             shipTableBody = $("#shipTableBody");
 
