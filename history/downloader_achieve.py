@@ -6,8 +6,20 @@ addedStr = ""
 
 url = 'https://raw.githubusercontent.com/pmotschmann/Evolve/master/src/achieve.js'
 res = requests.get(url)
+
 sourData = res.text.find("const achieve_list = {")
 endIndex = sourData + len("const achieve_list = {")
+brackets = 1
+while brackets > 0:
+    if res.text[endIndex] == "{":
+        brackets += 1
+    elif res.text[endIndex] == "}":
+        brackets -= 1
+    endIndex += 1
+addedStr += res.text[sourData : endIndex].replace("\n","\n\t") +"\n\t"
+
+sourData = res.text.find("const feats = {")
+endIndex = sourData + len("const feats = {")
 brackets = 1
 while brackets > 0:
     if res.text[endIndex] == "{":
@@ -30,6 +42,7 @@ while brackets > 0:
         brackets -= 1
     endIndex += 1
 addedStr += res.text[sourData : endIndex].replace("\n","\n\t") +"\n\t"
+
 icons = """const icons = {
     	standard: {
     		path: '<path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z" />',

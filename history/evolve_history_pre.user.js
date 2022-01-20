@@ -29,6 +29,22 @@
     });
     var starName = ['未获得', '无星', '白星', '铜星', '银星', '金星'];
     const AchiDivWid = 350, AchiDivCol = 3;
+    const FeatDivWid = 150, FeatDivCol = 3;
+    const PillDivWid = 140, PillDivCol = 3;
+
+    //全局CSS
+    const padTB = "0.5em";
+    const padLR = "0.75em";
+    let styles = $(`<style type='text/css' id='sideWindowCSS'>
+    #sideWindow>div:not(#titleListWindow) {
+        padding: ${padTB} ${padLR};
+    }
+    </style>`);
+    if($("#sideWindowCSS"))
+    {
+        $("#sideWindowCSS").remove();
+    }
+    $("head").append(styles);
 
     //初始化
     histF = window.setInterval(checkHist, 3000);
@@ -59,9 +75,9 @@
         if($("#smallHistTitle").length === 0)
         {
             let smallHistTitle = $("<div id='smallHistTitle' class='resource alt has-text-caution' onclick='(function (){if($(\"#histContent\").css(\"display\") == \"none\"){$(\".sideContentWindow\").hide();$(\"#histContent\").show();}else{$(\"#histContent\").hide();}})()'>统计</div>");
-            let histContent = $("<div id='histContent' class='resource alt sideContentWindow' style='height: 100%; display: none;'><div id='histFlexContent' style='height: 100%;display:flex;flex-direction: column;justify-content: space-between;'><div class='has-text-caution' style='text-align: center;'>数据统计</div></div></div>");
+            let histContent = $(`<div id='histContent' class='resource alt sideContentWindow' style='height: 100%; display: none;'><div id='histFlexContent' style='height: 100%;display:flex;flex-direction: column;justify-content: space-between;'><div class='has-text-caution' style='text-align: center; padding-bottom: ${padTB};'>数据统计</div></div></div>`);
 
-            let histWindow = $("<div id='histWindow' style='height: 100%; display:flex; flex-direction: row; justify-content: flex-end; align-items: flex-end; flex-grow: 1;'><div id='histTitleListWindow' style='height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end;'></div></div>");
+            let histWindow = $(`<div id='histWindow' style='height: 100%; display:flex; flex-direction: row; justify-content: flex-end; align-items: flex-end; flex-grow: 1;'><div id='histTitleListWindow' style='height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; padding-left: ${padLR};'></div></div>`);
 
             histContent.children().eq(0).append(histWindow);
 
@@ -69,17 +85,18 @@
             $("#titleListWindow").append(smallHistTitle);
         }
 
+        //未完全加载
+        if(evolve.global == undefined) return;
+        if(evolve.loc("feat_utopia_name") == undefined) return;
+
+        achieveStat();
+        featStat();
         histRecord();
         spireTimeDataFunc();
-        achieveStat();
     }
 
     function histRecord()
     {
-
-        //未完全加载
-        if(evolve.global == undefined) return;
-
         //还没有
         if($("#historyDataText").length == 0)
         {
@@ -246,8 +263,6 @@
 
     function achieveStat()
     {
-
-
         //独有窗口
         let smallAchiTitle = $("#smallAchiTitle");
         let achiContent = $("#achiContent");
@@ -257,7 +272,7 @@
         {
             smallAchiTitle = $("<div id='smallAchiTitle' class='has-text-advanced' onclick='(function (){if($(\"#achiContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#achiContent\").show();}else{$(\"#achiContent\").hide();}})()'>成就</div>");
             achiContent = $("<div id='achiContent' class='sideHistWindow' style='height: inherit; display: none;'><div style='height: 100%; display:flex;'></div></div>");
-            achiTotalStatus = $("<div id='achiTotalStatus'></div>");
+            achiTotalStatus = $(`<div id='achiTotalStatus' style='padding-right: ${padLR};'></div>`);
             let achiShow = $(`<div style='width: ${AchiDivWid * AchiDivCol + 6}px; height: 100%; display:flex; flex-direction: column;'><div id='achiFilter'></div><div class='vscroll' style='flex-grow: 1;'><div id='achiList' style='height: 0;'></div></div></div>`);
 
             achiContent.children().eq(0).append(achiTotalStatus);
@@ -322,7 +337,7 @@
         achiData.total.standard.forEach((ach) => {
             //成就信息
             let name = evolve.loc(`achieve_${ach}_name`).replace(/（.*）/, "");
-            let desc = evolve.loc(`achieve_${ach}_desc`).replace(/（.*）/, "");;
+            let desc = evolve.loc(`achieve_${ach}_desc`).replace(/（.*）/, "");
 
             //宇宙
             let uni = "";
@@ -349,7 +364,7 @@
             if(typeKeys[ach])
             {
                 typeKeys[ach].forEach((typ) => {
-                    star += `type_${typ} `;
+                    type += `type_${typ} `;
                 });
             }
 
@@ -360,7 +375,7 @@
                 icon.append($(`<span title="${evolve.loc("universe_" + uniL)} ${starName[starNum]}"><svg class="svg star${starNum}" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="${icons[uniL].viewbox}" xml:space="preserve" data-level="0">${icons[uniL].path}</svg></span>`))
             });
 
-            let line = $(`<div style="display:inline-block; width:${AchiDivWid}px;" class='achiLine ${uni} ${star} '><span title="${desc}">${name}</span></div>`);
+            let line = $(`<div style="display:inline-block; width:${AchiDivWid}px;" class='achiLine ${uni} ${star} ${type} '><span title="${desc}">${name}</span></div>`);
             line.prepend(icon);
             $("#achiList").append(line);
         });
@@ -399,7 +414,7 @@
             let tempIndex = tempArr.indexOf(UniLtoS[tempUni]);
             if(tempIndex > -1)
             {
-                tempArr.splice(tempIndex, 1);
+                tempArr.spilce(tempIndex, 1);
                 $(`.universe_${tempArr.join(`:not(.universe_${UniLtoS[tempUni]}),.universe_`)}:not(.universe_${UniLtoS[tempUni]})`).hide();
             }
         }
@@ -426,6 +441,108 @@
         {
             $(`.achiLine:not(.${tempType})`).hide();
         }
+    }
+
+    function featStat()
+    {
+        //独有窗口
+        let smallfeaTitle = $("#smallfeaTitle");
+        let feaContent = $("#feaContent");
+        let featStatus = $("#featStatus");
+        let pillarStatus = $("#pillarStatus");
+
+        if(smallfeaTitle.length === 0)
+        {
+            smallfeaTitle = $("<div id='smallfeaTitle' class='has-text-advanced' onclick='(function (){if($(\"#feaContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#feaContent\").show();}else{$(\"#feaContent\").hide();}})()'>壮举</div>");
+            feaContent = $("<div id='feaContent' class='sideHistWindow' style='height: inherit; display: none;'><div style='height: 100%; display:flex;'></div></div>");
+            featStatus = $(`<div style='height: 100%; display:flex; flex-direction: column;'><div id='feaFilter'></div><div class='vscroll' style='flex-grow: 1;'><div id='feaList' style='width: ${FeatDivWid * FeatDivCol + 6}px; height: 0;'></div></div></div>`);
+            pillarStatus = $(`<div style='height: 100%; display:flex; flex-direction: column;'><div id='pilFilter'></div><div class='vscroll' style='flex-grow: 1;'><div id='pilList' style='width: ${PillDivWid * PillDivCol + 6}px; height: 0;'></div></div></div>`);
+
+            feaContent.children().eq(0).append(featStatus);
+            feaContent.children().eq(0).append($(`<div style='width: ${padLR}; height: 100%;'></div>`));
+            feaContent.children().eq(0).append(pillarStatus);
+
+            $("#histWindow").prepend(feaContent);
+            $("#histTitleListWindow").append(smallfeaTitle);
+
+            buildFeat();
+            buildPillar();
+        }
+    }
+
+    function buildFeat()
+    {
+        $("#feaFilter").empty();
+        $("#feaFilter").append($("<div class='has-text-advanced'>壮举统计</div>"));
+        let compe = Object.keys(evolve.global.stats.feat).length;
+        let total = Object.keys(feats).length;
+        $("#feaFilter").append($(`<tr><td>完成率：</td><td><span style='visibility:hidden;'>${Array(3 - (compe +  '').length).join("0")}</span>${compe} / ${total}<span style='visibility:hidden;'>${Array(7 - ((compe / total * 100).toFixed(2) +  '').length).join("0")}</span>（<span class="${+(compe == total ? 'has-text-warning' : '')}">${(compe / total * 100).toFixed(2)}%</span>）</td></tr>`));
+
+        let feaLevel = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[]};
+
+        Object.keys(feats).forEach((fea) => {
+            let starNum = evolve.global.stats.feat[fea] ? evolve.global.stats.feat[fea] : 0;
+            feaLevel[starNum].push(fea);
+            let icon = $(`<span title="${starName[starNum]}"><svg class="svg star${starNum}" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="${icons.standard.viewbox}" xml:space="preserve" data-level="0">${icons.standard.path}</svg></span>`);
+            let line = $(`<div style="width: ${FeatDivWid}px; display: inline-block;" class='featLine ${starNum}_star'><span title="${feats[fea].desc.apply().replace(/（.*）/, "")}">${feats[fea].name.apply().replace(/（.*）/, "")}</span></div>`);
+            line.prepend(icon);
+            $("#feaList").append(line);
+        });
+
+        let table = $("<table></table>");
+        let tr = $("<tr></tr>");
+        [0,1,2].forEach((level) => {
+            tr.append($(`<td><span style='visibility:hidden;'>${Array(5 - (feaLevel[level].length +  '').length).join("0")}</span>${feaLevel[level].length} 个</td><td>${starName[level]}</td>`));
+        });
+        table.append(tr);
+        tr = $("<tr></tr>");
+        [3,4,5].forEach((level) => {
+            tr.append($(`<td><span style='visibility:hidden;'>${Array(5 - (feaLevel[level].length +  '').length).join("0")}</span>${feaLevel[level].length} 个</td><td>${starName[level]}</td>`));
+        });
+        table.append(tr);
+        $("#feaFilter").append(table);
+    }
+
+    function buildPillar()
+    {
+        let races = evolve.races;
+        delete races.protoplasm;
+        races = Object.keys(races);
+
+        $("#pilFilter").empty();
+        $("#pilFilter").append($("<div class='has-text-advanced'>永恒之柱统计</div>"));
+        let compe = Object.keys(evolve.global.pillars).length;
+        let total = races.length;
+        $("#pilFilter").append($(`<tr><td>完成率：</td><td><span style='visibility:hidden;'>${Array(3 - (compe +  '').length).join("0")}</span>${compe} / ${total}<span style='visibility:hidden;'>${Array(7 - ((compe / total * 100).toFixed(2) +  '').length).join("0")}</span>（<span class="${+(compe == total ? 'has-text-warning' : '')}">${(compe / total * 100).toFixed(2)}%</span>）</td></tr>`));
+
+        let pilLevel = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[]};
+
+        races.forEach((pil) => {
+            let starNum = evolve.global.pillars[pil] ? evolve.global.pillars[pil] : 0;
+            pilLevel[starNum].push(pil);
+            let icon = $(`<span title="${starName[starNum]}"><svg class="svg star${starNum}" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="${icons.standard.viewbox}" xml:space="preserve" data-level="0">${icons.standard.path}</svg></span>`);
+            let line = $(`<div style="width: ${PillDivWid}px; display: inline-block;" class='pillLine ${starNum}_star'><span>${evolve.races[pil].name}</span></div>`);
+            line.prepend(icon);
+            $("#pilList").append(line);
+        });
+
+        let table = $("<table></table>");
+        let tr = $("<tr></tr>");
+        [0,1,2].forEach((level) => {
+            tr.append($(`<td><span style='visibility:hidden;'>${Array(5 - (pilLevel[level].length +  '').length).join("0")}</span>${pilLevel[level].length} 个</td><td>${starName[level]}</td>`));
+        });
+        table.append(tr);
+        tr = $("<tr></tr>");
+        [3,4,5].forEach((level) => {
+            tr.append($(`<td><span style='visibility:hidden;'>${Array(5 - (pilLevel[level].length +  '').length).join("0")}</span>${pilLevel[level].length} 个</td><td>${starName[level]}</td>`));
+        });
+        table.append(tr);
+        $("#pilFilter").append(table);
+    }
+
+    function loc(key, variables)
+    {
+        return function(){return evolve.loc(key, variables)};
     }
 
     //手动维护成就列表
@@ -585,4 +702,5 @@
     };
 
     //此处插入数据
+
 })();
