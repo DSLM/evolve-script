@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.1
+// @version      1.4.2
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -10,6 +10,9 @@
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
+// @require      https://unpkg.com/@popperjs/core@2.9.2/dist/umd/popper.min.js
+// @require      https://d3js.org/d3.v7.min.js
+// @require      https://dagrejs.github.io/project/dagre-d3/latest/dagre-d3.min.js
 // ==/UserScript==
 
 (function() {
@@ -31,6 +34,7 @@
     const AchiDivWid = 350, AchiDivCol = 3;
     const FeatDivWid = 150, FeatDivCol = 3;
     const PillDivWid = 140, PillDivCol = 3;
+    const CrisDivWid = 140, CrisDivCol = 3;
 
     //全局CSS
     const padTB = "0.5em";
@@ -43,6 +47,36 @@
     if($("#sideWindowCSS"))
     {
         $("#sideWindowCSS").remove();
+    }
+    $("head").append(styles);
+
+    //手动CSS颜色
+    let cssData = {
+        dark:{background_color:"#1f2424", alt_color:"#0f1414", primary_border:"#ccc"},
+        light:{background_color:"#fff", alt_color:"#ddd", primary_border:"#000"},
+        night:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc"},
+        darkNight:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc"},
+        redgreen:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc"},
+        gruvboxLight:{background_color:"#fbf1c7", alt_color:"#f9f5d7", primary_border:"#3c3836"},
+        gruvboxDark:{background_color:"#282828", alt_color:"#1d2021", primary_border:"#3c3836"},
+        orangeSoda:{background_color:"#131516", alt_color:"#292929", primary_border:"#313638"}
+    };
+
+    let criGraphBackColor = "";
+
+    Object.keys(cssData).forEach((theme) => {
+        criGraphBackColor += `html.${theme} #criGraph {background-color:${cssData[theme].background_color};}`;
+        criGraphBackColor += `html.${theme} g.node rect {fill:${cssData[theme].background_color};stroke: ${cssData[theme].primary_border};}`;
+        criGraphBackColor += `html.${theme} g.edgePath path {fill:${cssData[theme].primary_border};stroke: ${cssData[theme].primary_border};stroke-width: 1.5px;}`;
+    });
+
+    //CRISPR的CSS
+    styles = $(`<style type='text/css' id='crisprGraphCSS'>
+    ${criGraphBackColor}
+    </style>`);
+    if($("#crisprGraphCSS"))
+    {
+        $("#crisprGraphCSS").remove();
     }
     $("head").append(styles);
 
@@ -91,6 +125,7 @@
 
         achieveStat();
         featStat();
+        crisprStat();
         histRecord();
         spireTimeDataFunc();
     }
@@ -540,9 +575,181 @@
         $("#pilFilter").append(table);
     }
 
+    function crisprStat()
+    {
+        //独有窗口
+        let smallcriTitle = $("#smallcriTitle");
+        let criContent = $("#criContent");
+        let crisprStatus = $("#crisprStatus");
+        let crisprGraph = $("#crisprGraph");
+
+        if(smallcriTitle.length === 0)
+        {
+            smallcriTitle = $("<div id='smallcriTitle' class='has-text-advanced' onclick='(function (){if($(\"#criContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#criContent\").show();}else{$(\"#criContent\").hide();}})()'>CRISPR</div>");
+            criContent = $("<div id='criContent' class='sideHistWindow' style='height: inherit; display: none;'><div style='height: 100%; display:flex;'></div></div>");
+            crisprStatus = $(`<div style='height: 100%; display:flex; flex-direction: column;'><div id='criFilter'></div><div class='vscroll' style='flex-grow: 1;'><div id='criList' style='width: ${CrisDivWid * CrisDivCol + 6}px; height: 0;'></div></div></div>`);
+            crisprGraph = $(`<svg id='criGraph' style='height: 100%;' width=1000 height=0><g/></svg>`);
+
+            criContent.children().eq(0).append(crisprStatus);
+            criContent.children().eq(0).append($(`<div style='width: ${padLR}; height: 100%;'></div>`));
+            criContent.children().eq(0).append(crisprGraph);
+
+            smallcriTitle.one("click", buildCrisprGraph);
+
+            $("#histWindow").prepend(criContent);
+            $("#histTitleListWindow").append(smallcriTitle);
+
+            buildCrisprStat();
+
+        }
+    }
+
+    function buildCrisprStat()
+    {
+        $("#criFilter").empty();
+        $("#criFilter").append($("<div class='has-text-advanced'>CRISPR统计</div>"));
+        let compe = 0;
+        let total = Object.keys(genePool).length;
+
+        Object.keys(genePool).forEach((gene) => {
+            if(evolve.global.genes[genePool[gene].grant[0]] && evolve.global.genes[genePool[gene].grant[0]] >= genePool[gene].grant[1])
+            {
+                compe+=1;
+            }
+        });
+
+        $("#criFilter").append($(`<tr><td>完成率：</td><td><span style='visibility:hidden;'>${Array(3 - (compe +  '').length).join("0")}</span>${compe} / ${total}<span style='visibility:hidden;'>${Array(7 - ((compe / total * 100).toFixed(2) +  '').length).join("0")}</span>（<span class="${+(compe == total ? 'has-text-warning' : '')}">${(compe / total * 100).toFixed(2)}%</span>）</td></tr>`));
+
+        Object.keys(genePool).forEach((gene) => {
+            let buy = evolve.global.genes[genePool[gene].grant[0]] && evolve.global.genes[genePool[gene].grant[0]] >= genePool[gene].grant[1];
+
+            let icon = $(`<span title="${buy? "已购买" : "未购买"}"><svg class="svg" fill="${buy? "#32CD32" : "none"}" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="${icons.checkmark.viewbox}" xml:space="preserve" data-level="0">${icons.checkmark.path}</svg></span>`);
+            let line = $(`<div style="width: ${CrisDivWid}px; display: inline-block;" class='criLine'><span title="${genePool[gene].desc()}">${genePool[gene].title()}</span></div>`);
+            line.prepend(icon);
+            $("#criList").append(line);
+        });
+    }
+
+    function buildCrisprGraph()
+    {
+        $("#smallcriTitle").off("click");
+        var g = new dagreD3.graphlib.Graph().setGraph({rankdir:'LR'});
+
+        let crisprTrees = {};
+        Object.keys(genePool).forEach(function (gene){
+            let crispr = genePool[gene];
+            if (!crisprTrees[crispr.grant[0]]){
+                crisprTrees[crispr.grant[0]] = {};
+            }
+            crisprTrees[crispr.grant[0]][crispr.grant[1]] = {
+                name: gene
+            };
+        });
+
+        Object.keys(genePool).forEach((gene) => {
+            let title = typeof genePool[gene].title === 'string' ? genePool[gene].title : genePool[gene].title();
+            let desc = typeof genePool[gene].desc === 'string' ? genePool[gene].desc : genePool[gene].desc();
+            let color = evolve.global.genes[genePool[gene].grant[0]] && evolve.global.genes[genePool[gene].grant[0]] >= genePool[gene].grant[1] ? 'has-text-success' : '';
+            g.setNode(gene, {labelType: "html", label: `<span class="${color}">${title}</span>`, id: "CRISPR_" + gene});
+
+            if (Object.keys(genePool[gene].reqs).length > 0)
+            {
+                Object.keys(genePool[gene].reqs).forEach(function (req){
+                    g.setEdge(crisprTrees[req][genePool[gene].reqs[req]].name, gene, {});
+                    /*
+                    let color = global.genes[req] && global.genes[req] >= genePool[gene].reqs[req] ? 'success' : 'danger';
+                    reqs.append(`${comma ? `, ` : ``}<span><a href="wiki.html#crispr-prestige-${crisprTrees[req][genePool[gene].reqs[req]].name}" class="has-text-${color}" target="_blank">${loc(`wiki_arpa_crispr_${req}`)} ${genePool[gene].reqs[req]}</a></span>`);
+                    comma = true;*/
+                });
+            }
+        });
+
+        // Set some general styles
+        g.nodes().forEach(function(v) {
+          var node = g.node(v);
+          node.rx = node.ry = 5;
+        });
+
+        var svg = d3.select("#criGraph"),
+            inner = svg.select("g");
+
+        // Set up zoom support
+        var zoom = d3.zoom().on("zoom", function(e) {
+              inner.attr("transform", e.transform);
+            });
+        svg.call(zoom);
+
+        // Create the renderer
+        var render = new dagreD3.render();
+
+        // Run the renderer. This is what draws the final graph.
+        render(inner, g);
+
+        // Center the graph
+        var initialScale = 0.75;
+        svg.call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(0.5));
+
+        //提示框
+        var cri_popper = $(`<div id="CRISPR_popper" class="popper has-background-light has-text-dark pop-desc"></div>`);
+        $(`#main`).append(cri_popper);
+        var cri_popperRef = false;
+        inner.selectAll("g.node")
+        .on("mouseover", function (v) {
+            let gene = $(this).attr("id").slice("CRISPR_".length)
+            if (cri_popperRef || $(`#CRISPR_popper`).length > 0){
+                console.log();
+                if (cri_popper.data('id') !== gene){
+                    cri_popper.hide();
+                    if (cri_popperRef){
+                        cri_popperRef.destroy();
+                        cri_popperRef = false;
+                    }
+                }
+            }
+            cri_popper.data('id', gene);
+            cri_popper.empty();
+            cri_popper.append(`<div class="has-text-warning">${genePool[gene].title()}</div><div>${genePool[gene].desc()}</div>`);
+
+            cri_popperRef = Popper.createPopper(this,
+                document.querySelector(`#CRISPR_popper`),
+                {
+                    modifiers: [
+                        {
+                            name: 'flip',
+                            enabled: true,
+                        },
+                        {
+                            name: 'offset',
+                            options: {
+                                offset: [0, 0],
+                            },
+                        }
+                    ],
+                }
+            );
+
+            cri_popper.show();
+        })
+        .on("mouseout", function (v) {
+            let gene = $(this).attr("id").slice("CRISPR_".length)
+            $(`#CRISPR_popper`).hide();
+            if (cri_popperRef){
+                cri_popperRef.destroy();
+                cri_popperRef = false;
+            }
+
+        })
+    }
+
     function loc(key, variables)
     {
         return function(){return evolve.loc(key, variables)};
+    }
+
+    function payCrispr(a)
+    {
+        //无用的函数
+        return true;
     }
 
     //手动维护成就列表
@@ -922,6 +1129,794 @@
 	        desc: loc("feat_fool_desc"),
 	        flair: loc("feat_fool_flair")
 	    }
+	}
+	const genePool = {
+	    genetic_memory: {
+	        id: 'genes-genetic_memory',
+	        title: loc('arpa_genepool_genetic_memory_title'),
+	        desc: loc('arpa_genepool_genetic_memory_desc'),
+	        reqs: {},
+	        grant: ['creep',1],
+	        cost: { Plasmid(){ return 25; } },
+	        action(){
+	            if (payCrispr('genetic_memory')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    animus: {
+	        id: 'genes-animus',
+	        title: loc('arpa_genepool_animus_title'),
+	        desc: loc('arpa_genepool_animus_desc'),
+	        reqs: { creep: 1 },
+	        grant: ['creep',2],
+	        cost: { Plasmid(){ return 75; } },
+	        action(){
+	            if (payCrispr('animus')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    divine_remembrance: {
+	        id: 'genes-divine_remembrance',
+	        title: loc('arpa_genepool_divine_remembrance_title'),
+	        desc: loc('arpa_genepool_divine_remembrance_desc'),
+	        reqs: { creep: 2 },
+	        grant: ['creep',3],
+	        cost: { Plasmid(){ return 225; } },
+	        action(){
+	            if (payCrispr('divine_remembrance')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    divine_proportion: {
+	        id: 'genes-divine_proportion',
+	        title: loc('arpa_genepool_divine_proportion_title'),
+	        desc: loc('arpa_genepool_divine_proportion_desc'),
+	        reqs: { creep: 3 },
+	        grant: ['creep',4],
+	        cost: { Plasmid(){ return 618; } },
+	        action(){
+	            if (payCrispr('divine_proportion')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    genetic_repository: {
+	        id: 'genes-genetic_repository',
+	        title: loc('arpa_genepool_genetic_repository_title'),
+	        desc: loc('arpa_genepool_genetic_repository_desc'),
+	        reqs: { creep: 4 },
+	        grant: ['creep',5],
+	        cost: { Plasmid(){ return 999; } },
+	        action(){
+	            if (payCrispr('genetic_repository')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    spatial_reasoning: {
+	        id: 'genes-spatial_reasoning',
+	        title: loc('arpa_genepool_spatial_reasoning_title'),
+	        desc: loc('arpa_genepool_spatial_reasoning_desc'),
+	        reqs: {},
+	        grant: ['store',1],
+	        cost: { Plasmid(){ return 50; } },
+	        action(){
+	            if (payCrispr('spatial_reasoning')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    spatial_superiority: {
+	        id: 'genes-spatial_superiority',
+	        title: loc('arpa_genepool_spatial_superiority_title'),
+	        desc: loc('arpa_genepool_spatial_superiority_desc'),
+	        reqs: { store: 1 },
+	        grant: ['store',2],
+	        cost: { Plasmid(){ return 125; } },
+	        action(){
+	            if (payCrispr('spatial_superiority')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    spatial_supremacy: {
+	        id: 'genes-spatial_supremacy',
+	        title: loc('arpa_genepool_spatial_supremacy_title'),
+	        desc: loc('arpa_genepool_spatial_supremacy_desc'),
+	        reqs: { store: 2 },
+	        grant: ['store',3],
+	        cost: { Plasmid(){ return 325; } },
+	        action(){
+	            if (payCrispr('spatial_supremacy')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    dimensional_warping: {
+	        id: 'genes-dimensional_warping',
+	        title: loc('arpa_genepool_dimensional_warping_title'),
+	        desc: loc('arpa_genepool_dimensional_warping_desc'),
+	        reqs: { store: 3 },
+	        grant: ['store',4],
+	        cost: { Plasmid(){ return 500; } },
+	        action(){
+	            if (payCrispr('dimensional_warping')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    enhanced_muscle_fiber: {
+	        id: 'genes-enhanced_muscle_fiber',
+	        title: loc('arpa_genepool_enhanced_muscle_fiber_title'),
+	        desc: loc('arpa_genepool_enhanced_muscle_fiber_desc'),
+	        reqs: {},
+	        grant: ['enhance',1],
+	        cost: { Plasmid(){ return 25; } },
+	        action(){
+	            if (payCrispr('enhanced_muscle_fiber')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    morphogenesis: {
+	        id: 'genes-morphogenesis',
+	        title: loc('arpa_genepool_morphogenesis_title'),
+	        desc: loc('arpa_genepool_morphogenesis_desc'),
+	        reqs: {},
+	        grant: ['evolve',1],
+	        cost: { Plasmid(){ return 10; } },
+	        action(){
+	            if (payCrispr('morphogenesis')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    recombination: {
+	        id: 'genes-recombination',
+	        title: loc('arpa_genepool_recombination_title'),
+	        desc: loc('arpa_genepool_recombination_desc'),
+	        reqs: { evolve: 1 },
+	        grant: ['evolve',2],
+	        cost: { Plasmid(){ return 35; } },
+	        action(){
+	            if (payCrispr('recombination')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    homologous_recombination: {
+	        id: 'genes-homologous_recombination',
+	        title: loc('arpa_genepool_homologous_recombination_title'),
+	        desc: loc('arpa_genepool_homologous_recombination_desc'),
+	        reqs: { evolve: 2 },
+	        grant: ['evolve',3],
+	        cost: { Plasmid(){ return 70; } },
+	        action(){
+	            if (payCrispr('homologous_recombination')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    genetic_reshuffling: {
+	        id: 'genes-genetic_reshuffling',
+	        title: loc('arpa_genepool_genetic_reshuffling_title'),
+	        desc: loc('arpa_genepool_genetic_reshuffling_desc'),
+	        reqs: { evolve: 3 },
+	        grant: ['evolve',4],
+	        cost: { Plasmid(){ return 175; } },
+	        action(){
+	            if (payCrispr('genetic_reshuffling')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    recombinant_dna: {
+	        id: 'genes-recombinant_dna',
+	        title: loc('arpa_genepool_recombinant_dna_title'),
+	        desc: loc('arpa_genepool_recombinant_dna_desc'),
+	        reqs: { evolve: 4 },
+	        grant: ['evolve',5],
+	        cost: { Plasmid(){ return 440; } },
+	        action(){
+	            if (payCrispr('recombinant_dna')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    chimeric_dna: {
+	        id: 'genes-chimeric_dna',
+	        title: loc('arpa_genepool_chimeric_dna_title'),
+	        desc: loc('arpa_genepool_chimeric_dna_desc'),
+	        reqs: { evolve: 5 },
+	        grant: ['evolve',6],
+	        cost: { Plasmid(){ return 1100; } },
+	        action(){
+	            if (payCrispr('chimeric_dna')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    molecular_cloning: {
+	        id: 'genes-molecular_cloning',
+	        title: loc('arpa_genepool_molecular_cloning_title'),
+	        desc: loc('arpa_genepool_molecular_cloning_desc'),
+	        reqs: { evolve: 6 },
+	        grant: ['evolve',7],
+	        cost: { Plasmid(){ return 2750; } },
+	        action(){
+	            if (payCrispr('molecular_cloning')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    transgenes: {
+	        id: 'genes-transgenes',
+	        title: loc('arpa_genepool_transgenes_title'),
+	        desc: loc('arpa_genepool_transgenes_desc'),
+	        reqs: { evolve: 7 },
+	        grant: ['evolve',8],
+	        cost: { Plasmid(){ return 6875; } },
+	        action(){
+	            if (payCrispr('transgenes')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    synthesis: {
+	        id: 'genes-synthesis',
+	        title: loc('arpa_genepool_synthesis_title'),
+	        desc: loc('arpa_genepool_synthesis_desc',[2,10]),
+	        reqs: { evolve: 1 },
+	        grant: ['synthesis',1],
+	        cost: { Plasmid(){ return 25; } },
+	        action(){
+	            if (payCrispr('synthesis')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    karyokinesis: {
+	        id: 'genes-karyokinesis',
+	        title: loc('arpa_genepool_karyokinesis_title'),
+	        desc: loc('arpa_genepool_synthesis_desc',[3,25]),
+	        reqs: { synthesis: 1 },
+	        grant: ['synthesis',2],
+	        cost: { Plasmid(){ return 40; } },
+	        action(){
+	            if (payCrispr('karyokinesis')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    cytokinesis: {
+	        id: 'genes-cytokinesis',
+	        title: loc('arpa_genepool_cytokinesis_title'),
+	        desc: loc('arpa_genepool_synthesis_desc',[4,50]),
+	        reqs: { synthesis: 2 },
+	        grant: ['synthesis',3],
+	        cost: { Plasmid(){ return 55; } },
+	        action(){
+	            if (payCrispr('cytokinesis')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    mitosis: {
+	        id: 'genes-mitosis',
+	        title: loc('arpa_genepool_mitosis_title'),
+	        desc: loc('arpa_genepool_mitosis_desc',[3]),
+	        reqs: { synthesis: 3, evolve: 2 },
+	        grant: ['plasma',1],
+	        cost: { Plasmid(){ return 90; } },
+	        action(){
+	            if (payCrispr('mitosis')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    metaphase: {
+	        id: 'genes-metaphase',
+	        title: loc('arpa_genepool_metaphase_title'),
+	        desc: loc('arpa_genepool_mitosis_desc',[5]),
+	        reqs: { plasma: 1 },
+	        grant: ['plasma',2],
+	        cost: { Plasmid(){ return 165; } },
+	        action(){
+	            if (payCrispr('mitosis')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    mutation: {
+	        id: 'genes-mutation',
+	        title: loc('arpa_genepool_mutation_title'),
+	        desc: loc('arpa_genepool_mutation_desc'),
+	        reqs: { synthesis: 3, creep: 5 },
+	        grant: ['mutation',1],
+	        cost: { Plasmid(){ return 1250; } },
+	        action(){
+	            if (payCrispr('mutation')){
+	                global.genes['mutation'] = 1;
+	                genetics();
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    transformation: {
+	        id: 'genes-transformation',
+	        title: loc('arpa_genepool_transformation_title'),
+	        desc: loc('arpa_genepool_transformation_desc'),
+	        reqs: { mutation: 1 },
+	        grant: ['mutation',2],
+	        cost: { Plasmid(){ return 1500; } },
+	        action(){
+	            if (payCrispr('transformation')){
+	                global.genes['mutation'] = 2;
+	                genetics();
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    metamorphosis: {
+	        id: 'genes-metamorphosis',
+	        title: loc('arpa_genepool_metamorphosis_title'),
+	        desc: loc('arpa_genepool_metamorphosis_desc'),
+	        reqs: { mutation: 2 },
+	        grant: ['mutation',3],
+	        cost: { Plasmid(){ return 1750; } },
+	        action(){
+	            if (payCrispr('metamorphosis')){
+	                global.genes['mutation'] = 3;
+	                genetics();
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    replication: {
+	        id: 'genes-replication',
+	        title: loc('arpa_genepool_replication_title'),
+	        desc: loc('arpa_genepool_replication_desc'),
+	        reqs: { evolve: 1 },
+	        grant: ['birth',1],
+	        cost: { Plasmid(){ return 65; } },
+	        action(){
+	            if (payCrispr('replication')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    artificer: {
+	        id: 'genes-artificer',
+	        title: loc('arpa_genepool_artificer_title'),
+	        desc: loc('arpa_genepool_artificer_desc'),
+	        reqs: { evolve: 1 },
+	        grant: ['crafty',1],
+	        cost: { Plasmid(){ return 45; } },
+	        action(){
+	            if (payCrispr('artificer')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    detail_oriented: {
+	        id: 'genes-detail_oriented',
+	        title: loc('arpa_genepool_detail_oriented_title'),
+	        desc: loc('arpa_genepool_crafting_desc',['50']),
+	        reqs: { crafty: 1 },
+	        grant: ['crafty',2],
+	        cost: { Plasmid(){ return 90; } },
+	        action(){
+	            if (payCrispr('detail_oriented')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    rigorous: {
+	        id: 'genes-rigorous',
+	        title: loc('arpa_genepool_rigorous_title'),
+	        desc: loc('arpa_genepool_crafting_desc',['100']),
+	        reqs: { crafty: 2 },
+	        grant: ['crafty',3],
+	        cost: { Plasmid(){ return 135; } },
+	        action(){
+	            if (payCrispr('rigorous')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    geographer: {
+	        id: 'genes-geographer',
+	        title: loc('arpa_genepool_geographer_title'),
+	        desc: loc('arpa_genepool_geographer_desc'),
+	        reqs: { store: 1 },
+	        grant: ['queue',1],
+	        cost: { Plasmid(){ return 75; } },
+	        action(){
+	            if (payCrispr('geographer')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    architect: {
+	        id: 'genes-architect',
+	        title: loc('arpa_genepool_architect_title'),
+	        desc: loc('arpa_genepool_architect_desc'),
+	        reqs: { queue: 1 },
+	        grant: ['queue',2],
+	        cost: { Plasmid(){ return 160; } },
+	        action(){
+	            if (payCrispr('architect')){
+	                return true;
+	            }
+	            return false;
+	        },
+	        post(){
+	            calcQueueMax();
+	            calcRQueueMax();
+	        }
+	    },
+	    governance: {
+	        id: 'genes-governance',
+	        title: loc('arpa_genepool_governance_title'),
+	        desc: loc('arpa_genepool_governance_desc'),
+	        reqs: { queue: 2 },
+	        grant: ['governor',1],
+	        cost: {
+	            Plasmid(){ return 300; },
+	            Phage(){ return 25; }
+	        },
+	        action(){
+	            if (payCrispr('governance')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    hardened_genes: {
+	        id: 'genes-hardened_genes',
+	        title: loc('arpa_genepool_hardened_genes_title'),
+	        desc: loc('arpa_genepool_hardened_genes_desc'),
+	        reqs: {},
+	        grant: ['challenge',1],
+	        cost: { Plasmid(){ return 5; } },
+	        action(){
+	            if (payCrispr('hardened_genes')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    unlocked: {
+	        id: 'genes-unlocked',
+	        title: loc('arpa_genepool_unlocked_title'),
+	        desc: loc('arpa_genepool_unlocked_desc'),
+	        reqs: {challenge:1},
+	        grant: ['challenge',2],
+	        cost: { Plasmid(){ return 50; } },
+	        action(){
+	            if (payCrispr('unlocked')){
+	                return true;
+	            }
+	            return false;
+	        },
+	        post(){
+	            calc_mastery(true);
+	        }
+	    },
+	    universal: {
+	        id: 'genes-universal',
+	        title: loc('arpa_genepool_universal_title'),
+	        desc: loc('arpa_genepool_universal_desc'),
+	        reqs: {challenge:2},
+	        grant: ['challenge',3],
+	        condition(){
+	            return global.race.universe !== 'standard' ? true : false;
+	        },
+	        cost: { Plasmid(){ return 400; } },
+	        action(){
+	            if (payCrispr('universal')){
+	                return true;
+	            }
+	            return false;
+	        },
+	        post(){
+	            calc_mastery(true);
+	        }
+	    },
+	    standard: {
+	        id: 'genes-standard',
+	        title: loc('arpa_genepool_standard_title'),
+	        desc: loc('arpa_genepool_standard_desc'),
+	        reqs: {challenge:3},
+	        grant: ['challenge',4],
+	        condition(){
+	            return global.race.universe !== 'standard' ? true : false;
+	        },
+	        cost: { Plasmid(){ return 2500; } },
+	        action(){
+	            if (payCrispr('standard')){
+	                return true;
+	            }
+	            return false;
+	        },
+	        post(){
+	            calc_mastery(true);
+	        }
+	    },
+	    mastered: {
+	        id: 'genes-mastered',
+	        title: loc('arpa_genepool_mastered_title'),
+	        desc: loc('arpa_genepool_mastered_desc'),
+	        reqs: {challenge:4},
+	        grant: ['challenge',5],
+	        cost: { Plasmid(){ return 4000; } },
+	        action(){
+	            if (payCrispr('mastered')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    negotiator: {
+	        id: 'genes-negotiator',
+	        title: loc('arpa_genepool_negotiator_title'),
+	        desc: loc('arpa_genepool_negotiator_desc'),
+	        reqs: {challenge:2},
+	        grant: ['trader',1],
+	        cost: { Plasmid(){ return 750; } },
+	        action(){
+	            if (payCrispr('negotiator')){
+	                global.genes['trader'] = 1;
+	                updateTrades();
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    ancients: {
+	        id: 'genes-ancients',
+	        title: loc('arpa_genepool_ancients_title'),
+	        desc: loc('arpa_genepool_ancients_desc'),
+	        reqs: { evolve: 2 },
+	        condition(){
+	            return global.genes['old_gods'] ? true : false;
+	        },
+	        grant: ['ancients',1],
+	        cost: { Plasmid(){ return 120; } },
+	        action(){
+	            if (payCrispr('ancients')){
+	                global.genes['ancients'] = 1;
+	                drawTech();
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    faith: {
+	        id: 'genes-faith',
+	        title: loc('arpa_genepool_faith_title'),
+	        desc: loc('arpa_genepool_faith_desc'),
+	        reqs: { ancients: 1 },
+	        grant: ['ancients',2],
+	        cost: { Plasmid(){ return 300; } },
+	        action(){
+	            if (payCrispr('faith')){
+	                global.civic.priest.display = true;
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    devotion: {
+	        id: 'genes-devotion',
+	        title: loc('arpa_genepool_devotion_title'),
+	        desc: loc('arpa_genepool_devotion_desc'),
+	        reqs: { ancients: 2 },
+	        grant: ['ancients',3],
+	        cost: { Plasmid(){ return 600; } },
+	        action(){
+	            if (payCrispr('devotion')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    acolyte: {
+	        id: 'genes-acolyte',
+	        title: loc('arpa_genepool_acolyte_title'),
+	        desc: loc('arpa_genepool_acolyte_desc'),
+	        reqs: { ancients: 3 },
+	        grant: ['ancients',4],
+	        cost: { Plasmid(){ return 1000; } },
+	        action(){
+	            if (payCrispr('acolyte')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    conviction: {
+	        id: 'genes-conviction',
+	        title: loc('arpa_genepool_conviction_title'),
+	        desc: loc('arpa_genepool_conviction_desc'),
+	        reqs: { ancients: 4 },
+	        grant: ['ancients',5],
+	        cost: { Plasmid(){ return 1500; } },
+	        action(){
+	            if (payCrispr('conviction')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    transcendence: {
+	        id: 'genes-transcendence',
+	        title: loc('arpa_genepool_transcendence_title'),
+	        desc: loc('arpa_genepool_transcendence_desc'),
+	        reqs: { ancients: 1, mutation: 3 },
+	        grant: ['transcendence',1],
+	        cost: { Plasmid(){ return 3000; } },
+	        action(){
+	            if (payCrispr('transcendence')){
+	                global.genes['transcendence'] = 1;
+	                drawTech();
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    /*preeminence: {
+	        id: 'genes-preeminence',
+	        title: loc('arpa_genepool_preeminence_title'),
+	        desc: loc('arpa_genepool_preeminence_desc'),
+	        reqs: {transcendence: 1, challenge:3},
+	        grant: ['transcendence',2],
+	        cost: { Plasmid(){ return 4200; } },
+	        action(){
+	            if (payCrispr('preeminence')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },*/
+	    bleeding_effect: {
+	        id: 'genes-bleeding_effect',
+	        title: loc('arpa_genepool_bleeding_effect_title'),
+	        desc: loc('arpa_genepool_bleeding_effect_desc',[2.5]),
+	        reqs: { creep: 2 },
+	        grant: ['bleed',1],
+	        condition(){
+	            return global.race.universe === 'antimatter' ? true : false;
+	        },
+	        cost: { Plasmid(){ return 100; } },
+	        action(){
+	            if (payCrispr('bleeding_effect')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    synchronicity: {
+	        id: 'genes-synchronicity',
+	        title: loc('arpa_genepool_synchronicity_title'),
+	        desc: loc('arpa_genepool_synchronicity_desc',[25]),
+	        reqs: { bleed: 1 },
+	        grant: ['bleed',2],
+	        cost: { Plasmid(){ return 500; } },
+	        action(){
+	            if (payCrispr('synchronicity')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    astral_awareness: {
+	        id: 'genes-astral_awareness',
+	        title: loc('arpa_genepool_astral_awareness_title'),
+	        desc: loc('arpa_genepool_astral_awareness_desc'),
+	        reqs: { bleed: 2 },
+	        grant: ['bleed',3],
+	        cost: { Plasmid(){ return 1000; } },
+	        action(){
+	            if (payCrispr('astral_awareness')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    blood_remembrance: {
+	        id: 'genes-blood_remembrance',
+	        title: loc('arpa_genepool_blood_remembrance_title'),
+	        desc: loc('arpa_genepool_blood_remembrance_desc'),
+	        reqs: {},
+	        grant: ['blood',1],
+	        condition(){
+	            return global.resource.Blood_Stone.amount >= 1 ? true : false;
+	        },
+	        cost: {
+	            Plasmid(){ return 1000; },
+	            Phage(){ return 10; }
+	        },
+	        action(){
+	            if (payCrispr('blood_remembrance')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    blood_sacrifice: {
+	        id: 'genes-blood_sacrifice',
+	        title: loc('arpa_genepool_blood_sacrifice_title'),
+	        desc: loc('arpa_genepool_blood_sacrifice_desc'),
+	        reqs: { blood: 1 },
+	        grant: ['blood',2],
+	        cost: {
+	            Plasmid(){ return 3000; },
+	            Phage(){ return 100; },
+	            Artifact(){ return 1; }
+	        },
+	        action(){
+	            if (payCrispr('blood_sacrifice')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
+	    essence_absorber: {
+	        id: 'genes-essence_absorber',
+	        title: loc('arpa_genepool_essence_absorber_title'),
+	        desc: loc('arpa_genepool_essence_absorber_desc'),
+	        reqs: { blood: 2 },
+	        grant: ['blood',3],
+	        cost: {
+	            Plasmid(){ return 7500; },
+	            Phage(){ return 250; },
+	            Artifact(){ return 1; }
+	        },
+	        action(){
+	            if (payCrispr('essence_absorber')){
+	                return true;
+	            }
+	            return false;
+	        },
+	        post(){
+	            blood();
+	        }
+	    },
 	}
 	const universeExclusives = {
 	    biome_hellscape: ['standard', 'micro', 'heavy', 'antimatter', 'magic'],

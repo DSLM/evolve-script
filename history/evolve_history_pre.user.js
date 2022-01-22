@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.4.2
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -10,6 +10,9 @@
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
+// @require      https://unpkg.com/@popperjs/core@2.9.2/dist/umd/popper.min.js
+// @require      https://d3js.org/d3.v7.min.js
+// @require      https://dagrejs.github.io/project/dagre-d3/latest/dagre-d3.min.js
 // ==/UserScript==
 
 (function() {
@@ -31,6 +34,7 @@
     const AchiDivWid = 350, AchiDivCol = 3;
     const FeatDivWid = 150, FeatDivCol = 3;
     const PillDivWid = 140, PillDivCol = 3;
+    const CrisDivWid = 140, CrisDivCol = 3;
 
     //全局CSS
     const padTB = "0.5em";
@@ -43,6 +47,36 @@
     if($("#sideWindowCSS"))
     {
         $("#sideWindowCSS").remove();
+    }
+    $("head").append(styles);
+
+    //手动CSS颜色
+    let cssData = {
+        dark:{background_color:"#1f2424", alt_color:"#0f1414", primary_border:"#ccc"},
+        light:{background_color:"#fff", alt_color:"#ddd", primary_border:"#000"},
+        night:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc"},
+        darkNight:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc"},
+        redgreen:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc"},
+        gruvboxLight:{background_color:"#fbf1c7", alt_color:"#f9f5d7", primary_border:"#3c3836"},
+        gruvboxDark:{background_color:"#282828", alt_color:"#1d2021", primary_border:"#3c3836"},
+        orangeSoda:{background_color:"#131516", alt_color:"#292929", primary_border:"#313638"}
+    };
+
+    let criGraphBackColor = "";
+
+    Object.keys(cssData).forEach((theme) => {
+        criGraphBackColor += `html.${theme} #criGraph {background-color:${cssData[theme].background_color};}`;
+        criGraphBackColor += `html.${theme} g.node rect {fill:${cssData[theme].background_color};stroke: ${cssData[theme].primary_border};}`;
+        criGraphBackColor += `html.${theme} g.edgePath path {fill:${cssData[theme].primary_border};stroke: ${cssData[theme].primary_border};stroke-width: 1.5px;}`;
+    });
+
+    //CRISPR的CSS
+    styles = $(`<style type='text/css' id='crisprGraphCSS'>
+    ${criGraphBackColor}
+    </style>`);
+    if($("#crisprGraphCSS"))
+    {
+        $("#crisprGraphCSS").remove();
     }
     $("head").append(styles);
 
@@ -91,6 +125,7 @@
 
         achieveStat();
         featStat();
+        crisprStat();
         histRecord();
         spireTimeDataFunc();
     }
@@ -540,9 +575,181 @@
         $("#pilFilter").append(table);
     }
 
+    function crisprStat()
+    {
+        //独有窗口
+        let smallcriTitle = $("#smallcriTitle");
+        let criContent = $("#criContent");
+        let crisprStatus = $("#crisprStatus");
+        let crisprGraph = $("#crisprGraph");
+
+        if(smallcriTitle.length === 0)
+        {
+            smallcriTitle = $("<div id='smallcriTitle' class='has-text-advanced' onclick='(function (){if($(\"#criContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#criContent\").show();}else{$(\"#criContent\").hide();}})()'>CRISPR</div>");
+            criContent = $("<div id='criContent' class='sideHistWindow' style='height: inherit; display: none;'><div style='height: 100%; display:flex;'></div></div>");
+            crisprStatus = $(`<div style='height: 100%; display:flex; flex-direction: column;'><div id='criFilter'></div><div class='vscroll' style='flex-grow: 1;'><div id='criList' style='width: ${CrisDivWid * CrisDivCol + 6}px; height: 0;'></div></div></div>`);
+            crisprGraph = $(`<svg id='criGraph' style='height: 100%;' width=1000 height=0><g/></svg>`);
+
+            criContent.children().eq(0).append(crisprStatus);
+            criContent.children().eq(0).append($(`<div style='width: ${padLR}; height: 100%;'></div>`));
+            criContent.children().eq(0).append(crisprGraph);
+
+            smallcriTitle.one("click", buildCrisprGraph);
+
+            $("#histWindow").prepend(criContent);
+            $("#histTitleListWindow").append(smallcriTitle);
+
+            buildCrisprStat();
+
+        }
+    }
+
+    function buildCrisprStat()
+    {
+        $("#criFilter").empty();
+        $("#criFilter").append($("<div class='has-text-advanced'>CRISPR统计</div>"));
+        let compe = 0;
+        let total = Object.keys(genePool).length;
+
+        Object.keys(genePool).forEach((gene) => {
+            if(evolve.global.genes[genePool[gene].grant[0]] && evolve.global.genes[genePool[gene].grant[0]] >= genePool[gene].grant[1])
+            {
+                compe+=1;
+            }
+        });
+
+        $("#criFilter").append($(`<tr><td>完成率：</td><td><span style='visibility:hidden;'>${Array(3 - (compe +  '').length).join("0")}</span>${compe} / ${total}<span style='visibility:hidden;'>${Array(7 - ((compe / total * 100).toFixed(2) +  '').length).join("0")}</span>（<span class="${+(compe == total ? 'has-text-warning' : '')}">${(compe / total * 100).toFixed(2)}%</span>）</td></tr>`));
+
+        Object.keys(genePool).forEach((gene) => {
+            let buy = evolve.global.genes[genePool[gene].grant[0]] && evolve.global.genes[genePool[gene].grant[0]] >= genePool[gene].grant[1];
+
+            let icon = $(`<span title="${buy? "已购买" : "未购买"}"><svg class="svg" fill="${buy? "#32CD32" : "none"}" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="${icons.checkmark.viewbox}" xml:space="preserve" data-level="0">${icons.checkmark.path}</svg></span>`);
+            let line = $(`<div style="width: ${CrisDivWid}px; display: inline-block;" class='criLine'><span title="${genePool[gene].desc()}">${genePool[gene].title()}</span></div>`);
+            line.prepend(icon);
+            $("#criList").append(line);
+        });
+    }
+
+    function buildCrisprGraph()
+    {
+        $("#smallcriTitle").off("click");
+        var g = new dagreD3.graphlib.Graph().setGraph({rankdir:'LR'});
+
+        let crisprTrees = {};
+        Object.keys(genePool).forEach(function (gene){
+            let crispr = genePool[gene];
+            if (!crisprTrees[crispr.grant[0]]){
+                crisprTrees[crispr.grant[0]] = {};
+            }
+            crisprTrees[crispr.grant[0]][crispr.grant[1]] = {
+                name: gene
+            };
+        });
+
+        Object.keys(genePool).forEach((gene) => {
+            let title = typeof genePool[gene].title === 'string' ? genePool[gene].title : genePool[gene].title();
+            let desc = typeof genePool[gene].desc === 'string' ? genePool[gene].desc : genePool[gene].desc();
+            let color = evolve.global.genes[genePool[gene].grant[0]] && evolve.global.genes[genePool[gene].grant[0]] >= genePool[gene].grant[1] ? 'has-text-success' : '';
+            g.setNode(gene, {labelType: "html", label: `<span class="${color}">${title}</span>`, id: "CRISPR_" + gene});
+
+            if (Object.keys(genePool[gene].reqs).length > 0)
+            {
+                Object.keys(genePool[gene].reqs).forEach(function (req){
+                    g.setEdge(crisprTrees[req][genePool[gene].reqs[req]].name, gene, {});
+                    /*
+                    let color = global.genes[req] && global.genes[req] >= genePool[gene].reqs[req] ? 'success' : 'danger';
+                    reqs.append(`${comma ? `, ` : ``}<span><a href="wiki.html#crispr-prestige-${crisprTrees[req][genePool[gene].reqs[req]].name}" class="has-text-${color}" target="_blank">${loc(`wiki_arpa_crispr_${req}`)} ${genePool[gene].reqs[req]}</a></span>`);
+                    comma = true;*/
+                });
+            }
+        });
+
+        // Set some general styles
+        g.nodes().forEach(function(v) {
+          var node = g.node(v);
+          node.rx = node.ry = 5;
+        });
+
+        var svg = d3.select("#criGraph"),
+            inner = svg.select("g");
+
+        // Set up zoom support
+        var zoom = d3.zoom().on("zoom", function(e) {
+              inner.attr("transform", e.transform);
+            });
+        svg.call(zoom);
+
+        // Create the renderer
+        var render = new dagreD3.render();
+
+        // Run the renderer. This is what draws the final graph.
+        render(inner, g);
+
+        // Center the graph
+        var initialScale = 0.75;
+        svg.call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(0.5));
+
+        //提示框
+        var cri_popper = $(`<div id="CRISPR_popper" class="popper has-background-light has-text-dark pop-desc"></div>`);
+        $(`#main`).append(cri_popper);
+        var cri_popperRef = false;
+        inner.selectAll("g.node")
+        .on("mouseover", function (v) {
+            let gene = $(this).attr("id").slice("CRISPR_".length)
+            if (cri_popperRef || $(`#CRISPR_popper`).length > 0){
+                console.log();
+                if (cri_popper.data('id') !== gene){
+                    cri_popper.hide();
+                    if (cri_popperRef){
+                        cri_popperRef.destroy();
+                        cri_popperRef = false;
+                    }
+                }
+            }
+            cri_popper.data('id', gene);
+            cri_popper.empty();
+            cri_popper.append(`<div class="has-text-warning">${genePool[gene].title()}</div><div>${genePool[gene].desc()}</div>`);
+
+            cri_popperRef = Popper.createPopper(this,
+                document.querySelector(`#CRISPR_popper`),
+                {
+                    modifiers: [
+                        {
+                            name: 'flip',
+                            enabled: true,
+                        },
+                        {
+                            name: 'offset',
+                            options: {
+                                offset: [0, 0],
+                            },
+                        }
+                    ],
+                }
+            );
+
+            cri_popper.show();
+        })
+        .on("mouseout", function (v) {
+            let gene = $(this).attr("id").slice("CRISPR_".length)
+            $(`#CRISPR_popper`).hide();
+            if (cri_popperRef){
+                cri_popperRef.destroy();
+                cri_popperRef = false;
+            }
+
+        })
+    }
+
     function loc(key, variables)
     {
         return function(){return evolve.loc(key, variables)};
+    }
+
+    function payCrispr(a)
+    {
+        //无用的函数
+        return true;
     }
 
     //手动维护成就列表
