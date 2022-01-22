@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.2.1
+// @version      1.4.2.2
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -451,7 +451,7 @@
             let tempIndex = tempArr.indexOf(UniLtoS[tempUni]);
             if(tempIndex > -1)
             {
-                tempArr.spilce(tempIndex, 1);
+                tempArr.splice(tempIndex, 1);
                 $(`.universe_${tempArr.join(`:not(.universe_${UniLtoS[tempUni]}),.universe_`)}:not(.universe_${UniLtoS[tempUni]})`).hide();
             }
         }
