@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.2.2
+// @version      1.4.2.3
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -36,7 +36,7 @@
     const AchiDivWid = 350, AchiDivCol = 3;
     const FeatDivWid = 150, FeatDivCol = 3;
     const PillDivWid = 140, PillDivCol = 3;
-    const CrisDivWid = 140, CrisDivCol = 3;
+    const CrisDivWid = 140, CrisDivCol = 2;
 
     //全局CSS
     const padTB = "0.5em";
@@ -521,7 +521,7 @@
             let starNum = evolve.global.stats.feat[fea] ? evolve.global.stats.feat[fea] : 0;
             feaLevel[starNum].push(fea);
             let icon = $(`<span title="${starName[starNum]}"><svg class="svg star${starNum}" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="${icons.standard.viewbox}" xml:space="preserve" data-level="0">${icons.standard.path}</svg></span>`);
-            let line = $(`<div style="width: ${FeatDivWid}px; display: inline-block;" class='featLine ${starNum}_star'><span title="${feats[fea].desc.apply().replace(/（.*）/, "")}">${feats[fea].name.apply().replace(/（.*）/, "")}</span></div>`);
+            let line = $(`<div style="width: ${FeatDivWid}px; display: inline-block;" class='featLine ${starNum}_star'><span title="${evolve.loc("wiki_feat_" + fea)}">${feats[fea].name.apply().replace(/（.*）/, "")}</span></div>`);
             line.prepend(icon);
             $("#feaList").append(line);
         });
@@ -692,6 +692,7 @@
         svg.call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(0.5));
 
         //提示框
+        //此处插入CRISPR特殊条件
         var cri_popper = $(`<div id="CRISPR_popper" class="popper has-background-light has-text-dark pop-desc"></div>`);
         $(`#main`).append(cri_popper);
         var cri_popperRef = false;
@@ -711,6 +712,19 @@
             cri_popper.data('id', gene);
             cri_popper.empty();
             cri_popper.append(`<div class="has-text-warning">${genePool[gene].title()}</div><div>${genePool[gene].desc()}</div>`);
+
+            if (specialRequirements.hasOwnProperty(gene)){
+                let comma = false;
+                let specialReq = $(`<div class="reqs"><span class="has-text-caution">${evolve.loc('wiki_arpa_crispr_req_extra')}</span></div>`);
+                cri_popper.append(specialReq);
+                Object.keys(specialRequirements[gene]).forEach(function (req){
+                    let color = specialRequirements[gene][req].color ? 'success' : 'danger';
+                    let text = specialRequirements[gene][req].title();
+                    specialReq.append(`${comma ? `, ` : ``}<span class="has-text-${color}">${text}</span>`);
+
+                    comma = true;
+                });
+            }
 
             cri_popperRef = Popper.createPopper(this,
                 document.querySelector(`#CRISPR_popper`),

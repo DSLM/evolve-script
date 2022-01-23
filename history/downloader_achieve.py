@@ -56,6 +56,19 @@ while brackets > 0:
     endIndex += 1
 addedStr += res.text[sourData : endIndex].replace("\n","\n\t") +"\n\t"
 
+url = 'https://raw.githubusercontent.com/pmotschmann/Evolve/master/src/wiki/crispr.js'
+res = requests.get(url)
+sourData = res.text.find("const specialRequirements = {")
+endIndex = sourData + len("const specialRequirements = {")
+brackets = 1
+while brackets > 0:
+    if res.text[endIndex] == "{":
+        brackets += 1
+    elif res.text[endIndex] == "}":
+        brackets -= 1
+    endIndex += 1
+addedStrCri = res.text[sourData : endIndex].replace("\n","\n\t").replace("global","evolve.global") +"\n\t"
+
 icons = """const icons = {
     	standard: {
     		path: '<path d="M320.012 15.662l88.076 215.246L640 248.153 462.525 398.438l55.265 225.9-197.778-122.363-197.778 122.363 55.264-225.9L0 248.153l231.936-17.245z" />',
@@ -87,4 +100,4 @@ icons = """const icons = {
     	}
     };"""
 addedStr += icons
-achiFile.write(codeFile.read().replace("//此处插入数据",addedStr))
+achiFile.write(codeFile.read().replace("//此处插入数据",addedStr).replace("//此处插入CRISPR特殊条件",addedStrCri))
