@@ -12,7 +12,7 @@
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // @require      https://unpkg.com/@popperjs/core@2.9.2/dist/umd/popper.min.js
 // @require      https://d3js.org/d3.v7.min.js
-// @require      https://dagrejs.github.io/project/dagre-d3/latest/dagre-d3.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.4/dagre-d3.min.js
 // ==/UserScript==
 
 // TODO: CRISPR记得加特殊需求
