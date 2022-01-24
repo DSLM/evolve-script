@@ -29,6 +29,33 @@
         addTr = [];
     }
 
+    //手动CSS颜色
+    let cssData = {
+        dark:{background_color:"#1f2424", alt_color:"#0f1414", primary_border:"#ccc", primary_color:"#fff"},
+        light:{background_color:"#fff", alt_color:"#ddd", primary_border:"#000", primary_color:"#000"},
+        night:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc", primary_color:"#fff"},
+        darkNight:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc", primary_color:"#b8b8b8"},
+        redgreen:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc", primary_color:"#fff"},
+        gruvboxLight:{background_color:"#fbf1c7", alt_color:"#f9f5d7", primary_border:"#3c3836", primary_color:"#3c3836"},
+        gruvboxDark:{background_color:"#282828", alt_color:"#1d2021", primary_border:"#3c3836", primary_color:"#ebdbb2"},
+        orangeSoda:{background_color:"#131516", alt_color:"#292929", primary_border:"#313638", primary_color:"#EBDBB2"}
+    };
+    //全局CSS
+    const padTB = "0.5em";
+    const padLR = "0.75em";
+    let styleLines = `#sideWindow>div:not(#titleListWindow) {padding: ${padTB} ${padLR};}`;
+    Object.keys(cssData).forEach((theme) => {
+        styleLines += `html.${theme} #sideWindow>div:not(#titleListWindow) {background-color:${cssData[theme].alt_color}; border: ${cssData[theme].primary_border} solid 1px;}`;
+        styleLines += `html.${theme} #titleListWindow>div {background-color:${cssData[theme].alt_color};}`;
+
+    });
+    let styles = $(`<style type='text/css' id='sideWindowCSS'>${styleLines}</style>`);
+    if($("#sideWindowCSS"))
+    {
+        $("#sideWindowCSS").remove();
+    }
+    $("head").append(styles);
+
 
     //初始化
     TR = window.setInterval(triatAuto, 5000);
@@ -2855,8 +2882,8 @@
 
         if(smallTraitTitle.length === 0)
         {
-            smallTraitTitle = $("<div id='smallTraitTitle' class='resource alt has-text-caution' onclick='(function (){if($(\"#traitContent\").css(\"display\") == \"none\"){$(\".sideContentWindow\").hide();$(\"#traitContent\").show();}else{$(\"#traitContent\").hide();}})()'>特质</div>");
-            traitContent = $("<div id='traitContent' class='resource alt vscroll sideContentWindow' style='height: 100%; display: none;'><div id='longTraitTitle' class='has-text-caution'>自动删减特质</div></div>");
+            smallTraitTitle = $("<div id='smallTraitTitle' class='has-text-caution' onclick='(function (){$(\"#titleListWindow\").children().removeClass(\"has-text-warning\");if($(\"#traitContent\").css(\"display\") == \"none\"){$(\".sideContentWindow\").hide();$(\"#traitContent\").show();$(\"#smallTraitTitle\").addClass(\"has-text-warning\");}else{$(\"#traitContent\").hide();}})()'>特质</div>");
+            traitContent = $("<div id='traitContent' class='vscroll sideContentWindow' style='height: 100%; display: none;'><div id='longTraitTitle' class='has-text-caution'>自动删减特质</div></div>");
             traitAdd = $("<div id='traitAdd' style='float: right;'></div>");
             traitRemove = $("<div id='traitRemove' style='float: right;'></div>");
             traitButton = $('<div id="traitButton" style="float: top;"></div>');

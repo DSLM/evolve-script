@@ -12,7 +12,7 @@
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // ==/UserScript==
 
-// TODO: 导入导出配置；压制满了不造
+// TODO: 导入导出配置；压制满了不造；多阶段造船
 
 (function($) {
     'use strict';
@@ -31,6 +31,33 @@
     "sensor" : ["visual", "radar", "lidar", "quantum"]};
     //let a = [];Object.keys(evolve.actions.space).forEach(function(location){if (evolve.actions.space[location].info.syndicate() || location === 'spc_dwarf'){a.push(location);}})
     var shipLocations = ['spc_moon', 'spc_red', 'spc_gas', 'spc_gas_moon', 'spc_belt', 'spc_dwarf', 'spc_titan', 'spc_enceladus', 'spc_triton', 'spc_kuiper', 'spc_eris'];
+
+    //手动CSS颜色
+    let cssData = {
+        dark:{background_color:"#1f2424", alt_color:"#0f1414", primary_border:"#ccc", primary_color:"#fff"},
+        light:{background_color:"#fff", alt_color:"#ddd", primary_border:"#000", primary_color:"#000"},
+        night:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc", primary_color:"#fff"},
+        darkNight:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc", primary_color:"#b8b8b8"},
+        redgreen:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc", primary_color:"#fff"},
+        gruvboxLight:{background_color:"#fbf1c7", alt_color:"#f9f5d7", primary_border:"#3c3836", primary_color:"#3c3836"},
+        gruvboxDark:{background_color:"#282828", alt_color:"#1d2021", primary_border:"#3c3836", primary_color:"#ebdbb2"},
+        orangeSoda:{background_color:"#131516", alt_color:"#292929", primary_border:"#313638", primary_color:"#EBDBB2"}
+    };
+    //全局CSS
+    const padTB = "0.5em";
+    const padLR = "0.75em";
+    let styleLines = `#sideWindow>div:not(#titleListWindow) {padding: ${padTB} ${padLR};}`;
+    Object.keys(cssData).forEach((theme) => {
+        styleLines += `html.${theme} #sideWindow>div:not(#titleListWindow) {background-color:${cssData[theme].alt_color}; border: ${cssData[theme].primary_border} solid 1px;}`;
+        styleLines += `html.${theme} #titleListWindow>div {background-color:${cssData[theme].alt_color};}`;
+
+    });
+    let styles = $(`<style type='text/css' id='sideWindowCSS'>${styleLines}</style>`);
+    if($("#sideWindowCSS"))
+    {
+        $("#sideWindowCSS").remove();
+    }
+    $("head").append(styles);
 
     SA = window.setInterval(shipAuto, 1001);
 
@@ -77,8 +104,8 @@
 
         if(smallShipTitle.length === 0)
         {
-            smallShipTitle = $("<div id='smallShipTitle' class='resource alt has-text-caution' onclick='(function (){if($(\"#shipContent\").css(\"display\") == \"none\"){$(\".sideContentWindow\").hide();$(\"#shipContent\").show();}else{$(\"#shipContent\").hide();}})()'>舰船</div>");
-            shipContent = $("<div id='shipContent' class='resource alt vscroll sideContentWindow' style='height: 100%; display: none;'><div id='longShipTitle' class='has-text-caution'>智械黎明舰船设置</div></div>");
+            smallShipTitle = $("<div id='smallShipTitle' class='has-text-caution' onclick='(function (){$(\"#titleListWindow\").children().removeClass(\"has-text-warning\");if($(\"#shipContent\").css(\"display\") == \"none\"){$(\".sideContentWindow\").hide();$(\"#shipContent\").show();$(\"#smallShipTitle\").addClass(\"has-text-warning\");}else{$(\"#shipContent\").hide();}})()'>舰船</div>");
+            shipContent = $("<div id='shipContent' class='vscroll sideContentWindow' style='height: 100%; display: none;'><div id='longShipTitle' class='has-text-caution'>智械黎明舰船设置</div></div>");
             shipButton = $('<div id="shipButton" style="float: top; display:flex; flex-direction: row; justify-content: flex-start; align-items: center;"></div>');
             shipSave = $('<button id="shipSave" class="button">保存舰船设置</button>');
             shipAdd = $('<button id="shipAdd" class="button">添加</button>');

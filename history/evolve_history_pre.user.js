@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.2.3
+// @version      1.4.2.4
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -14,8 +14,6 @@
 // @require      https://d3js.org/d3.v7.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.4/dagre-d3.min.js
 // ==/UserScript==
-
-// TODO: CRISPR记得加特殊需求
 
 (function() {
     'use strict';
@@ -38,31 +36,32 @@
     const PillDivWid = 140, PillDivCol = 3;
     const CrisDivWid = 140, CrisDivCol = 2;
 
+    //手动CSS颜色
+    let cssData = {
+        dark:{background_color:"#1f2424", alt_color:"#0f1414", primary_border:"#ccc", primary_color:"#fff"},
+        light:{background_color:"#fff", alt_color:"#ddd", primary_border:"#000", primary_color:"#000"},
+        night:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc", primary_color:"#fff"},
+        darkNight:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc", primary_color:"#b8b8b8"},
+        redgreen:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc", primary_color:"#fff"},
+        gruvboxLight:{background_color:"#fbf1c7", alt_color:"#f9f5d7", primary_border:"#3c3836", primary_color:"#3c3836"},
+        gruvboxDark:{background_color:"#282828", alt_color:"#1d2021", primary_border:"#3c3836", primary_color:"#ebdbb2"},
+        orangeSoda:{background_color:"#131516", alt_color:"#292929", primary_border:"#313638", primary_color:"#EBDBB2"}
+    };
     //全局CSS
     const padTB = "0.5em";
     const padLR = "0.75em";
-    let styles = $(`<style type='text/css' id='sideWindowCSS'>
-    #sideWindow>div:not(#titleListWindow) {
-        padding: ${padTB} ${padLR};
-    }
-    </style>`);
+    let styleLines = `#sideWindow>div:not(#titleListWindow) {padding: ${padTB} ${padLR};}`;
+    Object.keys(cssData).forEach((theme) => {
+        styleLines += `html.${theme} #sideWindow>div:not(#titleListWindow) {background-color:${cssData[theme].alt_color}; border: ${cssData[theme].primary_border} solid 1px;}`;
+        styleLines += `html.${theme} #titleListWindow>div {background-color:${cssData[theme].alt_color};}`;
+
+    });
+    let styles = $(`<style type='text/css' id='sideWindowCSS'>${styleLines}</style>`);
     if($("#sideWindowCSS"))
     {
         $("#sideWindowCSS").remove();
     }
     $("head").append(styles);
-
-    //手动CSS颜色
-    let cssData = {
-        dark:{background_color:"#1f2424", alt_color:"#0f1414", primary_border:"#ccc"},
-        light:{background_color:"#fff", alt_color:"#ddd", primary_border:"#000"},
-        night:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc"},
-        darkNight:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc"},
-        redgreen:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc"},
-        gruvboxLight:{background_color:"#fbf1c7", alt_color:"#f9f5d7", primary_border:"#3c3836"},
-        gruvboxDark:{background_color:"#282828", alt_color:"#1d2021", primary_border:"#3c3836"},
-        orangeSoda:{background_color:"#131516", alt_color:"#292929", primary_border:"#313638"}
-    };
 
     let criGraphBackColor = "";
 
@@ -110,8 +109,8 @@
         //独有窗口
         if($("#smallHistTitle").length === 0)
         {
-            let smallHistTitle = $("<div id='smallHistTitle' class='resource alt has-text-caution' onclick='(function (){if($(\"#histContent\").css(\"display\") == \"none\"){$(\".sideContentWindow\").hide();$(\"#histContent\").show();}else{$(\"#histContent\").hide();}})()'>统计</div>");
-            let histContent = $(`<div id='histContent' class='resource alt sideContentWindow' style='height: 100%; display: none;'><div id='histFlexContent' style='height: 100%;display:flex;flex-direction: column;justify-content: space-between;'><div class='has-text-caution' style='text-align: center; padding-bottom: ${padTB};'>数据统计</div></div></div>`);
+            let smallHistTitle = $("<div id='smallHistTitle' class='has-text-caution' onclick='(function (){$(\"#titleListWindow\").children().removeClass(\"has-text-warning\");if($(\"#histContent\").css(\"display\") == \"none\"){$(\".sideContentWindow\").hide();$(\"#histContent\").show();$(\"#smallHistTitle\").addClass(\"has-text-warning\");}else{$(\"#histContent\").hide();}})()'>统计</div>");
+            let histContent = $(`<div id='histContent' class='sideContentWindow' style='height: 100%; display: none;'><div id='histFlexContent' style='height: 100%;display:flex;flex-direction: column;justify-content: space-between;'><div class='has-text-caution' style='text-align: center; padding-bottom: ${padTB};'>数据统计</div></div></div>`);
 
             let histWindow = $(`<div id='histWindow' style='height: 100%; display:flex; flex-direction: row; justify-content: flex-end; align-items: flex-end; flex-grow: 1;'><div id='histTitleListWindow' style='height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; padding-left: ${padLR};'></div></div>`);
 
@@ -307,7 +306,7 @@
 
         if(smallAchiTitle.length === 0)
         {
-            smallAchiTitle = $("<div id='smallAchiTitle' class='has-text-advanced' onclick='(function (){if($(\"#achiContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#achiContent\").show();}else{$(\"#achiContent\").hide();}})()'>成就</div>");
+            smallAchiTitle = $("<div id='smallAchiTitle' class='has-text-advanced' onclick='(function (){$(\"#histTitleListWindow\").children().removeClass(\"has-text-success\");if($(\"#achiContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#achiContent\").show();$(\"#smallAchiTitle\").addClass(\"has-text-success\");}else{$(\"#achiContent\").hide();}})()'>成就</div>");
             achiContent = $("<div id='achiContent' class='sideHistWindow' style='height: inherit; display: none;'><div style='height: 100%; display:flex;'></div></div>");
             achiTotalStatus = $(`<div id='achiTotalStatus' style='padding-right: ${padLR};'></div>`);
             let achiShow = $(`<div style='width: ${AchiDivWid * AchiDivCol + 6}px; height: 100%; display:flex; flex-direction: column;'><div id='achiFilter'></div><div class='vscroll' style='flex-grow: 1;'><div id='achiList' style='height: 0;'></div></div></div>`);
@@ -315,10 +314,10 @@
             achiContent.children().eq(0).append(achiTotalStatus);
             achiContent.children().eq(0).append(achiShow);
 
+            smallAchiTitle.one("click", buildAchieve);
+
             $("#histWindow").prepend(achiContent);
             $("#histTitleListWindow").append(smallAchiTitle);
-
-            buildAchieve();
         }
     }
 
@@ -408,8 +407,15 @@
             //图标
             let icon = $("<span></span>")
             Object.keys(UniLtoS).forEach((uniL) => {
-                let starNum = (evolve.global.stats.achieve[ach] && evolve.global.stats.achieve[ach][UniLtoS[uniL]]) ? evolve.global.stats.achieve[ach][UniLtoS[uniL]] : 0;
-                icon.append($(`<span title="${evolve.loc("universe_" + uniL)} ${starName[starNum]}"><svg class="svg star${starNum}" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="${icons[uniL].viewbox}" xml:space="preserve" data-level="0">${icons[uniL].path}</svg></span>`))
+                if(uniL == "standard" || !universeExclusives[ach] || universeExclusives[ach].includes(uniL))
+                {
+                    let starNum = (evolve.global.stats.achieve[ach] && evolve.global.stats.achieve[ach][UniLtoS[uniL]]) ? evolve.global.stats.achieve[ach][UniLtoS[uniL]] : 0;
+                    icon.append($(`<span title="${evolve.loc("universe_" + uniL)} ${starName[starNum]}"><svg class="svg star${starNum}" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="${icons[uniL].viewbox}" xml:space="preserve" data-level="0">${icons[uniL].path}</svg></span>`))
+                }
+                else
+                {
+                    icon.append($(`<span><svg class="svg" width="16px" height="16px"></svg></span>`))
+                }
             });
 
             let line = $(`<div style="display:inline-block; width:${AchiDivWid}px;" class='achiLine ${uni} ${star} ${type} '><span title="${desc}">${name}</span></div>`);
@@ -490,7 +496,7 @@
 
         if(smallfeaTitle.length === 0)
         {
-            smallfeaTitle = $("<div id='smallfeaTitle' class='has-text-advanced' onclick='(function (){if($(\"#feaContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#feaContent\").show();}else{$(\"#feaContent\").hide();}})()'>壮举</div>");
+            smallfeaTitle = $("<div id='smallfeaTitle' class='has-text-advanced' onclick='(function (){$(\"#histTitleListWindow\").children().removeClass(\"has-text-success\");if($(\"#feaContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#feaContent\").show();$(\"#smallfeaTitle\").addClass(\"has-text-success\");}else{$(\"#feaContent\").hide();}})()'>壮举</div>");
             feaContent = $("<div id='feaContent' class='sideHistWindow' style='height: inherit; display: none;'><div style='height: 100%; display:flex;'></div></div>");
             featStatus = $(`<div style='height: 100%; display:flex; flex-direction: column;'><div id='feaFilter'></div><div class='vscroll' style='flex-grow: 1;'><div id='feaList' style='width: ${FeatDivWid * FeatDivCol + 6}px; height: 0;'></div></div></div>`);
             pillarStatus = $(`<div style='height: 100%; display:flex; flex-direction: column;'><div id='pilFilter'></div><div class='vscroll' style='flex-grow: 1;'><div id='pilList' style='width: ${PillDivWid * PillDivCol + 6}px; height: 0;'></div></div></div>`);
@@ -587,7 +593,7 @@
 
         if(smallcriTitle.length === 0)
         {
-            smallcriTitle = $("<div id='smallcriTitle' class='has-text-advanced' onclick='(function (){if($(\"#criContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#criContent\").show();}else{$(\"#criContent\").hide();}})()'>CRISPR</div>");
+            smallcriTitle = $("<div id='smallcriTitle' class='has-text-advanced' onclick='(function (){$(\"#histTitleListWindow\").children().removeClass(\"has-text-success\");if($(\"#criContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#criContent\").show();$(\"#smallcriTitle\").addClass(\"has-text-success\");}else{$(\"#criContent\").hide();}})()'>CRISPR</div>");
             criContent = $("<div id='criContent' class='sideHistWindow' style='height: inherit; display: none;'><div style='height: 100%; display:flex;'></div></div>");
             crisprStatus = $(`<div style='height: 100%; display:flex; flex-direction: column;'><div id='criFilter'></div><div class='vscroll' style='flex-grow: 1;'><div id='criList' style='width: ${CrisDivWid * CrisDivCol + 6}px; height: 0;'></div></div></div>`);
             crisprGraph = $(`<svg id='criGraph' style='height: 100%;' width=1000 height=0><g/></svg>`);
@@ -634,7 +640,6 @@
 
     function buildCrisprGraph()
     {
-        $("#smallcriTitle").off("click");
         var g = new dagreD3.graphlib.Graph().setGraph({rankdir:'LR'});
 
         let crisprTrees = {};
@@ -688,7 +693,6 @@
         render(inner, g);
 
         // Center the graph
-        var initialScale = 0.75;
         svg.call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(0.5));
 
         //提示框
