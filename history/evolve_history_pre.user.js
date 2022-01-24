@@ -63,21 +63,21 @@
     }
     $("head").append(styles);
 
-    let criGraphBackColor = "";
+    let graphBackColor = "";
 
     Object.keys(cssData).forEach((theme) => {
-        criGraphBackColor += `html.${theme} #criGraph {background-color:${cssData[theme].background_color};}`;
-        criGraphBackColor += `html.${theme} g.node rect {fill:${cssData[theme].background_color};stroke: ${cssData[theme].primary_border};}`;
-        criGraphBackColor += `html.${theme} g.edgePath path {fill:${cssData[theme].primary_border};stroke: ${cssData[theme].primary_border};stroke-width: 1.5px;}`;
+        graphBackColor += `html.${theme} #criGraph,#bloGraph {background-color:${cssData[theme].background_color};}`;
+        graphBackColor += `html.${theme} g.node rect {fill:${cssData[theme].background_color};stroke: ${cssData[theme].primary_border};}`;
+        graphBackColor += `html.${theme} g.edgePath path {fill:${cssData[theme].primary_border};stroke: ${cssData[theme].primary_border};stroke-width: 1.5px;}`;
     });
 
-    //CRISPR的CSS
-    styles = $(`<style type='text/css' id='crisprGraphCSS'>
-    ${criGraphBackColor}
+    //流程图的CSS
+    styles = $(`<style type='text/css' id='graphCSS'>
+    ${graphBackColor}
     </style>`);
-    if($("#crisprGraphCSS"))
+    if($("#graphCSS"))
     {
-        $("#crisprGraphCSS").remove();
+        $("#graphCSS").remove();
     }
     $("head").append(styles);
 
@@ -127,6 +127,7 @@
         achieveStat();
         featStat();
         crisprStat();
+        bloodStat();
         histRecord();
         spireTimeDataFunc();
     }
@@ -655,7 +656,6 @@
 
         Object.keys(genePool).forEach((gene) => {
             let title = typeof genePool[gene].title === 'string' ? genePool[gene].title : genePool[gene].title();
-            let desc = typeof genePool[gene].desc === 'string' ? genePool[gene].desc : genePool[gene].desc();
             let color = evolve.global.genes[genePool[gene].grant[0]] && evolve.global.genes[genePool[gene].grant[0]] >= genePool[gene].grant[1] ? 'has-text-success' : '';
             g.setNode(gene, {labelType: "html", label: `<span class="${color}">${title}</span>`, id: "CRISPR_" + gene});
 
@@ -704,7 +704,6 @@
         .on("mouseover", function (v) {
             let gene = $(this).attr("id").slice("CRISPR_".length)
             if (cri_popperRef || $(`#CRISPR_popper`).length > 0){
-                console.log();
                 if (cri_popper.data('id') !== gene){
                     cri_popper.hide();
                     if (cri_popperRef){
@@ -715,7 +714,7 @@
             }
             cri_popper.data('id', gene);
             cri_popper.empty();
-            cri_popper.append(`<div class="has-text-warning">${genePool[gene].title()}</div><div>${genePool[gene].desc()}</div>`);
+            cri_popper.append(`<div class="has-text-warning">${genePool[gene].title()}（${evolve.loc("wiki_arpa_crispr_"+genePool[gene].grant[0])}：${genePool[gene].grant[1]}）</div><div>${genePool[gene].desc()}</div>`);
 
             if (specialRequirements.hasOwnProperty(gene)){
                 let comma = false;
@@ -761,12 +760,188 @@
         })
     }
 
+    function bloodStat()
+    {
+        //独有窗口
+        let smallbloTitle = $("#smallbloTitle");
+        let bloContent = $("#bloContent");
+        let bloodStatus = $("#bloodStatus");
+        let bloodGraph = $("#bloodGraph");
+
+        if(smallbloTitle.length === 0)
+        {
+            smallbloTitle = $("<div id='smallbloTitle' class='has-text-advanced' onclick='(function (){$(\"#histTitleListWindow\").children().removeClass(\"has-text-success\");if($(\"#bloContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#bloContent\").show();$(\"#smallbloTitle\").addClass(\"has-text-success\");}else{$(\"#bloContent\").hide();}})()'>鲜血灌注</div>");
+            bloContent = $("<div id='bloContent' class='sideHistWindow' style='height: inherit; display: none;'><div style='height: 100%; display:flex;'></div></div>");
+            bloodStatus = $(`<div style='height: 100%; display:flex; flex-direction: column;'><div id='bloFilter'></div><div class='vscroll' style='flex-grow: 1;'><div id='bloList' style='width: ${CrisDivWid * CrisDivCol + 6}px; height: 0;'></div></div></div>`);
+            bloodGraph = $(`<svg id='bloGraph' style='height: 100%;' width=1000 height=0><g/></svg>`);
+
+            bloContent.children().eq(0).append(bloodStatus);
+            bloContent.children().eq(0).append($(`<div style='width: ${padLR}; height: 100%;'></div>`));
+            bloContent.children().eq(0).append(bloodGraph);
+
+            smallbloTitle.one("click", buildBloodGraph);
+
+            $("#histWindow").prepend(bloContent);
+            $("#histTitleListWindow").append(smallbloTitle);
+
+            buildBloodStat();
+
+        }
+    }
+
+    function buildBloodStat()
+    {
+        $("#bloFilter").empty();
+        $("#bloFilter").append($("<div class='has-text-advanced'>鲜血灌注统计</div>"));
+        let compe = 0;
+        let total = Object.keys(bloodPool).length;
+
+        Object.keys(bloodPool).forEach((blood) => {
+            if(evolve.global.blood[bloodPool[blood].grant[0]] && !(evolve.global.blood[bloodPool[blood].grant[0]] < bloodPool[blood].grant[1]))
+            {
+                compe+=1;
+            }
+        });
+
+        $("#bloFilter").append($(`<tr><td>完成率：</td><td><span style='visibility:hidden;'>${Array(3 - (compe +  '').length).join("0")}</span>${compe} / ${total}<span style='visibility:hidden;'>${Array(7 - ((compe / total * 100).toFixed(2) +  '').length).join("0")}</span>（<span class="${(compe == total ? 'has-text-warning' : '')}">${(compe / total * 100).toFixed(2)}%</span>）</td></tr>`));
+
+        Object.keys(bloodPool).forEach((blood) => {
+            let buy = evolve.global.blood[bloodPool[blood].grant[0]] && !(evolve.global.blood[bloodPool[blood].grant[0]] < bloodPool[blood].grant[1]);
+
+            let icon = $(`<span title="${buy? "已购买" : "未购买"}"><svg class="svg" fill="${buy? "#32CD32" : "none"}" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="${icons.checkmark.viewbox}" xml:space="preserve" data-level="0">${icons.checkmark.path}</svg></span>`);
+            let line = $(`<div style="width: ${CrisDivWid}px; display: inline-block;" class='bloLine'><span title="${bloodPool[blood].desc()}">${bloodPool[blood].title()}${(buy&&bloodPool[blood].grant[1]=="*")?"（"+evolve.global.blood[bloodPool[blood].grant[0]]+"）":""}</span></div>`);
+            line.prepend(icon);
+            $("#bloList").append(line);
+        });
+    }
+
+    function buildBloodGraph()
+    {
+        var g = new dagreD3.graphlib.Graph().setGraph({rankdir:'TB', ranker:"longest-path"});
+
+        let bloodTrees = {};
+        Object.keys(bloodPool).forEach(function (blood){
+            if (!bloodTrees[bloodPool[blood].grant[0]]){
+                bloodTrees[bloodPool[blood].grant[0]] = {};
+            }
+            bloodTrees[bloodPool[blood].grant[0]][bloodPool[blood].grant[1]] = {
+                name: blood
+            };
+        });
+
+        //特殊，CRIPS的鲜血3
+        g.setNode("essence_absorber", {labelType: "html", label: `<span class="${evolve.global.genes[genePool.essence_absorber.grant[0]] && evolve.global.genes[genePool.essence_absorber.grant[0]] >= genePool.essence_absorber.grant[1] ? 'has-text-success' : ''}">${typeof genePool.essence_absorber.title === 'string' ? genePool.essence_absorber.title : genePool.essence_absorber.title()}</span>`, id: "BLOOD_" + "essence_absorber"});
+
+        Object.keys(bloodPool).forEach((blood) => {
+            let title = typeof bloodPool[blood].title === 'string' ? bloodPool[blood].title : bloodPool[blood].title();
+            let color = evolve.global.blood[bloodPool[blood].grant[0]] && !(evolve.global.blood[bloodPool[blood].grant[0]] < bloodPool[blood].grant[1]) ? 'has-text-success' : '';
+            g.setNode(blood, {labelType: "html", label: `<span class="${color}">${title}</span>`, id: "BLOOD_" + blood});
+
+            if (Object.keys(bloodPool[blood].reqs).length > 0)
+            {
+                Object.keys(bloodPool[blood].reqs).forEach(function (req){
+                    g.setEdge(bloodTrees[req][bloodPool[blood].reqs[req]].name, blood, {});
+                });
+            }
+            if (bloodPool[blood].hasOwnProperty('condition')){
+                g.setEdge("essence_absorber", blood, {});
+            }
+        });
+
+        // Set some general styles
+        g.nodes().forEach(function(v) {
+          var node = g.node(v);
+          node.rx = node.ry = 5;
+        });
+
+        var svg = d3.select("#bloGraph"),
+            inner = svg.select("g");
+
+        // Set up zoom support
+        var zoom = d3.zoom().on("zoom", function(e) {
+              inner.attr("transform", e.transform);
+            });
+        svg.call(zoom);
+
+        // Create the renderer
+        var render = new dagreD3.render();
+
+        // Run the renderer. This is what draws the final graph.
+        render(inner, g);
+
+        // Center the graph
+        svg.call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(0.5));
+
+        //提示框
+        var blo_popper = $(`<div id="BLOOD_popper" class="popper has-background-light has-text-dark pop-desc"></div>`);
+        $(`#main`).append(blo_popper);
+        var blo_popperRef = false;
+        inner.selectAll("g.node")
+        .on("mouseover", function (v) {
+            let blood = $(this).attr("id").slice("BLOOD_".length)
+            if (blo_popperRef || $(`#BLOOD_popper`).length > 0){
+                if (blo_popper.data('id') !== blood){
+                    blo_popper.hide();
+                    if (blo_popperRef){
+                        blo_popperRef.destroy();
+                        blo_popperRef = false;
+                    }
+                }
+            }
+            blo_popper.data('id', blood);
+            blo_popper.empty();
+            //特殊，CRIPS的鲜血3
+            if(blood == "essence_absorber")
+            {
+                blo_popper.append(`<div class="has-text-warning">${genePool[blood].title()}（${evolve.loc("wiki_arpa_crispr_"+genePool[blood].grant[0])}：${genePool[blood].grant[1]}）</div><div>${genePool[blood].desc()}</div>`);
+            }
+            else {
+                blo_popper.append(`<div class="has-text-warning">${bloodPool[blood].title()}（${evolve.loc("wiki_arpa_blood_"+bloodPool[blood].grant[0])}：${bloodPool[blood].grant[1]}）</div><div>${bloodPool[blood].desc()}</div>`);
+            }
+
+            blo_popperRef = Popper.createPopper(this,
+                document.querySelector(`#BLOOD_popper`),
+                {
+                    modifiers: [
+                        {
+                            name: 'flip',
+                            enabled: true,
+                        },
+                        {
+                            name: 'offset',
+                            options: {
+                                offset: [0, 0],
+                            },
+                        }
+                    ],
+                }
+            );
+
+            blo_popper.show();
+        })
+        .on("mouseout", function (v) {
+            let blood = $(this).attr("id").slice("BLOOD_".length)
+            $(`#BLOOD_popper`).hide();
+            if (blo_popperRef){
+                blo_popperRef.destroy();
+                blo_popperRef = false;
+            }
+
+        })
+    }
+
     function loc(key, variables)
     {
         return function(){return evolve.loc(key, variables)};
     }
 
     function payCrispr(a)
+    {
+        //无用的函数
+        return true;
+    }
+
+    function payBloodPrice(a)
     {
         //无用的函数
         return true;

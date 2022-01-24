@@ -42,6 +42,19 @@ while brackets > 0:
     endIndex += 1
 addedStr += res.text[sourData : endIndex].replace("\n","\n\t") +"\n\t"
 
+url = 'https://raw.githubusercontent.com/pmotschmann/Evolve/master/src/arpa.js'
+res = requests.get(url)
+sourData = res.text.find("const bloodPool = {")
+endIndex = sourData + len("const bloodPool = {")
+brackets = 1
+while brackets > 0:
+    if res.text[endIndex] == "{":
+        brackets += 1
+    elif res.text[endIndex] == "}":
+        brackets -= 1
+    endIndex += 1
+addedStr += res.text[sourData : endIndex].replace("\n","\n\t").replace("global","evolve.global") +"\n\t"
+
 
 url = 'https://raw.githubusercontent.com/pmotschmann/Evolve/master/src/wiki/achieve.js'
 res = requests.get(url)
