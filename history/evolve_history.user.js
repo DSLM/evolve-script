@@ -149,31 +149,31 @@
 
             let backupString = LZString.decompressFromUTF16(localStorage.getItem('evolveBak'));
             if (backupString) {
-                let oldStats = JSON.parse(backupString).stats;
-                let statsData = {game_days_played: oldStats.days, race: oldStats.race.species};
-                if (oldStats.plasmid > 0) {
-                    statsData.plasmid_earned = oldStats.plasmid;
+                let oldGlobal = JSON.parse(backupString);
+                let statsData = {race: oldGlobal.race.species, game_days_played: oldGlobal.stats.days};
+                if (oldGlobal.stats.plasmid > 0) {
+                    statsData.plasmid_earned = oldGlobal.stats.plasmid;
                 }
-                if (oldStats.antiplasmid > 0) {
-                    statsData.antiplasmid_earned = oldStats.antiplasmid;
+                if (oldGlobal.stats.antiplasmid > 0) {
+                    statsData.antiplasmid_earned = oldGlobal.stats.antiplasmid;
                 }
-                if (oldStats.phage > 0) {
-                    statsData.phage_earned = oldStats.phage;
+                if (oldGlobal.stats.phage > 0) {
+                    statsData.phage_earned = oldGlobal.stats.phage;
                 }
-                if (oldStats.dark > 0) {
-                    statsData.dark_earned = oldStats.dark;
+                if (oldGlobal.stats.dark > 0) {
+                    statsData.dark_earned = oldGlobal.stats.dark;
                 }
-                if (oldStats.harmony > 0) {
-                    statsData.harmony_earned = oldStats.harmony;
+                if (oldGlobal.stats.harmony > 0) {
+                    statsData.harmony_earned = oldGlobal.stats.harmony;
                 }
-                if (oldStats.blood > 0) {
-                    statsData.blood_earned = oldStats.blood;
+                if (oldGlobal.stats.blood > 0) {
+                    statsData.blood_earned = oldGlobal.stats.blood;
                 }
-                if (oldStats.artifact > 0) {
-                    statsData.artifact_earned = oldStats.artifact;
+                if (oldGlobal.stats.artifact > 0) {
+                    statsData.artifact_earned = oldGlobal.stats.artifact;
                 }
-                if (oldStats.reset > 0) {
-                    statsData.total_resets = oldStats.reset;
+                if (oldGlobal.stats.reset > 0) {
+                    statsData.total_resets = oldGlobal.stats.reset;
                 }
 
                 if(historyData.length == 0 || (historyData.length > 0 && historyData[0].total_resets != statsData.total_resets)) historyData.unshift(statsData)
@@ -214,7 +214,7 @@
                 //威望物资
                 if(label == "race")
                 {
-                    $("#recoList").append($(`<tr><td class="has-text-warning">种族：</td><td>${evolve.loc("race_" + label)}</td></tr>`));
+                    $("#recoList").append($(`<tr><td class="has-text-warning">种族：</td><td>${evolve.loc("race_" + value)}</td></tr>`));
                 }
                 else if(label.includes("_earned"))
                 {

@@ -150,7 +150,7 @@
             let backupString = LZString.decompressFromUTF16(localStorage.getItem('evolveBak'));
             if (backupString) {
                 let oldGlobal = JSON.parse(backupString);
-                let statsData = {game_days_played: oldGlobal.stats.days, race: oldGlobal.race.species};
+                let statsData = {race: oldGlobal.race.species, game_days_played: oldGlobal.stats.days};
                 if (oldGlobal.stats.plasmid > 0) {
                     statsData.plasmid_earned = oldGlobal.stats.plasmid;
                 }
@@ -214,7 +214,7 @@
                 //威望物资
                 if(label == "race")
                 {
-                    $("#recoList").append($(`<tr><td class="has-text-warning">种族：</td><td>${evolve.loc("race_" + label)}</td></tr>`));
+                    $("#recoList").append($(`<tr><td class="has-text-warning">种族：</td><td>${evolve.loc("race_" + value)}</td></tr>`));
                 }
                 else if(label.includes("_earned"))
                 {
