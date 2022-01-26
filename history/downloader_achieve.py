@@ -4,6 +4,7 @@ achiFile = open('history\evolve_history.user.js', 'w', encoding="utf-8")
 codeFile = open('history\evolve_history_pre.user.js', 'r', encoding="utf-8")
 addedStr = ""
 
+
 url = 'https://raw.githubusercontent.com/pmotschmann/Evolve/master/src/achieve.js'
 res = requests.get(url)
 
@@ -29,6 +30,18 @@ while brackets > 0:
     endIndex += 1
 addedStr += res.text[sourData : endIndex].replace("\n","\n\t") +"\n\t"
 
+sourData = res.text.find("const perkList = {")
+endIndex = sourData + len("const perkList = {")
+brackets = 1
+while brackets > 0:
+    if res.text[endIndex] == "{":
+        brackets += 1
+    elif res.text[endIndex] == "}":
+        brackets -= 1
+    endIndex += 1
+addedStrPrk = res.text[sourData : endIndex].replace("\n","\n\t").replace("global","evolve.global")  +"\n\t"
+
+
 url = 'https://raw.githubusercontent.com/pmotschmann/Evolve/master/src/arpa.js'
 res = requests.get(url)
 sourData = res.text.find("const genePool = {")
@@ -42,8 +55,6 @@ while brackets > 0:
     endIndex += 1
 addedStr += res.text[sourData : endIndex].replace("\n","\n\t") +"\n\t"
 
-url = 'https://raw.githubusercontent.com/pmotschmann/Evolve/master/src/arpa.js'
-res = requests.get(url)
 sourData = res.text.find("const bloodPool = {")
 endIndex = sourData + len("const bloodPool = {")
 brackets = 1
@@ -69,6 +80,7 @@ while brackets > 0:
     endIndex += 1
 addedStr += res.text[sourData : endIndex].replace("\n","\n\t") +"\n\t"
 
+
 url = 'https://raw.githubusercontent.com/pmotschmann/Evolve/master/src/wiki/crispr.js'
 res = requests.get(url)
 sourData = res.text.find("const specialRequirements = {")
@@ -81,6 +93,7 @@ while brackets > 0:
         brackets -= 1
     endIndex += 1
 addedStrCri = res.text[sourData : endIndex].replace("\n","\n\t").replace("global","evolve.global") +"\n\t"
+
 
 icons = """const icons = {
     	standard: {
@@ -113,4 +126,4 @@ icons = """const icons = {
     	}
     };"""
 addedStr += icons
-achiFile.write(codeFile.read().replace("//此处插入数据",addedStr).replace("//此处插入CRISPR特殊条件",addedStrCri))
+achiFile.write(codeFile.read().replace("//此处插入数据",addedStr).replace("//此处插入CRISPR特殊条件",addedStrCri).replace("//此处插入特权列表",addedStrPrk))

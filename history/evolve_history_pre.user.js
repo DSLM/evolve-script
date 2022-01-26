@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.2.4
+// @version      1.4.3
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -35,6 +35,7 @@
     const FeatDivWid = 150, FeatDivCol = 3;
     const PillDivWid = 140, PillDivCol = 3;
     const CrisDivWid = 140, CrisDivCol = 2;
+    const PerkDivWid = 200, PerkDivCol = 2;
 
     //手动CSS颜色
     let cssData = {
@@ -66,7 +67,7 @@
     let graphBackColor = "";
 
     Object.keys(cssData).forEach((theme) => {
-        graphBackColor += `html.${theme} #criGraph,#bloGraph {background-color:${cssData[theme].background_color};}`;
+        graphBackColor += `html.${theme} #criGraph, html.${theme} #bloGraph {background-color:${cssData[theme].background_color};}`;
         graphBackColor += `html.${theme} g.node rect {fill:${cssData[theme].background_color};stroke: ${cssData[theme].primary_border};}`;
         graphBackColor += `html.${theme} g.edgePath path {fill:${cssData[theme].primary_border};stroke: ${cssData[theme].primary_border};stroke-width: 1.5px;}`;
     });
@@ -96,7 +97,6 @@
             clearInterval(temp)
             return;
         }
-
 
         //共用窗口
         let sideWindow = $("#sideWindow");
@@ -128,6 +128,7 @@
         featStat();
         crisprStat();
         bloodStat();
+        perkStat();
         histRecord();
         spireTimeDataFunc();
     }
@@ -490,14 +491,14 @@
     function featStat()
     {
         //独有窗口
-        let smallfeaTitle = $("#smallfeaTitle");
+        let smallFeaTitle = $("#smallFeaTitle");
         let feaContent = $("#feaContent");
         let featStatus = $("#featStatus");
         let pillarStatus = $("#pillarStatus");
 
-        if(smallfeaTitle.length === 0)
+        if(smallFeaTitle.length === 0)
         {
-            smallfeaTitle = $("<div id='smallfeaTitle' class='has-text-advanced' onclick='(function (){$(\"#histTitleListWindow\").children().removeClass(\"has-text-success\");if($(\"#feaContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#feaContent\").show();$(\"#smallfeaTitle\").addClass(\"has-text-success\");}else{$(\"#feaContent\").hide();}})()'>壮举</div>");
+            smallFeaTitle = $("<div id='smallFeaTitle' class='has-text-advanced' onclick='(function (){$(\"#histTitleListWindow\").children().removeClass(\"has-text-success\");if($(\"#feaContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#feaContent\").show();$(\"#smallFeaTitle\").addClass(\"has-text-success\");}else{$(\"#feaContent\").hide();}})()'>壮举</div>");
             feaContent = $("<div id='feaContent' class='sideHistWindow' style='height: inherit; display: none;'><div style='height: 100%; display:flex;'></div></div>");
             featStatus = $(`<div style='height: 100%; display:flex; flex-direction: column;'><div id='feaFilter'></div><div class='vscroll' style='flex-grow: 1;'><div id='feaList' style='width: ${FeatDivWid * FeatDivCol + 6}px; height: 0;'></div></div></div>`);
             pillarStatus = $(`<div style='height: 100%; display:flex; flex-direction: column;'><div id='pilFilter'></div><div class='vscroll' style='flex-grow: 1;'><div id='pilList' style='width: ${PillDivWid * PillDivCol + 6}px; height: 0;'></div></div></div>`);
@@ -506,11 +507,11 @@
             feaContent.children().eq(0).append($(`<div style='width: ${padLR}; height: 100%;'></div>`));
             feaContent.children().eq(0).append(pillarStatus);
 
-            $("#histWindow").prepend(feaContent);
-            $("#histTitleListWindow").append(smallfeaTitle);
+            smallFeaTitle.one("click", buildFeat);
+            smallFeaTitle.one("click", buildPillar);
 
-            buildFeat();
-            buildPillar();
+            $("#histWindow").prepend(feaContent);
+            $("#histTitleListWindow").append(smallFeaTitle);
         }
     }
 
@@ -604,12 +605,10 @@
             criContent.children().eq(0).append(crisprGraph);
 
             smallcriTitle.one("click", buildCrisprGraph);
+            smallcriTitle.one("click", buildCrisprStat);
 
             $("#histWindow").prepend(criContent);
             $("#histTitleListWindow").append(smallcriTitle);
-
-            buildCrisprStat();
-
         }
     }
 
@@ -780,12 +779,10 @@
             bloContent.children().eq(0).append(bloodGraph);
 
             smallbloTitle.one("click", buildBloodGraph);
+            smallbloTitle.one("click", buildBloodStat);
 
             $("#histWindow").prepend(bloContent);
             $("#histTitleListWindow").append(smallbloTitle);
-
-            buildBloodStat();
-
         }
     }
 
@@ -830,7 +827,7 @@
         });
 
         //特殊，CRIPS的鲜血3
-        g.setNode("essence_absorber", {labelType: "html", label: `<span class="${evolve.global.genes[genePool.essence_absorber.grant[0]] && evolve.global.genes[genePool.essence_absorber.grant[0]] >= genePool.essence_absorber.grant[1] ? 'has-text-success' : ''}">${typeof genePool.essence_absorber.title === 'string' ? genePool.essence_absorber.title : genePool.essence_absorber.title()}</span>`, id: "BLOOD_" + "essence_absorber"});
+        g.setNode("essence_absorber", {labelType: "html", label: `<span class="${evolve.global.genes[genePool.essence_absorber.grant[0]] && evolve.global.genes[genePool.essence_absorber.grant[0]] >= genePool.essence_absorber.grant[1] ? 'has-text-success' : ''}">CRISPR升级：${typeof genePool.essence_absorber.title === 'string' ? genePool.essence_absorber.title : genePool.essence_absorber.title()}</span>`, id: "BLOOD_" + "essence_absorber"});
 
         Object.keys(bloodPool).forEach((blood) => {
             let title = typeof bloodPool[blood].title === 'string' ? bloodPool[blood].title : bloodPool[blood].title();
@@ -928,6 +925,111 @@
             }
 
         })
+    }
+
+    function perkStat()
+    {
+        //独有窗口
+        let smallPerTitle = $("#smallPerTitle");
+        let perContent = $("#perContent");
+        let perkStatus = $("#perkStatus");
+        //let perkDetail = $("#perkDetail");
+
+        if(smallPerTitle.length === 0)
+        {
+            smallPerTitle = $("<div id='smallPerTitle' class='has-text-advanced' onclick='(function (){$(\"#histTitleListWindow\").children().removeClass(\"has-text-success\");if($(\"#perContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#perContent\").show();$(\"#smallPerTitle\").addClass(\"has-text-success\");}else{$(\"#perContent\").hide();}})()'>特权</div>");
+            perContent = $("<div id='perContent' class='sideHistWindow' style='height: inherit; display: none;'><div style='height: 100%; display:flex;'></div></div>");
+            perkStatus = $(`<div style='height: 100%; display:flex; flex-direction: column;'><div id='perFilter'></div><div class='vscroll' style='flex-grow: 1;'><div id='perList' style='width: ${PerkDivWid * PerkDivCol + 6}px; height: 0;'></div></div></div>`);
+            //perkDetail = $(`<div style='' id='perkDetail'></div>`);
+
+            //perContent.children().eq(0).append(perkDetail);
+            //perContent.children().eq(0).append($(`<div style='width: ${padLR}; height: 100%;'></div>`));
+            perContent.children().eq(0).append(perkStatus);
+
+            smallPerTitle.one("click", buildPerk);
+
+            $("#histWindow").prepend(perContent);
+            $("#histTitleListWindow").append(smallPerTitle);
+        }
+    }
+
+    function buildPerk()
+    {
+        $("#perFilter").empty();
+        $("#perFilter").append($("<div class='has-text-advanced'>特权统计</div>"));
+        let compe = 0;
+        let total = Object.keys(perks).length;
+        let types = {achieve:{fName:"achievements"}, feat:{fName:"feats"}};
+
+        //提示框
+        var per_popper = $(`<div id="PERK_popper" class="popper has-background-light has-text-dark pop-desc"></div>`);
+        $(`#main`).append(per_popper);
+        var per_popperRef = false;
+
+        perks.forEach((per) => {
+            let name = evolve.loc(`${per.src[1]}_${per.src[0]}_name`).replace(/（.*）/, "")
+            let type = evolve.loc(`wiki_menu_${types[per.src[1]].fName}`)
+            let starNum = evolve.global.stats[per.src[1]][per.src[0]] ? (evolve.global.stats[per.src[1]][per.src[0]].l ? evolve.global.stats[per.src[1]][per.src[0]].l : evolve.global.stats[per.src[1]][per.src[0]]) : 0;
+            if(starNum > 0) compe += 1;
+            let icon = $(`<span title="${starName[starNum]}"><svg class="svg star${starNum}" version="1.1" x="0px" y="0px" width="16px" height="16px" viewBox="${icons.standard.viewbox}" xml:space="preserve" data-level="0">${icons.standard.path}</svg></span>`);
+            let line = $(`<div style="width: ${PerkDivWid}px; display: inline-block;" class='perkLine ${starNum}_star'><span id="PERK_${per.src[0]}">${type}：${name}</span></div>`);
+            line.prepend(icon);
+            $("#perList").append(line);
+
+            //提示框
+            line.children(`span:last-of-type`)
+            .on("mouseover", function (v) {
+                let perk = per.src[0]
+                if (per_popperRef || $(`#PERK_popper`).length > 0){
+                    if (per_popper.data('id') !== perk){
+                        per_popper.hide();
+                        if (per_popperRef){
+                            per_popperRef.destroy();
+                            per_popperRef = false;
+                        }
+                    }
+                }
+                per_popper.data('id', perk);
+                per_popper.empty();
+                let desc = $(`<div></div>`)
+                per.desc().forEach((line) => {
+                    desc.append($(`<div>${line}</div>`))
+                });
+
+                per_popper.append(`<div class="has-text-warning">${name}</div>`);
+                per_popper.append(desc);
+
+                per_popperRef = Popper.createPopper(this,
+                    document.querySelector(`#PERK_popper`),
+                    {
+                        modifiers: [
+                            {
+                                name: 'flip',
+                                enabled: true,
+                            },
+                            {
+                                name: 'offset',
+                                options: {
+                                    offset: [0, 0],
+                                },
+                            }
+                        ],
+                    }
+                );
+
+                per_popper.show();
+            })
+            .on("mouseout", function (v) {
+                $(`#PERK_popper`).hide();
+                if (per_popperRef){
+                    per_popperRef.destroy();
+                    per_popperRef = false;
+                }
+
+            });
+        });
+
+        $("#perFilter").append($(`<tr><td>完成率：</td><td><span style='visibility:hidden;'>${Array(3 - (compe +  '').length).join("0")}</span>${compe} / ${total}<span style='visibility:hidden;'>${Array(7 - ((compe / total * 100).toFixed(2) +  '').length).join("0")}</span>（<span class="${(compe == total ? 'has-text-warning' : '')}">${(compe / total * 100).toFixed(2)}%</span>）</td></tr>`));
     }
 
     function loc(key, variables)
@@ -1102,6 +1204,134 @@
     	obsolete: ['perk', 'scenario'],
     	gross: ['perk', 'challenge'],
     };
+    //手动维护特权列表
+    const perks = [
+        {src:['blackhole', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_blackhole",["5% / +10% / +15% / +20% / +25"])()];
+        }},
+        {src:['trade', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_trade",["2% / +4% / +6% / +8% / +10","1% / -2% / -3% / -4% / -5"])()];
+        }},
+        {src:['creator', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_creator",["1.5 / 2 / 2.5 / 3 / 3.5"])()];
+        }},
+        {src:['mass_extinction', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_mass_extinction")(),
+                    loc("achieve_perks_mass_extinction2",["0 / 50 / 100 / 150 / 200"])()];
+        }},
+        {src:['explorer', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_explorer",["1 / +2 / +3 / +4 / +5"])()];
+        }},
+        {src:['miners_dream', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_miners_dream",["1 / 2 / 3 / 5 / 7"])()];
+        }},
+        {src:['extinct_junker', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_enlightened")()];
+        }},
+        {src:['joyless', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_joyless",["2% / +4% / +6% / +8% / +10"])()];
+        }},
+        {src:['steelen', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_steelen",["2% / +4% / +6% / +8% / +10"])()];
+        }},
+        {src:['wheelbarrow', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_wheelbarrow",["2% / +4% / +6% / +8% / +10"])()];
+        }},
+        {src:['extinct_sludge', 'achieve' ],
+        desc(){
+            return ["+3% / +6% / +9% / +12% / +15% 当前宇宙中的暗能量效果"];
+        }},
+        {src:['whitehole', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_whitehole")(),
+                    loc("achieve_perks_whitehole2",["5% / +10% / +15% / +20% / +25"])(),
+                    loc("achieve_perks_whitehole3",["1 / +2 / +3 / +4 / +5"])()];
+        }},
+        {src:['heavyweight', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_heavyweight",["4% / -8% / -12% / -16% / -20"])()];
+        }},
+        {src:['dissipated', 'achieve' ],
+        desc(){
+            return ["无星："+loc("achieve_perks_dissipated1",[1])(),
+                    "白星："+loc("achieve_perks_dissipated3",[1])(),
+                    "铜星："+loc("achieve_perks_dissipated2",[1])(),
+                    "银星："+loc("achieve_perks_dissipated4",[1])(),
+                    "金星："+loc("achieve_perks_dissipated2",[1])()];
+        }},
+        {src:['banana', 'achieve' ],
+        desc(){
+            return ["无星："+loc("achieve_perks_banana1",[50])(),
+                    "白星："+loc("achieve_perks_banana2",[1])(),
+                    "铜星："+loc("achieve_perks_banana3",[10])(),
+                    "银星："+loc("achieve_perks_banana4",[3])(),
+                    "金星："+loc("achieve_perks_banana5",[0.01])()];
+        }},
+        {src:['anarchist', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_anarchist",["10% / -20% / -30% / -40% / -50"])()];
+        }},
+        {src:['ascended', 'achieve' ],
+        desc(){
+            return ["每有一个宇宙的一级成就，自定义种族时的基因点数 +1。（总计上限 30 点）",
+                    "和谐水晶减蠕变效果受当前宇宙的成就等级影响"];
+        }},
+        {src:['technophobe', 'achieve' ],
+        desc(){
+            return ["无星："+loc("achieve_perks_technophobe1",[25])(),
+                    "白星："+loc("achieve_perks_technophobe2",[10])()+"（每在非标准宇宙中完成金星的本成就，集热器效果就再增加 5%）",
+                    "铜星："+loc("achieve_perks_technophobe3",[1])()+"（每在非标准宇宙中完成金星的本成就，灵魂宝石就再增加 1）",
+                    "银星："+loc("achieve_perks_technophobe2",[15])(),
+                    "金星："+loc("achieve_perks_technophobe4",[10])(),
+                    loc("achieve_perks_technophobe5",["1 / +2 / +3 / +4 / +5"])()];
+        }},
+        {src:['iron_will', 'achieve' ],
+        desc(){
+            return ["无星："+loc("achieve_perks_iron_will1",[0.15])(),
+                    "白星："+loc("achieve_perks_iron_will2",[10])(),
+                    "铜星："+loc("achieve_perks_iron_will3",[6])(),
+                    "银星："+loc("achieve_perks_iron_will4",[1])(),
+                    "金星："+loc("achieve_perks_iron_will5")()];
+        }},
+        {src:['failed_history', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_failed_history",[2])()];
+        }},
+        {src:['gladiator', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_gladiator",["20% / +40% / +60% / +80% / +100"])()];
+        }},
+        {src:['pathfinder', 'achieve' ],
+        desc(){
+            return ["无星："+loc("achieve_perks_pathfinder1",[10])(),
+                    "白星："+loc("achieve_perks_pathfinder2",[10])(),
+                    "铜星："+loc("achieve_perks_pathfinder3")(),
+                    "银星："+loc("unavailable_content")(),
+                    "金星："+loc("unavailable_content")()];
+        }},
+        {src:['novice', 'feat' ],
+        desc(){
+            return [loc("achieve_perks_novice",["0.5 / +1 / +1.5 / +2 / +2.5","0.25 / +0.5 / +0.75 / +1 / +1.25"])()];
+        }},
+        {src:['journeyman', 'feat' ],
+        desc(){
+            return [loc("achieve_perks_journeyman2",["1 / +1 / +2 / +2 / +3","0 / +1 / +1 / +2 / +2"])()];
+        }},
+        {src:['adept', 'feat' ],
+        desc(){
+            return [loc("achieve_perks_adept",["100 / 200 / 300 / 400 / 500","60 / +120 / +180 / +240 / +300"])()];
+        }}
+    ];
 
     //此处插入数据
 
