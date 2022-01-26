@@ -185,7 +185,7 @@
 
         let th1 = $(`<tr class="has-text-warning" style="position: relative;"><td>种族</td><td>地球</td><td>火星</td><td>水星</td><td>木星</td><td>木卫三</td><td>谷神星</td></tr>`);
         planList.append(th1);
-        let th2 = $(`<tr class="has-text-warning" style="position: relative;"><td>种群    </td><td>土卫六</td><td>土卫二</td><td>海卫一</td><td>阋神星</td></tr>`);
+        let th2 = $(`<tr class="has-text-warning" style="position: relative;"><td>种群<span style="visibility:hidden;">0000</span></td><td>土卫六</td><td>土卫二</td><td>海卫一</td><td>阋神星</td></tr>`);
         outeList.append(th2);
 
         Object.keys(races).forEach((race) => {
@@ -852,7 +852,7 @@
 	        }
 	    ]
 	}
-	
+
         var cri_popper = $(`<div id="CRISPR_popper" class="popper has-background-light has-text-dark pop-desc"></div>`);
         $(`#main`).append(cri_popper);
         var cri_popperRef = false;
