@@ -51,7 +51,7 @@
     //全局CSS
     const padTB = "0.5em";
     const padLR = "0.75em";
-    let styleLines = `#sideWindow>div:not(#titleListWindow) {padding: ${padTB} ${padLR};}`;
+    let styleLines = `#sideWindow>div:not(#titleListWindow) {padding: ${padTB} ${padLR};} #sideWindow>div>div.has-text-caution.has-text-warning{background-color:#7957d5;color:#fff !important;}`;
     Object.keys(cssData).forEach((theme) => {
         styleLines += `html.${theme} #sideWindow>div:not(#titleListWindow) {background-color:${cssData[theme].alt_color}; border: ${cssData[theme].primary_border} solid 1px;}`;
         styleLines += `html.${theme} #titleListWindow>div {background-color:${cssData[theme].alt_color};}`;
@@ -79,6 +79,10 @@
     ${graphBackColor}
     #spirList > p {
         margin-top: 8px;
+    }
+    #histWindow>div>div.has-text-advanced.has-text-success {
+        background-color:#7957d5;
+        color:#fff !important;
     }
     </style>`);
     if($("#graphCSS"))
@@ -117,7 +121,7 @@
             let smallHistTitle = $("<div id='smallHistTitle' class='has-text-caution' onclick='(function (){$(\"#titleListWindow\").children().removeClass(\"has-text-warning\");if($(\"#histContent\").css(\"display\") == \"none\"){$(\".sideContentWindow\").hide();$(\"#histContent\").show();$(\"#smallHistTitle\").addClass(\"has-text-warning\");}else{$(\"#histContent\").hide();}})()'>统计</div>");
             let histContent = $(`<div id='histContent' class='sideContentWindow' style='height: 100%; display: none;'><div id='histFlexContent' style='height: 100%;display:flex;flex-direction: column;justify-content: space-between;'><div class='has-text-caution' style='text-align: center; padding-bottom: ${padTB};'>数据统计</div></div></div>`);
 
-            let histWindow = $(`<div id='histWindow' style='height: 100%; display:flex; flex-direction: row; justify-content: flex-end; align-items: flex-end; flex-grow: 1;'><div id='histTitleListWindow' style='height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; padding-left: ${padLR};'></div></div>`);
+            let histWindow = $(`<div id='histWindow' style='height: 100%; display:flex; flex-direction: row; justify-content: flex-end; align-items: flex-end; flex-grow: 1;'><div id='histTitleListWindow' style='height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding-left: ${padLR};' align='right'></div></div>`);
 
             histContent.children().eq(0).append(histWindow);
 

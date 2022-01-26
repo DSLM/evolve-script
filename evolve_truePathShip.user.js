@@ -46,7 +46,7 @@
     //全局CSS
     const padTB = "0.5em";
     const padLR = "0.75em";
-    let styleLines = `#sideWindow>div:not(#titleListWindow) {padding: ${padTB} ${padLR};}`;
+    let styleLines = `#sideWindow>div:not(#titleListWindow) {padding: ${padTB} ${padLR};} #sideWindow>div>div.has-text-caution.has-text-warning{background-color:#7957d5;color:#fff !important;}`;
     Object.keys(cssData).forEach((theme) => {
         styleLines += `html.${theme} #sideWindow>div:not(#titleListWindow) {background-color:${cssData[theme].alt_color}; border: ${cssData[theme].primary_border} solid 1px;}`;
         styleLines += `html.${theme} #titleListWindow>div {background-color:${cssData[theme].alt_color};}`;
