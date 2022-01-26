@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.3a
+// @version      1.4.3.1
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -64,17 +64,20 @@
     }
     $("head").append(styles);
 
+    //流程图的的CSS
     let graphBackColor = "";
-
     Object.keys(cssData).forEach((theme) => {
         graphBackColor += `html.${theme} #criGraph, html.${theme} #bloGraph {background-color:${cssData[theme].background_color};}`;
         graphBackColor += `html.${theme} g.node rect {fill:${cssData[theme].background_color};stroke: ${cssData[theme].primary_border};}`;
         graphBackColor += `html.${theme} g.edgePath path {fill:${cssData[theme].primary_border};stroke: ${cssData[theme].primary_border};stroke-width: 1.5px;}`;
     });
 
-    //流程图的CSS
+    //各种统计的的CSS
     styles = $(`<style type='text/css' id='graphCSS'>
     ${graphBackColor}
+    #spirList > p {
+        margin-top: 8px;
+    }
     </style>`);
     if($("#graphCSS"))
     {
@@ -129,14 +132,14 @@
         crisprStat();
         bloodStat();
         perkStat();
-        histRecord();
-        spireTimeDataFunc();
+        recordStat();
+        spireStat();
     }
 
-    function histRecord()
+    function recordStat()
     {
         //还没有
-        if($("#historyDataText").length == 0)
+        if($("#smallRecoTitle").length == 0)
         {
             let historyData = JSON.parse(localStorage.getItem("historyData"));
             if(historyData == null)
@@ -146,118 +149,126 @@
 
             let backupString = LZString.decompressFromUTF16(localStorage.getItem('evolveBak'));
             if (backupString) {
-                let oldStats = JSON.parse(backupString).stats;
-                //race: JSON.parse(backupString).race.species,
-                let statsData = {/*knowledge_spent: oldStats.know, starved_to_death: oldStats.starved, died_in_combat: oldStats.died, attacks_made: oldStats.attacks,*/ game_days_played: oldStats.days};
-                /*if (oldStats.dkills > 0) {
-                statsData.demons_kills = oldStats.dkills;
-            }
-            if (oldStats.sac > 0) {
-            statsData.sacrificed = oldStats.sac;
-        }*/
-        if (oldStats.plasmid > 0) {
-            statsData.plasmid_earned = oldStats.plasmid;
-        }
-        if (oldStats.antiplasmid > 0) {
-            statsData.antiplasmid_earned = oldStats.antiplasmid;
-        }
-        if (oldStats.phage > 0) {
-            statsData.phage_earned = oldStats.phage;
-        }
-        if (oldStats.dark > 0) {
-            statsData.dark_earned = oldStats.dark;
-        }
-        if (oldStats.harmony > 0) {
-            statsData.harmony_earned = oldStats.harmony;
-        }
-        if (oldStats.blood > 0) {
-            statsData.blood_earned = oldStats.blood;
-        }
-        if (oldStats.artifact > 0) {
-            statsData.artifact_earned = oldStats.artifact;
-        }
-        if (oldStats.reset > 0) {
-            statsData.total_resets = oldStats.reset;
-        }
+                let oldGlobal = JSON.parse(backupString);
+                let statsData = {game_days_played: oldGlobal.stats.days, race: oldGlobal.race.species};
+                if (oldGlobal.stats.plasmid > 0) {
+                    statsData.plasmid_earned = oldGlobal.stats.plasmid;
+                }
+                if (oldGlobal.stats.antiplasmid > 0) {
+                    statsData.antiplasmid_earned = oldGlobal.stats.antiplasmid;
+                }
+                if (oldGlobal.stats.phage > 0) {
+                    statsData.phage_earned = oldGlobal.stats.phage;
+                }
+                if (oldGlobal.stats.dark > 0) {
+                    statsData.dark_earned = oldGlobal.stats.dark;
+                }
+                if (oldGlobal.stats.harmony > 0) {
+                    statsData.harmony_earned = oldGlobal.stats.harmony;
+                }
+                if (oldGlobal.stats.blood > 0) {
+                    statsData.blood_earned = oldGlobal.stats.blood;
+                }
+                if (oldGlobal.stats.artifact > 0) {
+                    statsData.artifact_earned = oldGlobal.stats.artifact;
+                }
+                if (oldGlobal.stats.reset > 0) {
+                    statsData.total_resets = oldGlobal.stats.reset;
+                }
 
-        if(historyData.length == 0 || (historyData.length > 0 && historyData[0].total_resets != statsData.total_resets)) historyData.unshift(statsData)
-        if(historyData.length > HIST_RESET_LIMIT) historyData.pop()
-        localStorage.setItem("historyData", JSON.stringify(historyData));
+                if(historyData.length == 0 || (historyData.length > 0 && historyData[0].total_resets != statsData.total_resets)) historyData.unshift(statsData)
+                if(historyData.length > HIST_RESET_LIMIT) historyData.pop()
+                localStorage.setItem("historyData", JSON.stringify(historyData));
+            }
+
+
+            let smallRecoTitle = $("<div id='smallRecoTitle' class='has-text-advanced' onclick='(function (){$(\"#histTitleListWindow\").children().removeClass(\"has-text-success\");if($(\"#recoContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#recoContent\").show();$(\"#smallRecoTitle\").addClass(\"has-text-success\");}else{$(\"#recoContent\").hide();}})()'>历史记录</div>");
+            let recoContent = $("<div id='recoContent' class='sideHistWindow' style='height: inherit; display: none;'><div style='height: 100%; display:flex;'></div></div>");
+            let recoTotalStatus = $(`<div style='height: 100%; display:flex; flex-direction: column;'><div id='recoFilter'></div><div class='vscroll' style='flex-grow: 1;'><div id='recoList' style='height: 0;'></div></div></div>`)
+
+            recoContent.children().eq(0).append(recoTotalStatus);
+
+            smallRecoTitle.one("click", buildRecord);
+
+            $("#histWindow").prepend(recoContent);
+            $("#histTitleListWindow").append(smallRecoTitle);
+
+        }
     }
 
-    let historyDataTitle = $(`<div class='has-text-warning' style='margin-top:32px' onclick=\"(function (){if($('#historyDataText').css('display')!='none'){$('#historyDataText').hide();$('#hiddenTip1').show();}else{$('#historyDataText').show();$('#hiddenTip1').hide();}})()\"><span>历史统计数据（保存${HIST_RESET_LIMIT}组数据，点击隐藏/显示）:</span></div>`);
-    let historyDataText = $("<div id='historyDataText'style='display: none;'></div>");
-    let hiddenTip1 = $("<div id='hiddenTip1'>已隐藏</div>");
-    $('#stats').append(historyDataTitle);
-    $('#stats').append(hiddenTip1);
-    $('#stats').append(historyDataText);
-
-    for(var i = 0; i < historyData.length; i++)
+    function buildRecord()
     {
-        let statsString = `<div><span class="has-text-success">前${i+1}轮：</span></div>`;
-        for (let [label, value] of Object.entries(historyData[i])) {
-            //威望物资
-            if(label.includes("_earned"))
-            {
-                var calData = (i == 0) ? (evolve.global.stats[label.slice(0,-7)] - value) : (historyData[i-1][label] - value);
-                if(calData == 0) continue;
-                statsString += `<div><span class="has-text-warning">${evolve.loc("achieve_stats_" + label)}</span> ${calData.toLocaleString()}</div>`;
-            }
-            else
-            {
-                statsString += `<div><span class="has-text-warning">${evolve.loc("achieve_stats_" + label)}</span> ${value.toLocaleString()}</div>`;
-            }
-        }
-        historyDataText.append(statsString);
-    }
-}
-}
+        $("#recoFilter").empty();
+        $("#recoFilter").append($(`<div class='has-text-advanced'>历史统计数据（保存${HIST_RESET_LIMIT}组数据）:</div>`));
 
-    function spireTimeDataFunc()
-    {
-        var spireTimeData, nowRecord;
-        //显示
-        //evolve.global.stats.spire["h"]['dlstr']
-
-        let spireTimeDataText = $("#spireTimeDataText");
-        if(spireTimeDataText.length === 0)
+        $("#recoList").empty();
+        let historyData = JSON.parse(localStorage.getItem("historyData"));
+        if(historyData == null)
         {
-            let spireTimeDataTitle = $(`<div class='has-text-warning' style='margin-top:32px' onclick=\"(function (){if($('#spireTimeDataText').css('display')!='none'){$('#spireTimeDataText').hide();$('#hiddenTip2').show();}else{$('#spireTimeDataText').show();$('#hiddenTip2').hide();}})()\"><span>地狱尖塔数据（保存${HIST_SPIRE_LIMIT}条数据，点击隐藏/显示）:</span></div>`)
-            spireTimeDataText = $("<div id='spireTimeDataText' style='display: none;'></div>");
-            let hiddenTip2 = $("<div id='hiddenTip2'>已隐藏</div>");
-            $('#stats').append(spireTimeDataTitle);
-            $('#stats').append(hiddenTip2);
-            $('#stats').append(spireTimeDataText);
-
-            spireTimeData = JSON.parse(localStorage.getItem("spireTimeData"));
-            if(spireTimeData == null)
-            {
-                return;
-            }
-
-            for(var i = 0; i < spireTimeData["record"].length - 1; i++)
-            {
-                nowRecord = spireTimeData["record"][i]
-                if(nowRecord["effi"] < spireTimeData["record"][i + 1]["effi"])
+            historyData = [];
+        }
+        for(var i = 0; i < historyData.length; i++)
+        {
+            $("#recoList").append($(`<tr><td colspan="2" class="has-text-success">前${i+1}轮：</td></tr>`));
+            for (let [label, value] of Object.entries(historyData[i])) {
+                //威望物资
+                if(label == "race")
                 {
-                    spireTimeDataText.append($("<p class='has-text-success'>抵达 " + nowRecord["floor"] + " 层，花费 " + nowRecord["day"] + " 天，效率 " + nowRecord["effi"].toFixed(4) + " 天/层，鲜血之石 " + nowRecord["stone"] + " 个，效率 " + (nowRecord["effi"] / nowRecord["stone"]).toFixed(4) + " 天/个</p>"))
+                    $("#recoList").append($(`<tr><td class="has-text-warning">种族：</td><td>${evolve.loc("race_" + label)}</td></tr>`));
+                }
+                else if(label.includes("_earned"))
+                {
+                    var calData = (i == 0) ? (evolve.global.stats[label.slice(0,-7)] - value) : (historyData[i-1][label] - value);
+                    if(calData == 0) continue;
+                    $("#recoList").append($(`<tr><td class="has-text-warning">${evolve.loc("achieve_stats_" + label)}</td><td>${calData}</td></tr>`));
                 }
                 else
                 {
-                    spireTimeDataText.append($("<p class='has-text-danger'>抵达 " + nowRecord["floor"] + " 层，花费 " + nowRecord["day"] + " 天，效率 " + nowRecord["effi"].toFixed(4) + " 天/层，鲜血之石 " + nowRecord["stone"] + " 个，效率 " + (nowRecord["effi"] / nowRecord["stone"]).toFixed(4) + " 天/个</p>"))
+                    $("#recoList").append($(`<tr><td class="has-text-warning">${evolve.loc("achieve_stats_" + label)}</td><td>${value}</td></tr>`));
                 }
+            }
+        }
+    }
+
+    function spireStat()
+    {
+        let spireTimeData;
+        //还没有
+        if($("#smallSpirTitle").length == 0)
+        {
+            spireTimeData = JSON.parse(localStorage.getItem("spireTimeData"));
+            if(spireTimeData == null)
+            {
+                spireTimeData = {"now":-1, "record":new Array()};
+            }
+
+            let smallSpirTitle = $("<div id='smallSpirTitle' class='has-text-advanced' onclick='(function (){$(\"#histTitleListWindow\").children().removeClass(\"has-text-success\");if($(\"#spirContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#spirContent\").show();$(\"#smallSpirTitle\").addClass(\"has-text-success\");}else{$(\"#spirContent\").hide();}})()'>尖塔记录</div>");
+            let spirContent = $("<div id='spirContent' class='sideHistWindow' style='height: inherit; display: none;'><div style='height: 100%; display:flex;'></div></div>");
+            let spirTotalStatus = $(`<div style='height: 100%; display:flex; flex-direction: column;'><div id='spirFilter'></div><div class='vscroll' style='flex-grow: 1; margin-top: 8px;'><div id='spirList' style='height: 0;'></div></div></div>`)
+
+            spirContent.children().eq(0).append(spirTotalStatus);
+
+            $("#histWindow").prepend(spirContent);
+            $("#histTitleListWindow").append(smallSpirTitle);
+
+            $("#spirFilter").empty();
+            $("#spirFilter").append($(`<div class='has-text-advanced'>地狱尖塔数据（保存${HIST_SPIRE_LIMIT}条数据）：</div>`));
+            let spirList = $("#spirList");
+            let nowRecord;
+            for(var i = 0; i < spireTimeData["record"].length - 1; i++)
+            {
+                nowRecord = spireTimeData["record"][i]
+                let color = nowRecord["effi"] < spireTimeData["record"][i + 1]["effi"] ? 'has-text-success' : 'has-text-danger';
+                spirList.append($(`<p class=${color}>抵达 ${nowRecord["floor"]} 层，花费 ${nowRecord["day"]} 天，效率 ${nowRecord["effi"].toFixed(4)} 天/层，鲜血之石 ${nowRecord["stone"]} 个，效率 ${(nowRecord["effi"] / nowRecord["stone"]).toFixed(4)} 天/个</p>`));
             }
             if(spireTimeData["record"].length > 0)
             {
                 nowRecord = spireTimeData["record"][spireTimeData["record"].length - 1]
-                spireTimeDataText.append($("<p class='has-text-success'>抵达 " + nowRecord["floor"] + " 层，花费 " + nowRecord["day"] + " 天，效率 " + nowRecord["effi"].toFixed(4) + " 天/层，鲜血之石 " + nowRecord["stone"] + " 个，效率 " + (nowRecord["effi"] / nowRecord["stone"]).toFixed(4) + " 天/个</p>"))
+                spirList.append($(`<p class='has-text-success'>抵达 ${nowRecord["floor"]} 层，花费 ${nowRecord["day"]} 天，效率 ${nowRecord["effi"].toFixed(4)} 天/层，鲜血之石 ${nowRecord["stone"]} 个，效率 ${(nowRecord["effi"] / nowRecord["stone"]).toFixed(4)} 天/个</p>`));
             }
-
-            return;
         }
 
-        if(evolve.global.portal.spire == undefined) return;
-
+        if(evolve.global.portal == undefined || evolve.global.portal.spire == undefined) return;
 
         //刷新后初始化
         if(!spirePrepared && evolve.global.portal.spire.count)
@@ -286,14 +297,8 @@
             nowRecord = spireTimeData["record"][0]
             if(spireTimeData["record"].length > 1)
             {
-                if(nowRecord["effi"] < spireTimeData["record"][1]["effi"])
-                {
-                    spireTimeDataText.prepend($("<p class='has-text-success'>抵达 " + nowRecord["floor"] + " 层，花费 " + nowRecord["day"] + " 天，效率 " + nowRecord["effi"].toFixed(4) + " 天/层，鲜血之石 " + nowRecord["stone"] + " 个，效率 " + (nowRecord["effi"] / nowRecord["stone"]).toFixed(4) + " 天/个</p>"))
-                }
-                else
-                {
-                    spireTimeDataText.prepend($("<p class='has-text-danger'>抵达 " + nowRecord["floor"] + " 层，花费 " + nowRecord["day"] + " 天，效率 " + nowRecord["effi"].toFixed(4) + " 天/层，鲜血之石 " + nowRecord["stone"] + " 个，效率 " + (nowRecord["effi"] / nowRecord["stone"]).toFixed(4) + " 天/个</p>"))
-                }
+                let color = nowRecord["effi"] < spireTimeData["record"][1]["effi"] ? 'has-text-success' : 'has-text-danger';
+                spirList.append($(`<p class=${color}>抵达 ${nowRecord["floor"]} 层，花费 ${nowRecord["day"]} 天，效率 ${nowRecord["effi"].toFixed(4)} 天/层，鲜血之石 ${nowRecord["stone"]} 个，效率 ${(nowRecord["effi"] / nowRecord["stone"]).toFixed(4)} 天/个</p>`));
             }
         }
         localStorage.setItem("spireTimeData", JSON.stringify(spireTimeData));
