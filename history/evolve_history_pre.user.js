@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.3
+// @version      1.4.3a
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -347,7 +347,10 @@
         //已有
         Object.keys(evolve.global.stats.achieve).forEach((ach) => {
             Object.keys(evolve.global.stats.achieve[ach]).forEach((uni) => {
-                achiData.complete[UniStoL[uni]][ach] = evolve.global.stats.achieve[ach][uni];
+                if(evolve.global.stats.achieve[ach][uni] > 0)
+                {
+                    achiData.complete[UniStoL[uni]][ach] = evolve.global.stats.achieve[ach][uni];
+                }
             });
         });
 
