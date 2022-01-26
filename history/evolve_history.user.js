@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.3.1
+// @version      1.4.4
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -64,15 +64,17 @@
     }
     $("head").append(styles);
 
-    //流程图的的CSS
+    //各种统计的的CSS
     let graphBackColor = "";
     Object.keys(cssData).forEach((theme) => {
+        //流程图的的CSS
         graphBackColor += `html.${theme} #criGraph, html.${theme} #bloGraph {background-color:${cssData[theme].background_color};}`;
         graphBackColor += `html.${theme} g.node rect {fill:${cssData[theme].background_color};stroke: ${cssData[theme].primary_border};}`;
         graphBackColor += `html.${theme} g.edgePath path {fill:${cssData[theme].primary_border};stroke: ${cssData[theme].primary_border};stroke-width: 1.5px;}`;
+        //表格交叉背景色的CSS
+        graphBackColor += `html.${theme} #planList>tr:nth-child(odd), html.${theme} #outeList>tr:nth-child(odd) {background-color:${cssData[theme].background_color};}`;
     });
 
-    //各种统计的的CSS
     styles = $(`<style type='text/css' id='graphCSS'>
     ${graphBackColor}
     #spirList > p {
@@ -134,6 +136,112 @@
         perkStat();
         recordStat();
         spireStat();
+        planetNameStat();
+    }
+
+
+
+    function planetNameStat()
+    {
+        //还没有
+        if($("#smallPlanTitle").length == 0)
+        {
+
+            let smallPlanTitle = $("<div id='smallPlanTitle' class='has-text-advanced' onclick='(function (){$(\"#histTitleListWindow\").children().removeClass(\"has-text-success\");if($(\"#planContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#planContent\").show();$(\"#smallPlanTitle\").addClass(\"has-text-success\");}else{$(\"#planContent\").hide();}})()'>星球名称</div>");
+            let planContent = $("<div id='planContent' class='sideHistWindow' style='height: inherit; display: none;'><div style='height: 100%; display:flex;'></div></div>");
+            let planTotalStatus = $(`<div style='height: 100%; display:flex; flex-direction: column;'><div id='planFilter'></div><div id='planScroll' class='vscroll' style='flex-grow: 1;'><div id='planList' style='height: 0;'></div></div><div id='outeFilter'></div><div id='outeScroll' class='vscroll' style='flex-grow: 1;'><div id='outeList' style='height: 0;'></div></div></div>`)
+
+            planContent.children().eq(0).append(planTotalStatus);
+
+            smallPlanTitle.one("click", buildPlanetName);
+
+            $("#histWindow").prepend(planContent);
+            $("#histTitleListWindow").append(smallPlanTitle);
+
+        }
+    }
+
+    function buildPlanetName()
+    {
+        $("#planFilter").empty();
+        $("#planFilter").append($(`<div class='has-text-advanced'>太阳系星球名称对照表：</div>`));
+
+
+        let planList = $(`#planList`);
+        let outeList = $(`#outeList`);
+        planList.empty();
+        outeList.empty();
+
+        let planet1Types = ["red", "hell", "gas", "gas_moon", "dwarf"];
+        let planet2Types = ["titan", "enceladus", "triton", "eris"];
+
+        let races = evolve.races;
+        let raceTypes = {};
+        delete races.protoplasm;
+
+        let th1 = $(`<tr class="has-text-warning" style="position: relative;"><td>种族</td><td>地球</td><td>火星</td><td>水星</td><td>木星</td><td>木卫三</td><td>谷神星</td></tr>`);
+        planList.append(th1);
+        let th2 = $(`<tr class="has-text-warning" style="position: relative;"><td>种群    </td><td>土卫六</td><td>土卫二</td><td>海卫一</td><td>阋神星</td></tr>`);
+        outeList.append(th2);
+
+        Object.keys(races).forEach((race) => {
+            raceTypes[races[race].type] = races[race].type;
+            let line = $(`<tr><td>${races[race].name}</td><td>${races[race].home}</td></tr>`)
+            planet1Types.forEach((name) => {
+                line.append($(`<td>${races[race].solar[name]}</td>`));
+            });
+
+            planList.append(line);
+        });
+        Object.keys(raceTypes).forEach((type) => {
+            let line = $(`<tr><td>${evolve.loc(`genelab_genus_${type}`)}</td></tr>`)
+            planet2Types.forEach((name) => {
+                line.append($(`<td>${evolve.loc(`genus_${type}_solar_${name}`)}</td>`));
+            });
+
+            outeList.append(line);
+        });
+
+        $("#planScroll").on('scroll', function(){
+            var scrollTop = $("#planScroll").scrollTop();
+            // 当滚动距离大于0时设置top及相应的样式
+            if (scrollTop > 0)
+            {
+                th1.css({
+                    "top": scrollTop + 'px',
+                    "marginTop": "-1px",
+                    "padding": 0
+                });
+            }
+            else
+            {
+            // 当滚动距离小于0时设置top及相应的样式
+                th1.css({
+                    "top": scrollTop + 'px',
+                    "marginTop": "0",
+                });
+            }
+        });
+        $("#outeScroll").on('scroll', function(){
+            var scrollTop = $("#outeScroll").scrollTop();
+            // 当滚动距离大于0时设置top及相应的样式
+            if (scrollTop > 0)
+            {
+                th2.css({
+                    "top": scrollTop + 'px',
+                    "marginTop": "-1px",
+                    "padding": 0
+                });
+            }
+            else
+            {
+            // 当滚动距离小于0时设置top及相应的样式
+                th2.css({
+                    "top": scrollTop + 'px',
+                    "marginTop": "0",
+                });
+            }
+        });
     }
 
     function recordStat()
@@ -740,7 +848,7 @@
 	        }
 	    ]
 	}
-	
+
         var cri_popper = $(`<div id="CRISPR_popper" class="popper has-background-light has-text-dark pop-desc"></div>`);
         $(`#main`).append(cri_popper);
         var cri_popperRef = false;
