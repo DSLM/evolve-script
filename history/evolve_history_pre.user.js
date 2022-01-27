@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.4a
+// @version      1.4.4.2
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -327,7 +327,7 @@
                 //威望物资
                 if(label == "race")
                 {
-                    $("#recoList").append($(`<tr><td class="has-text-warning">种族：</td><td>${evolve.loc("race_" + value)}</td></tr>`));
+                    $("#recoList").append($(`<tr><td class="has-text-warning">种族：</td><td>${evolve.races[value].name}</td></tr>`));
                 }
                 else if(label.includes("_earned"))
                 {
