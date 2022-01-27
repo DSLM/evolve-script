@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.4
+// @version      1.4.4a
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -182,6 +182,7 @@
         let races = evolve.races;
         let raceTypes = {};
         delete races.protoplasm;
+        if(Object.keys(evolve.races.custom).length == 0) delete races.custom;
 
         let th1 = $(`<tr class="has-text-warning" style="position: relative;"><td>种族</td><td>地球</td><td>火星</td><td>水星</td><td>木星</td><td>木卫三</td><td>谷神星</td></tr>`);
         planList.append(th1);
@@ -852,7 +853,7 @@
 	        }
 	    ]
 	}
-
+	
         var cri_popper = $(`<div id="CRISPR_popper" class="popper has-background-light has-text-dark pop-desc"></div>`);
         $(`#main`).append(cri_popper);
         var cri_popperRef = false;
