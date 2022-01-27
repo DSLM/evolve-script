@@ -1,12 +1,12 @@
 name: Origin
 
 on:
-  push:
-    paths:
-    - "translater.py"
+  #push:
+    #paths:
+    #- "translater.py"
   workflow_dispatch:
-  schedule:
-    - cron:  '0 * * * *'
+  #schedule:
+    #- cron:  '0 * * * *'
 
 jobs:
   build:
