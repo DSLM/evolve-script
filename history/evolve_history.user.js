@@ -12,7 +12,7 @@
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // @require      https://unpkg.com/@popperjs/core@2.9.2/dist/umd/popper.min.js
 // @require      https://d3js.org/d3.v7.min.js
-// @require      https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.4/dagre-d3.min.js
+// @require      https://cdn.bootcdn.net/ajax/libs/dagre-d3/0.6.4/dagre-d3.min.js
 // ==/UserScript==
 
 (function() {
@@ -407,7 +407,7 @@
                 spireTimeData["record"].pop();
             }
 
-            nowRecord = spireTimeData["record"][0]
+            let nowRecord = spireTimeData["record"][0]
             if(spireTimeData["record"].length > 1)
             {
                 let color = nowRecord["effi"] < spireTimeData["record"][1]["effi"] ? 'has-text-success' : 'has-text-danger';

@@ -1,7 +1,7 @@
 import requests
 
-achiFile = open('history\evolve_history.user.js', 'w', encoding="utf-8")
-codeFile = open('history\evolve_history_pre.user.js', 'r', encoding="utf-8")
+achiFile = open('./history/evolve_history.user.js', 'w', encoding="utf-8")
+codeFile = open('./history/evolve_history_pre.user.js', 'r', encoding="utf-8")
 addedStr = ""
 
 

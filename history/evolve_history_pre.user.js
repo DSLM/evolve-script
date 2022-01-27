@@ -407,7 +407,7 @@
                 spireTimeData["record"].pop();
             }
 
-            nowRecord = spireTimeData["record"][0]
+            let nowRecord = spireTimeData["record"][0]
             if(spireTimeData["record"].length > 1)
             {
                 let color = nowRecord["effi"] < spireTimeData["record"][1]["effi"] ? 'has-text-success' : 'has-text-danger';
