@@ -1,0 +1,43 @@
+name: 历史统计脚本更新
+
+on:
+  push:
+    paths:
+    - "history/downloader_achieve.py"
+    - "history/evolve_history_pre.user.js"
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 0 * * *'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python
+        uses: actions/setup-python@master
+        with:
+          python-version: 3.8
+
+      - name: Download
+        run: |
+          pip install requests
+          python history/downloader_achieve.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit
+        run: |
+          git add .
+          if ! git diff-index --quiet HEAD; then
+            git config --global user.name 'github-actions[bot]'
+            git config --global user.email 'actions@users.noreply.github.com'
+            git commit -m "更新历史统计脚本" -a
+          fi
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          branch: "master"
