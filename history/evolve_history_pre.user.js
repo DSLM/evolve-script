@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.4.2
+// @version      1.4.4.3
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -411,7 +411,7 @@
             if(spireTimeData["record"].length > 1)
             {
                 let color = nowRecord["effi"] < spireTimeData["record"][1]["effi"] ? 'has-text-success' : 'has-text-danger';
-                spirList.append($(`<p class=${color}>抵达 ${nowRecord["floor"]} 层，花费 ${nowRecord["day"]} 天，效率 ${nowRecord["effi"].toFixed(4)} 天/层，鲜血之石 ${nowRecord["stone"]} 个，效率 ${(nowRecord["effi"] / nowRecord["stone"]).toFixed(4)} 天/个</p>`));
+                $("#spirList").prepend($(`<p class=${color}>抵达 ${nowRecord["floor"]} 层，花费 ${nowRecord["day"]} 天，效率 ${nowRecord["effi"].toFixed(4)} 天/层，鲜血之石 ${nowRecord["stone"]} 个，效率 ${(nowRecord["effi"] / nowRecord["stone"]).toFixed(4)} 天/个</p>`));
             }
         }
         localStorage.setItem("spireTimeData", JSON.stringify(spireTimeData));
