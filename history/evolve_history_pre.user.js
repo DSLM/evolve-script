@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.4.3
+// @version      1.4.4.4
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -1442,11 +1442,13 @@
         }},
         {src:['novice', 'feat' ],
         desc(){
-            return [loc("achieve_perks_novice",["0.5 / +1 / +1.5 / +2 / +2.5","0.25 / +0.5 / +0.75 / +1 / +1.25"])()];
+            return [loc("achieve_perks_novice",["0.5 / +1 / +1.5 / +2 / +2.5","0.25 / +0.5 / +0.75 / +1 / +1.25"])(),
+                    loc("achieve_perks_novice2")()];
         }},
         {src:['journeyman', 'feat' ],
         desc(){
-            return [loc("achieve_perks_journeyman2",["1 / +1 / +2 / +2 / +3","0 / +1 / +1 / +2 / +2"])()];
+            return [loc("achieve_perks_journeyman2",["1 / +1 / +2 / +2 / +3","0 / +1 / +1 / +2 / +2"])(),
+                    loc("achieve_perks_journeyman3")()];
         }},
         {src:['adept', 'feat' ],
         desc(){
