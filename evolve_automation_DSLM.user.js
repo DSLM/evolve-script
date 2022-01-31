@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Evolve
 // @namespace    http://tampermonkey.net/
-// @version      3.3.1.94.2
+// @version      3.3.1.94.3
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_automation_DSLM.user.js
 // @author       Fafnir
@@ -1169,7 +1169,13 @@
         }
 
         get name() {
-            return this.title;
+            let nameStr = typeof this.title === 'function' ? this.title() : this.title;
+            let pathStr = "";
+            if((game.actions.tech[this._id].path) && (game.actions.tech[this._id].path.length == 1) && (game.actions.tech[this._id].path[0] == "truepath"))
+            {
+                pathStr = "（智械黎明）";
+            }
+            return nameStr+pathStr;
         }
 
         isAffordable(max = false) {
@@ -2534,7 +2540,7 @@
           () => 0
       ],[
           () => settings.prestigeType === "mad" && (haveTech("mad") || (techIds['tech-mad'].isUnlocked() && techIds['tech-mad'].isAffordable(true))),
-          (building) => !building.is.housing && !building.is.garrison && !building.cost["Knowledge"] && (building !== buildings.OilWell || !game.global.race.terrifying), // Terrifying can't buy oil, keep building rigs
+          (building) => !building.is.housing && !building.is.garrison && !building.cost["Knowledge"] && building !== buildings.OilWell,
           () => "等待核爆重置",
           () => settings.buildingWeightingMADUseless
       ],[
