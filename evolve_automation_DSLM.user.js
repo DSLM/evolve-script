@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Evolve
 // @namespace    http://tampermonkey.net/
-// @version      3.3.1.94.3
+// @version      3.3.1.94.4
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_automation_DSLM.user.js
 // @author       Fafnir
@@ -1169,6 +1169,12 @@
         }
 
         get name() {
+            //特殊科技手动命名
+            let speciNames = {'alt_fanaticism':"狂热信仰（超越）",'alt_anthropology':"人类学（超越）",'lodge':"狩猎小屋（食肉动物）"};
+            if(speciNames[this._id])
+            {
+                return speciNames[this._id];
+            }
             let nameStr = typeof this.title === 'function' ? this.title() : this.title;
             let pathStr = "";
             if((game.actions.tech[this._id].path) && (game.actions.tech[this._id].path.length == 1) && (game.actions.tech[this._id].path[0] == "truepath"))
