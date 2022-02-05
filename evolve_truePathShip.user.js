@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         自动智械造船配置
 // @namespace    http://tampermonkey.net/
-// @version      1.1.1
+// @version      1.2
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_truePathShip.user.js
 // @author       DSLM
@@ -21,7 +21,8 @@
     var SA;
 
     var currStytle = {};
-    var inputName = ["location", "class", "power", "weapon", "armor", "engine", "sensor", "count"];
+    var inputName = ["location", "class", "power", "weapon", "armor", "engine", "sensor", "count", "reqType", "reqData"];
+    var reqTypes = {hasTech: {name:"有科技", desc:"只有在研究对应科技后才会建造", req:true}, noTech: {name:"无科技", desc:"只有在研究对应科技前才会建造", req:false}};
     var partsName = ["class", "power", "weapon", "armor", "engine", "sensor"];
     var shipPartsName = {"class" : ["corvette", "frigate", "destroyer", "cruiser", "battlecruiser", "dreadnought"],
     "power" : ["solar", "diesel", "fission", "fusion", "elerium"],
@@ -81,7 +82,7 @@
         let buildList = JSON.parse(localStorage.getItem("shipBuildList"));
         if(buildList == null)
         {
-            buildList = [{}];
+            buildList = [{"location":"spc_moon","class":"corvette","power":"solar","weapon":"railgun","armor":"steel","engine":"ion","sensor":"visual","count":"0","reqType":"hasTech","reqData":"club"}];
         }
 
         //共用窗口
@@ -110,10 +111,10 @@
             shipSave = $('<button id="shipSave" class="button">保存舰船设置</button>');
             shipAdd = $('<button id="shipAdd" class="button">添加</button>');
             shipTotalStatus = $('<div id="shipTotalStatus"></div>');
-            shipTable = $(`<table><thead class="has-text-plain"><tr><th>目的地</th><th>${evolve.loc("outer_shipyard_class")}</th><th>${evolve.loc("outer_shipyard_power")}</th><th>${evolve.loc("outer_shipyard_weapon")}</th><th>${evolve.loc("outer_shipyard_armor")}</th><th>${evolve.loc("outer_shipyard_engine")}</th><th>${evolve.loc("outer_shipyard_sensor")}</th><th>数量</th><th>状态</th><th>删除</th></tr></thead><tbody id="shipTableBody" class="ui-sortable"></tbody></table>`);
+            shipTable = $(`<table><thead class="has-text-plain"><tr><th>目的地</th><th>${evolve.loc("outer_shipyard_class")}</th><th>${evolve.loc("outer_shipyard_power")}</th><th>${evolve.loc("outer_shipyard_weapon")}</th><th>${evolve.loc("outer_shipyard_armor")}</th><th>${evolve.loc("outer_shipyard_engine")}</th><th>${evolve.loc("outer_shipyard_sensor")}</th><th>数量</th><th colspan="2">前置条件</th><th>状态</th><th>删除</th></tr></thead><tbody id="shipTableBody" class="ui-sortable"></tbody></table>`);
 
             shipSave.click(saveShipList);
-            shipAdd.click(function(){addShipList({"location":"spc_moon","class":"corvette","power":"solar","weapon":"railgun","armor":"steel","engine":"ion","sensor":"visual","count":"0"})});
+            shipAdd.click(function(){addShipList({"location":"spc_moon","class":"corvette","power":"solar","weapon":"railgun","armor":"steel","engine":"ion","sensor":"visual","count":"0","reqType":"hasTech","reqData":"club"})});
 
             shipButton.append(shipSave);
             shipButton.append(shipAdd);
@@ -187,9 +188,10 @@
             let yardShips = [];
 
             //检查配置解锁没
-            if(!buildCheck(buildList[i]))
+            let result = buildCheck(buildList[i]);
+            if(!result.pass)
             {
-                shipTableBody.children().eq(i).children().eq(inputName.length).html("<span class='has-text-danger'>舰船部件未解锁</span>");
+                shipTableBody.children().eq(i).children().eq(inputName.length).html(`<span class='has-text-danger'>${result.reason}</span>`);
                 continue;
             }
 
@@ -269,10 +271,21 @@
     {
         let clone = $(ui).clone();
         ui.children().each((index, element) => {
-            let copyVal = $(element).children().val();
-            if(copyVal.length > 0)
+            if($(element).children().data("value"))
             {
-                clone.children().eq(index).children().val($(element).children().val());
+                let copyVal = $(element).children().data("value");
+                if(copyVal != undefined && copyVal.length > 0)
+                {
+                    clone.children().eq(index).children().val(copyVal);
+                }
+            }
+            else
+            {
+                let copyVal = $(element).children().val();
+                if(copyVal != undefined && copyVal.length > 0)
+                {
+                    clone.children().eq(index).children().val(copyVal);
+                }
             }
         });
         clone.css('position','absolute');
@@ -285,14 +298,19 @@
         {
             if ($("#shipPlans").find("div.dropdown-menu-animation").eq(i).find("[data-val='" + curOne[partsName[i]] + "']").eq(0).css("display") == "none")
             {
-                return false;
+                return {pass:false, reason:"舰船部件未解锁"};
             }
         }
         if (!evolve.actions.space[curOne["location"]].info.syndicate())
         {
-            return false;
+            return {pass:false, reason:"目标地点未解锁"};
         }
-        return true;
+        let tec = evolve.actions.tech[curOne["reqData"]];
+        if ((!evolve.global.tech[tec.grant[0]] || evolve.global.tech[tec.grant[0]] < tec.grant[1]) == reqTypes[curOne["reqType"]].req)
+        {
+            return {pass:false, reason:"前置条件未达成"};
+        }
+        return {pass:true, reason:"前置条件已达成"};
     }
 
     function tryBuild(curOne)
@@ -351,7 +369,14 @@
             let line = {};
             for (let i = 0; i < inputName.length; i++)
             {
-                line[inputName[i]] = $(value).children().eq(i).children().eq(0).val().trim();
+                if($(value).children().eq(i).children().eq(0).data("value"))
+                {
+                    line[inputName[i]] = $(value).children().eq(i).children().eq(0).data("value").trim();
+                }
+                else
+                {
+                    line[inputName[i]] = $(value).children().eq(i).children().eq(0).val().trim();
+                }
             }
             buildList.push(line);
         });
@@ -378,7 +403,7 @@
         for (let key of Object.keys(shipPartsName))
         {
             let tempTD = $(`<td></td>`);
-            let tempSelect = $(`<select class="key"></select>`);
+            let tempSelect = $(`<select class="${key}"></select>`);
             for (let value of shipPartsName[key])
             {
                 tempSelect.append($(`<option value="${value}">${evolve.loc("outer_shipyard_" + key + "_" + value)}</option>`));
@@ -394,6 +419,49 @@
         tempInput.on("change", function() {
             tempInput.val($.trim(tempInput.val()).replace(/\b(0+)/gi,""));
         });
+        tempTD.append(tempInput);
+        tempTR.append(tempTD);
+
+        //条件种类
+        tempTD = $(`<td></td>`);
+        tempSelect = $(`<select class="reqType"></select>`);
+        Object.keys(reqTypes).forEach((item, i) => {
+            tempSelect.append($(`<option value="${item}" title="${reqTypes[item].desc}">${reqTypes[item].name}</option>`));
+        });
+        tempSelect.val(values['reqType'] != undefined ? values['reqType'] : "hasTech");
+        tempTD.append(tempSelect);
+        tempTR.append(tempTD);
+
+        //科技框
+        tempTD = $(`<td></td>`);
+        tempInput = $(`<input class="reqData" type="text" style="width: 100px;">`);
+        tempInput.autocomplete({
+            delay: 0,
+            source: function(request, response) {
+                let matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
+                let techs = evolve.actions.tech;
+                response(Object.keys(techs)
+                  .filter((item) => {
+                      let str = typeof techs[item].title === 'string' ? techs[item].title : techs[item].title();
+                      if((techs[item].path) && (techs[item].path.length == 1) && (techs[item].path[0] == "truepath"))
+                      {
+                          str += "（智械黎明）";
+                      }
+                      return matcher.test(str);
+                  })
+                  .map((item) => {
+                      let str = typeof techs[item].title === 'string' ? techs[item].title : techs[item].title();
+                      if((techs[item].path) && (techs[item].path.length == 1) && (techs[item].path[0] == "truepath"))
+                      {
+                          str += "（智械黎明）";
+                      }
+                      return {label: str, data: item};
+                  }));
+            },
+            select: onChanges.reqData, // Dropdown list click
+            change: onChanges.reqData // Keyboard type
+        });
+        setValues.reqData(tempInput, values['reqData'] != undefined ? values['reqData'] : "club");
         tempTD.append(tempInput);
         tempTR.append(tempTD);
 
@@ -414,4 +482,45 @@
         shipTableBody.append(tempTR);
     }
 
+    var setValues = {
+        reqData:function(target, val)
+        {
+            target.data("value", val);
+            let techs = evolve.actions.tech;
+            //错误科技名
+            if(!techs[val])
+            {
+                return;
+            }
+            let str = typeof techs[val].title === 'string' ? techs[val].title : techs[val].title();
+            if((techs[val].path) && (techs[val].path.length == 1) && (techs[val].path[0] == "truepath"))
+            {
+                str += "（智械黎明）";
+            }
+            target.val(str);
+        }};
+    var onChanges = {
+        reqData:function(event, ui)
+    {
+        if(ui.item === null)
+        {
+            let techs = evolve.actions.tech;
+            let trueValue = Object.keys(techs).find((item) => {
+                let str = typeof techs[item].title === 'string' ? techs[item].title : techs[item].title();
+                if((techs[item].path) && (techs[item].path.length == 1) && (techs[item].path[0] == "truepath"))
+                {
+                    str += "（智械黎明）";
+                }
+                return str == $(event.target).val();
+            });
+            if (trueValue !== undefined)
+            {
+                setValues.reqData($(event.target), trueValue);
+            }
+        }
+        else
+        {
+            setValues.reqData($(event.target), ui.item.data);
+        }
+    }};
 })(jQuery);
