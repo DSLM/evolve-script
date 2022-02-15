@@ -13,7 +13,7 @@
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // ==/UserScript==
-//炼钢、冶炼和石墨烯厂会在需求资源储量大于10万时继续运作而非关闭
+//炼钢、冶炼和石墨烯厂会在需求资源储量可以支撑运作10秒以上时继续运作而非关闭
 //让部分背景色随主题变化
 //
 // This script forked from TMVictor's script version 3.3.1. Original script: https://gist.github.com/TMVictor/3f24e27a21215414ddc68842057482da
@@ -7885,7 +7885,7 @@
 
                 for (let productionCost of fuel.cost) {
                     let resource = productionCost.resource;
-                    if (resource.storageRatio < 0.8 && resource.currentQuantity < 100000 || resource === resources.StarPower){
+                    if (resource.storageRatio < 0.8 && ((resource.currentQuantity/resource.rateOfChange)>-10 && (resource.currentQuantity/resource.rateOfChange)<0) || resource === resources.StarPower){
                         let remainingRateOfChange = resource.rateOfChange + (m.fueledCount(fuel) * productionCost.quantity);
                         // No need to preserve minimum income when storage is full
                         if (resource.storageRatio < 0.98) {
@@ -7946,7 +7946,7 @@
         let steelSmeltingConsumption = m.Productions.Steel.cost;
         for (let productionCost of steelSmeltingConsumption) {
             let resource = productionCost.resource;
-            if (resource.storageRatio < 0.8 && resource.currentQuantity < 100000){
+            if (resource.storageRatio < 0.8 && ((resource.currentQuantity/resource.rateOfChange)>-10 && (resource.currentQuantity/resource.rateOfChange)<0)){
                 let remainingRateOfChange = resource.rateOfChange + (smelterSteelCount * productionCost.quantity);
                 // No need to preserve minimum income when storage is full
                 if (resource.storageRatio < 0.98) {
@@ -8234,7 +8234,7 @@
             let maxFueledForConsumption = remainingPlants;
             if (!resources.Graphene.isUseful()) {
                 maxFueledForConsumption = 0;
-            } else if (resource.storageRatio < 0.8 && resource.currentQuantity < 100000){
+            } else if (resource.storageRatio < 0.8 && ((resource.currentQuantity/resource.rateOfChange)>-10 && (resource.currentQuantity/resource.rateOfChange)<0)){
                 let rateOfChange = resource.rateOfChange + fuel.cost.quantity * currentFuelCount;
                 if (resource.storageRatio < 0.98) {
                     rateOfChange -= fuel.cost.minRateOfChange;
