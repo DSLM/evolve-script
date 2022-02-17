@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.4.4
+// @version      1.4.4.5
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -1439,6 +1439,10 @@
                     "铜星："+loc("achieve_perks_pathfinder3")(),
                     "银星："+loc("unavailable_content")(),
                     "金星："+loc("unavailable_content")()];
+        }},
+        {src:['doomed', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_doomed")()];
         }},
         {src:['novice', 'feat' ],
         desc(){
