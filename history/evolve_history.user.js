@@ -1320,6 +1320,10 @@
     	biome_desert: ['biome'],
     	biome_volcanic: ['biome'],
     	biome_tundra: ['biome'],
+    	biome_savanna: ['biome'],
+    	biome_swamp: ['biome'],
+    	biome_ashland: ['biome'],
+    	biome_taiga: ['biome'],
     	biome_hellscape: ['biome'],
     	biome_eden: ['biome', 'universe'],
     	atmo_toxic: ['atmosphere'],
@@ -1333,6 +1337,7 @@
     	atmo_flare: ['atmosphere'],
     	atmo_dense: ['atmosphere'],
     	atmo_unstable: ['atmosphere'],
+    	atmo_permafrost: ['atmosphere'],
     	vigilante: ['reset', 'universe'],
     	squished: ['reset', 'universe'],
     	double_density: ['universe'],
@@ -1522,9 +1527,10 @@
 	        'genus_insectoid','genus_plant','genus_fungi','genus_aquatic','genus_fey','genus_heat','genus_polar','genus_sand','genus_demonic','genus_angelic','genus_synthetic'
 	    ],
 	    planet: [
-	        'explorer','biome_grassland','biome_oceanic','biome_forest','biome_desert','biome_volcanic','biome_tundra','biome_hellscape','biome_eden',
+	        'explorer','biome_grassland','biome_oceanic','biome_forest','biome_desert','biome_volcanic','biome_tundra',
+	        'biome_savanna','biome_swamp','biome_ashland','biome_taiga','biome_hellscape','biome_eden',
 	        'atmo_toxic','atmo_mellow','atmo_rage','atmo_stormy','atmo_ozone','atmo_magnetic','atmo_trashed','atmo_elliptical','atmo_flare','atmo_dense',
-	        'atmo_unstable'
+	        'atmo_unstable','atmo_permafrost'
 	    ],
 	    universe: [
 	        'vigilante','squished','double_density','cross','macro','marble','heavyweight','whitehole','heavy','canceled',
