@@ -15,6 +15,7 @@
 // ==/UserScript==
 //炼钢、冶炼和石墨烯厂会在需求资源储量大于10万时继续运作而非关闭
 //让部分背景色随主题变化
+//暴露当前设置配合监听脚本
 //
 // This script forked from TMVictor's script version 3.3.1. Original script: https://gist.github.com/TMVictor/3f24e27a21215414ddc68842057482da
 // Removed downloadURL in case that script got screwed up. Original downloadURL: @downloadURL  https://gist.github.com/Vollch/b1a5eec305558a48b7f4575d317d7dd1/raw/evolve_automation.user.js
@@ -11284,7 +11285,7 @@
 
         // The user has turned off the master toggle. Stop taking any actions on behalf of the player.
         // We've still updated the UI etc. above; just not performing any actions.
-        if (!settings.masterScriptToggle) { return; }
+        window.currentScriptSetting = settings; if (!settings.masterScriptToggle) { return; }
 
         if (state.goal === "Evolution") {
             if (settings.autoEvolution) {
