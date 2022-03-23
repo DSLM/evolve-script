@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.4.5
+// @version      1.4.4.6
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -428,7 +428,7 @@
         {
             smallAchiTitle = $("<div id='smallAchiTitle' class='has-text-advanced' onclick='(function (){$(\"#histTitleListWindow\").children().removeClass(\"has-text-success\");if($(\"#achiContent\").css(\"display\") == \"none\"){$(\".sideHistWindow\").hide();$(\"#achiContent\").show();$(\"#smallAchiTitle\").addClass(\"has-text-success\");}else{$(\"#achiContent\").hide();}})()'>成就</div>");
             achiContent = $("<div id='achiContent' class='sideHistWindow' style='height: inherit; display: none;'><div style='height: 100%; display:flex;'></div></div>");
-            achiTotalStatus = $(`<div id='achiTotalStatus' style='padding-right: ${padLR};'></div>`);
+            achiTotalStatus = $(`<div id='achiTotalStatus' class='vscroll' style='padding-right: ${padLR};'></div>`);
             let achiShow = $(`<div style='width: ${AchiDivWid * AchiDivCol + 6}px; height: 100%; display:flex; flex-direction: column;'><div id='achiFilter'></div><div class='vscroll' style='flex-grow: 1;'><div id='achiList' style='height: 0;'></div></div></div>`);
 
             achiContent.children().eq(0).append(achiTotalStatus);
@@ -444,10 +444,11 @@
     function buildAchieve()
     {
         //初始化
-        let achiData = {total:{}, complete:{}};
+        let achiData = {total:{}, complete:{}, detail:{}};
         Object.keys(UniLtoS).forEach((uni) => {
             achiData.total[uni] = [];
             achiData.complete[uni] = {};
+            achiData.detail[uni] = [0,0,0,0,0,0];
         });
 
         //上限
@@ -468,6 +469,7 @@
                 if(evolve.global.stats.achieve[ach][uni] > 0)
                 {
                     achiData.complete[UniStoL[uni]][ach] = evolve.global.stats.achieve[ach][uni];
+                    achiData.detail[UniStoL[uni]][evolve.global.stats.achieve[ach][uni]] += 1;
                 }
             });
         });
@@ -475,17 +477,27 @@
         //总计
         $("#achiTotalStatus").empty();
         $("#achiTotalStatus").append($("<div class='has-text-advanced'>成就统计</div>"));
+        $("#achiTotalStatus").append($("<table id='achiTotalStatus_total'></table>"));
+        $("#achiTotalStatus").append($("<table id='achiTotalStatus_table' border='1' style='border-color: #ffffff;margin-top: 1em;'><tbody align='right'><tr><td></td><td>未获</td><td>无星</td><td>白星</td><td>铜星</td><td>银星</td><td>金星</td></tr></tbody></table>"));
         Object.keys(UniLtoS).forEach((uni) => {
             let compe = Object.keys(achiData.complete[uni]).length;
             let total = achiData.total[uni].length;
-            $("#achiTotalStatus").append(`<tr><td>${evolve.loc("universe_" + uni)}：</td><td><span style='visibility:hidden;'>${Array(4 - (compe +  '').length).join("0")}</span>${compe} / ${total}<span style='visibility:hidden;'>${Array(7 - ((compe / total * 100).toFixed(2) +  '').length).join("0")}</span>（<span class="${(compe == total ? 'has-text-warning' : '')}">${(compe / total * 100).toFixed(2)}%</span>）</td></tr>`);
+            achiData.detail[uni][0] = total - compe;
+
+            $("#achiTotalStatus_total").append(`<tr><td>${evolve.loc("universe_" + uni)}：</td><td><span style='visibility:hidden;'>${Array(4 - (compe +  '').length).join("0")}</span>${compe} / ${total}<span style='visibility:hidden;'>${Array(7 - ((compe / total * 100).toFixed(2) +  '').length).join("0")}</span>（<span class="${(compe == total ? 'has-text-warning' : '')}">${(compe / total * 100).toFixed(2)}%</span>）</td></tr>`);
+
+            let tempLineStr = "";
+            achiData.detail[uni].forEach((level) => {
+                tempLineStr += `<td>${level}</td>`;
+            });
+            $("#achiTotalStatus_table>tbody").append(`<tr><td>${evolve.loc("universe_" + uni)}</td>${tempLineStr}</tr>`);
         });
 
         //成就筛选
         $("#achiFilter").empty();
         $("#achiFilter").append($("<div class='has-text-advanced'>成就列表</div><table style='width:100%'></table>"));
         $("#achiFilter").children().eq(1).append(buildButtonGroup("宇宙：", "universe", {'all':'所有宇宙', 'standard':'标准宇宙', 'evil':'邪恶宇宙', 'antimatter':'反物质宇宙', 'micro':'微型宇宙', 'heavy':'高引力宇宙', 'magic':'魔法宇宙'}));
-        $("#achiFilter").children().eq(1).append(buildButtonGroup("星级：", "star", {'all':'所有', '1_star':'无星', '2_star':'白星', '3_star':'铜星', '4_star':'银星', '5_star':'金星', 'none':'未获得'}));
+        $("#achiFilter").children().eq(1).append(buildButtonGroup("星级：", "star", {'all':'所有', 'none':'未获得', '1_star':'无星', '2_star':'白星', '3_star':'铜星', '4_star':'银星', '5_star':'金星', 'non_5':'非金'}));
         $("#achiFilter").children().eq(1).append(buildButtonGroup("种类：", "type", {all: "所有", type_atmosphere: "星球特性", type_biome: "生物群系", type_challenge: "挑战", type_combat: "战斗", type_fanaticism: "狂热信仰", type_genus: "种群", type_perk: "特权", type_progression: "游戏进度", type_reset: "威望重置", type_scenario: "剧情模式", type_species: "种族", type_unification: "统一", type_universe: "宇宙", type_other: "其它"}));
 
         $("#achiFilter").find("input").off("click");
@@ -596,8 +608,13 @@
             {
                 $(`.achiLine:not(.${tempUniS}_${tempStar})`).hide();
             }
-            else {
+            else if(tempStar == "none")
+            {
                 $(`.${tempUniS}_${tempArr.join(`,.${tempUniS}_`)}`).hide();
+            }
+            else if(tempStar == "non_5")
+            {
+                $(`.${tempUniS}_5_star`).hide();
             }
         }
 
