@@ -478,7 +478,7 @@
         $("#achiTotalStatus").empty();
         $("#achiTotalStatus").append($("<div class='has-text-advanced'>成就统计</div>"));
         $("#achiTotalStatus").append($("<table id='achiTotalStatus_total'></table>"));
-        $("#achiTotalStatus").append($("<table id='achiTotalStatus_table' border='1'><tbody align='right'><tr><td></td><td>未获</td><td>无星</td><td>白星</td><td>铜星</td><td>银星</td><td>金星</td></tr></tbody></table>"));
+        $("#achiTotalStatus").append($("<table id='achiTotalStatus_table' border='1' style='border-color: #ffffff;margin-top: 1em;'><tbody align='right'><tr><td></td><td>未获</td><td>无星</td><td>白星</td><td>铜星</td><td>银星</td><td>金星</td></tr></tbody></table>"));
         Object.keys(UniLtoS).forEach((uni) => {
             let compe = Object.keys(achiData.complete[uni]).length;
             let total = achiData.total[uni].length;
