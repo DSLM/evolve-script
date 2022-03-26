@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.4.6
+// @version      1.4.4.7
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -479,18 +479,41 @@
         $("#achiTotalStatus").append($("<div class='has-text-advanced'>成就统计</div>"));
         $("#achiTotalStatus").append($("<table id='achiTotalStatus_total'></table>"));
         $("#achiTotalStatus").append($("<table id='achiTotalStatus_table' border='1' style='border-color: #ffffff;margin-top: 1em;'><tbody align='right'><tr><td></td><td>未获</td><td>无星</td><td>白星</td><td>铜星</td><td>银星</td><td>金星</td></tr></tbody></table>"));
+        $("#achiTotalStatus").append($("<div class='has-text-advanced' style='margin-top: 1em;'>真实精通（不计基因）</div>"));
+        $("#achiTotalStatus").append($("<table id='achiTotalStatus_real_mastery'></table>"));
+        let lvl = 0;
         Object.keys(UniLtoS).forEach((uni) => {
             let compe = Object.keys(achiData.complete[uni]).length;
             let total = achiData.total[uni].length;
             achiData.detail[uni][0] = total - compe;
 
-            $("#achiTotalStatus_total").append(`<tr><td>${evolve.loc("universe_" + uni)}：</td><td><span style='visibility:hidden;'>${Array(4 - (compe +  '').length).join("0")}</span>${compe} / ${total}<span style='visibility:hidden;'>${Array(7 - ((compe / total * 100).toFixed(2) +  '').length).join("0")}</span>（<span class="${(compe == total ? 'has-text-warning' : '')}">${(compe / total * 100).toFixed(2)}%</span>）</td></tr>`);
+            $("#achiTotalStatus_total").append(`<tr><td class="has-text-caution">${evolve.loc("universe_" + uni)}：</td><td><span style='visibility:hidden;'>${Array(4 - (compe +  '').length).join("0")}</span>${compe} / ${total}<span style='visibility:hidden;'>${Array(7 - ((compe / total * 100).toFixed(2) +  '').length).join("0")}</span>（<span class="${(compe == total ? 'has-text-warning' : '')}">${(compe / total * 100).toFixed(2)}%</span>）</td></tr>`);
 
             let tempLineStr = "";
-            achiData.detail[uni].forEach((level) => {
-                tempLineStr += `<td>${level}</td>`;
-            });
-            $("#achiTotalStatus_table>tbody").append(`<tr><td>${evolve.loc("universe_" + uni)}</td>${tempLineStr}</tr>`);
+            let ulvl = 0;
+            for (let i = 0; i < achiData.detail[uni].length; i++)
+            {
+                tempLineStr += `<td>${achiData.detail[uni][i]}</td>`;
+                if(uni == "standard")
+                {
+                    lvl += achiData.detail[uni][i] * i;
+                }
+                else
+                {
+                    ulvl += achiData.detail[uni][i] * i;
+                }
+            }
+            $("#achiTotalStatus_table>tbody").append(`<tr><td class="has-text-caution">${evolve.loc("universe_" + uni)}</td>${tempLineStr}</tr>`);
+
+            let m_rate = uni === 'standard' ? 0.25 : 0.15;
+            let u_rate = evolve.global.genes['challenge'] >= 3 ? 0.15 : 0.1;
+            if (evolve.global.genes['challenge'] >= 4 && uni !== 'standard'){
+                m_rate += 0.05;
+                u_rate -= 0.05;
+            }
+            let m_mastery = lvl * m_rate;
+            let u_mastery = uni !== 'standard' ? ulvl * u_rate : 0;
+            $("#achiTotalStatus_real_mastery").append(`<tr><td class="has-text-caution">${evolve.loc("universe_" + uni)}：</td><td>${evolve.loc("perks_mastery_general", [`<span class="has-text-advanced">${+(m_mastery).toFixed(2)}%</span>`])}，</td><td>${evolve.loc("perks_mastery_universe", [`<span class="has-text-advanced">${+(u_mastery).toFixed(2)}%</span>`])}</td></tr>`);
         });
 
         //成就筛选

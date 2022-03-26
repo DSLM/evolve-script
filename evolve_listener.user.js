@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         数据监听
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1.1
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_listener.user.js
 // @author       DSLM
@@ -16,7 +16,7 @@
 (function($) {
     'use strict';
 
-    var LM_times = 0
+    var LM_times = 0;
     var LM;
 
     var currStytle = {};
@@ -25,6 +25,7 @@
                     mainScriptCur:{name:"脚本设置当前值", desc:"需搭配修改版脚本", func:(str) => {try{return window.currentScriptSetting[str];}catch(e){return e;}}}
                 };
     var dataMap = {note:0, type:1, eval:2};
+    var nowOverrides = [];
 
     //手动CSS颜色
     let cssData = {
@@ -53,9 +54,35 @@
     }
     $("head").append(styles);
 
-    LM = window.setInterval(listenerMain, 250);
+    //各种统计的的CSS
+    let bodyStytle = document.body.currentStyle ? document.body.currentStyle : window.getComputedStyle(document.body, null);
 
-    function listenerMain()
+    let listenerColor = "";
+    Object.keys(cssData).forEach((theme) => {
+        //表格表头的CSS
+        listenerColor += `html.${theme} .has-text-plain th {
+            color: ${cssData[theme].primary_color};
+            font-weight: ${bodyStytle["font-weight"]};
+            font-size: ${bodyStytle["font-size"]};
+            padding: 0.5em 0.75em;
+        }`;
+    });
+    styles = $(`<style type='text/css' id='listenerCSS'>
+    ${listenerColor}
+    #listenerWindow>div>div.has-text-advanced.has-text-success {
+        background-color:#7957d5;
+        color:#fff !important;
+    }
+    </style>`);
+    if($("#listenerCSS"))
+    {
+        $("#listenerCSS").remove();
+    }
+    $("head").append(styles);
+
+    LM = window.setInterval(listenerMainFunc, 250);
+
+    function listenerMainFunc()
     {
         LM_times = LM_times + 1;
         //判断是否需要初始化
@@ -63,20 +90,13 @@
         {
             var LM_temp = LM
             LM_times = 0;
-            LM = window.setInterval(listenerMain, 250);
+            LM = window.setInterval(listenerMainFunc, 250);
             clearInterval(LM_temp)
             return;
         }
 
         //未完全加载
         if(evolve.global == undefined) return;
-
-
-        let listenerList = JSON.parse(localStorage.getItem("listenerList"));
-        if(listenerList == null)
-        {
-            listenerList = [];
-        }
 
         //共用窗口
         let sideWindow = $("#sideWindow");
@@ -89,71 +109,189 @@
         //独有窗口
         let smallListenerTitle = $("#smallListenerTitle");
         let listenerContent = $("#listenerContent");
-        let listenerButton = $("#listenerButton");
-        let listenerSave = $("#listenerSave");
-        let listenerAdd = $("#listenerAdd");
-        let listenerTable = $("#listenerTable");
-        let listenerTableBody = $("#listenerTableBody");
+        let listenerWindow = $("#listenerWindow");
 
         if(smallListenerTitle.length === 0)
         {
             smallListenerTitle = $("<div id='smallListenerTitle' class='has-text-caution' onclick='(function (){$(\"#titleListWindow\").children().removeClass(\"has-text-warning\");if($(\"#listenerContent\").css(\"display\") == \"none\"){$(\".sideContentWindow\").hide();$(\"#listenerContent\").show();$(\"#smallListenerTitle\").addClass(\"has-text-warning\");}else{$(\"#listenerContent\").hide();}})()'>监听</div>");
-            listenerContent = $("<div id='listenerContent' class='vscroll sideContentWindow' style='height: 100%; display: none;'><div id='longListenerTitle' class='has-text-caution'>数据监听</div></div>");
-            listenerButton = $('<div id="listenerButton" style="float: top; display:flex; flex-direction: row; justify-content: flex-start; align-items: center;"></div>');
-            listenerSave = $('<button id="listenerSave" class="button">保存监听项目</button>');
-            listenerAdd = $('<button id="listenerAdd" class="button">添加</button>');
-            listenerTable = $(`<table><thead class="has-text-plain"><tr><th>备注</th><th>类型</th><th>数据</th><th>结果</th><th>删除</th></tr></thead><tbody id="listenerTableBody" class="ui-sortable"></tbody></table>`);
+            listenerContent = $(`<div id='listenerContent' class='sideContentWindow' style='height: 100%; display: none;'><div id='listenerFlexContent' style='height: 100%;display:flex;flex-direction: column;justify-content: space-between;'><div class='has-text-caution' style='text-align: center; padding-bottom: ${padTB};'>数据监听</div></div></div>`);
+            listenerWindow = $(`<div id='listenerWindow' style='height: 0; display:flex; flex-direction: row; justify-content: flex-end; align-items: flex-end; flex-grow: 1;'><div id='listenerTitleListWindow' style='height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding-left: ${padLR};' align='right'></div></div>`);
 
-            listenerSave.click(saveListenerList);
-            listenerAdd.click(function(){addNewListener({note:"", type:"default", eval:""})});
-
-            listenerButton.append(listenerSave);
-            listenerButton.append(listenerAdd);
-
-            listenerContent.append(listenerButton);
-            listenerContent.append(listenerTable);
+            listenerContent.children().eq(0).append(listenerWindow);
 
             sideWindow.prepend(listenerContent);
             $("#titleListWindow").append(smallListenerTitle);
-
-            listenerTableBody = $("#listenerTableBody");
-
-            for (let i = 0; i < listenerList.length; i++)
-            {
-                addNewListener(listenerList[i]);
-            }
-
-            listenerTableBody.sortable({
-                items: "tr:not(.unsortable)",
-                helper: sorterHelper,
-            });
-
         }
 
-        let bodyStytle = document.body.currentStyle ? document.body.currentStyle : window.getComputedStyle(document.body, null);
-        if(bodyStytle.color != currStytle.color)
+        mainListener();
+        overrideListener();
+    }
+
+    function overrideListener()
+    {
+        let settings = JSON.parse(localStorage.getItem("settings"));
+        if(settings == null)
         {
-            currStytle.color = bodyStytle.color;
-            let styles = $(`<style type='text/css' id='listenerCSS'>
-            .has-text-plain th {
-                color: ${bodyStytle["color"]};
-                font-weight: ${bodyStytle["font-weight"]};
-                font-size: ${bodyStytle["font-size"]};
-                padding: 0.5em 0.75em;
-            }
-            #listenerTableBody td {
-                padding: 0.5em 0.75em;
-            }
-            </style>`);
-            if($("#listenerCSS"))
-            {
-                $("#listenerCSS").remove();
-            }
-            $("head").append(styles);
+            return;
+        }
+
+        let smallOverrideListenerTitle = $("#smallOverrideListenerTitle");
+        let overrideListenerButton = $("#overrideListenerButton");
+        let overrideListenerTable = $("#overrideListenerTable");
+        let overrideListenerTableBody = $("#overrideListenerTableBody");
+
+        //还没有
+        if($("#smallOverrideListenerTitle").length == 0)
+        {
+            let smallOverrideListenerTitle = $("<div id='smallOverrideListenerTitle' class='has-text-advanced' onclick='(function (){$(\"#listenerTitleListWindow\").children().removeClass(\"has-text-success\");if($(\"#overrideListenerContent\").css(\"display\") == \"none\"){$(\".sideListenerWindow\").hide();$(\"#overrideListenerContent\").show();$(\"#smallOverrideListenerTitle\").addClass(\"has-text-success\");}else{$(\"#overrideListenerContent\").hide();}})()'>脚本高级设置</div>");
+            let overrideListenerContent = $("<div id='overrideListenerContent' class='vscroll sideListenerWindow' style='height: 100%; display: none;'></div>");
+
+            overrideListenerButton = $('<div id="overrideListenerButton" style="float: top; display:flex; flex-direction: row; justify-content: flex-start; align-items: center;"></div>');
+            overrideListenerTable = $(`<table><thead class="has-text-plain"><tr><th>内部名</th><th>定位</th></tr></thead><tbody id="overrideListenerTableBody"></tbody></table>`);
+
+            overrideListenerContent.append(overrideListenerTable);
+
+            $("#listenerWindow").prepend(overrideListenerContent);
+            $("#listenerTitleListWindow").append(smallOverrideListenerTitle);
+
+            overrideListenerTableBody = $("#overrideListenerTableBody");
+        }
+
+        //列表是否更新
+        let overrideListenerList = settings.overrides;
+        if(nowOverrides.toString() == Object.keys(overrideListenerList).toString())
+        {
+            return;
+        }
+        else
+        {
+            nowOverrides = Object.keys(overrideListenerList);
         }
 
         //监听
-        listenThem();
+        $("#overrideListenerTableBody button").unbind();
+        overrideListenerTableBody.empty();
+        Object.keys(overrideListenerList).forEach((item) => {
+            let tempTR = $(`<tr><td>${item}</td></tr>`);
+            let tempTD, tempInput, tempSelect, tempButton;
+
+            tempTD = $(`<td></td>`);
+            tempButton = $(`<button id="listenerHide" class="button">定位</button>`);
+            tempButton.click(function () {
+                for (var i = 0; i < $(`#script_settings`).children().length; i++)
+                {
+                    let tab = $(`#script_settings>div:nth-child(${i})>div:nth-child(2)`);
+                    let target = $(`#script_settings>div:nth-child(${i})>div:nth-child(2) .script_${item}`);
+                    if(target.length > 0 && tab.css("display") != "block")
+                    {
+                        $(`#script_settings>div:nth-child(${i})>h3:nth-child(1)`).click();
+                        break;
+                    }
+                    tab = null;
+                    target = null;
+                }
+                let results = document.getElementsByClassName(`script_${item}`);
+                let result = results[results.length - 1];
+
+                document.querySelector("#\\31 7-label").click();
+                $("#mainColumn > div > div > section > div").hide();
+                $("#settings").show();
+                result.scrollIntoView();
+                highlight(3, result, item);
+                results = null;
+                result = null;
+            });
+            tempTD.append(tempButton);
+            tempTR.append(tempTD);
+            overrideListenerTableBody.append(tempTR);
+        });
+    }
+
+    function highlight(times, element, info)
+    {
+        let toolTip = $(`<div style="color:red; background-color:orange;">${info} 在这里</div>`);
+        Popper.createPopper(element, toolTip[0], {
+            placement: "right",
+        });
+        $("body").append(toolTip);
+        let timer = setInterval(function(){
+            toolTip.remove();
+            toolTip = null;
+            clearInterval(timer);
+            return;
+        },1000 * times);
+    }
+
+    function mainListener()
+    {
+        let smallMainListenerTitle = $("#smallMainListenerTitle");
+        let mainListenerButton = $("#mainListenerButton");
+        let mainListenerSave = $("#mainListenerSave");
+        let mainListenerAdd = $("#mainListenerAdd");
+        let mainListenerTable = $("#mainListenerTable");
+        let mainListenerTableBody = $("#mainListenerTableBody");
+
+        //还没有
+        if($("#smallMainListenerTitle").length == 0)
+        {
+            let smallMainListenerTitle = $("<div id='smallMainListenerTitle' class='has-text-advanced' onclick='(function (){$(\"#listenerTitleListWindow\").children().removeClass(\"has-text-success\");if($(\"#mainListenerContent\").css(\"display\") == \"none\"){$(\".sideListenerWindow\").hide();$(\"#mainListenerContent\").show();$(\"#smallMainListenerTitle\").addClass(\"has-text-success\");}else{$(\"#mainListenerContent\").hide();}})()'>数据监听</div>");
+            let mainListenerContent = $("<div id='mainListenerContent' class='vscroll sideListenerWindow' style='height: 100%; display: none;'></div>");
+
+            mainListenerButton = $('<div id="mainListenerButton" style="float: top; display:flex; flex-direction: row; justify-content: flex-start; align-items: center;"></div>');
+            mainListenerSave = $('<button id="mainListenerSave" class="button">保存监听项目</button>');
+            mainListenerAdd = $('<button id="mainListenerAdd" class="button">添加</button>');
+            mainListenerTable = $(`<table><thead class="has-text-plain"><tr><th>备注</th><th>类型</th><th>数据</th><th>结果</th><th>删除</th></tr></thead><tbody id="mainListenerTableBody" class="ui-sortable"></tbody></table>`);
+
+            mainListenerSave.click(saveListenerList);
+            mainListenerAdd.click(function(){addNewListener({note:"", type:"default", eval:""})});
+
+            mainListenerButton.append(mainListenerSave);
+            mainListenerButton.append(mainListenerAdd);
+
+            mainListenerContent.append(mainListenerButton);
+            mainListenerContent.append(mainListenerTable);
+
+            $("#listenerWindow").prepend(mainListenerContent);
+            $("#listenerTitleListWindow").append(smallMainListenerTitle);
+
+
+            let mainListenerList = JSON.parse(localStorage.getItem("listenerList"));
+            if(mainListenerList == null)
+            {
+                mainListenerList = [];
+            }
+
+            mainListenerTableBody = $("#mainListenerTableBody");
+
+            for (let i = 0; i < mainListenerList.length; i++)
+            {
+                addNewListener(mainListenerList[i]);
+            }
+
+            mainListenerTableBody.sortable({
+                items: "tr:not(.unsortable)",
+                helper: sorterHelper,
+            });
+        }
+
+        //监听
+        $("#mainListenerTableBody").children().each(function(index, value) {
+            let line = {};
+            let resultIndex = 3;
+            for (let i of Object.keys(dataMap))
+            {
+                if($(value).children().eq(dataMap[i]).children().eq(0).data("value"))
+                {
+                    line[i] = $(value).children().eq(dataMap[i]).children().eq(0).data("value");
+                }
+                else
+                {
+                    line[i] = $(value).children().eq(dataMap[i]).children().eq(0).val();
+                }
+            }
+            if(evalList[line.type])
+                $(value).children().eq(resultIndex).html(line.note + evalList[line.type].func(line.eval));
+        });
     }
 
     function sorterHelper(event, ui)
@@ -181,31 +319,10 @@
         return clone.get(0);
     }
 
-    function listenThem()
-    {
-        $("#listenerTableBody").children().each(function(index, value) {
-            let line = {};
-            let resultIndex = 3;
-            for (let i of Object.keys(dataMap))
-            {
-                if($(value).children().eq(dataMap[i]).children().eq(0).data("value"))
-                {
-                    line[i] = $(value).children().eq(dataMap[i]).children().eq(0).data("value");
-                }
-                else
-                {
-                    line[i] = $(value).children().eq(dataMap[i]).children().eq(0).val();
-                }
-            }
-            if(evalList[line.type])
-                $(value).children().eq(resultIndex).html(line.note + evalList[line.type].func(line.eval));
-        });
-    }
-
     function saveListenerList()
     {
         let listenerList = [];
-        $("#listenerTableBody").children().each(function(index, value) {
+        $("#mainListenerTableBody").children().each(function(index, value) {
             let line = {};
             for (let i of Object.keys(dataMap))
             {
@@ -226,7 +343,7 @@
 
     function addNewListener(values)
     {
-        let listenerTableBody = $("#listenerTableBody");
+        let mainListenerTableBody = $("#mainListenerTableBody");
         let tempTR = $(`<tr class="ui-sortable-handle"></tr>`);
         let tempTD, tempInput, tempSelect, tempButton;
 
@@ -266,7 +383,7 @@
         tempTD.append(tempButton);
         tempTR.append(tempTD);
 
-        listenerTableBody.append(tempTR);
+        mainListenerTableBody.append(tempTR);
         tempTR.find(".typeSelect").val(values["type"]);
     }
 })(jQuery);
