@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         自动智械造船配置
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_truePathShip.user.js
 // @author       DSLM
@@ -12,7 +12,7 @@
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // ==/UserScript==
 
-// TODO: 压制满了不造；中继器
+// TODO: 压制满了不造
 
 (function($) {
     'use strict';
@@ -20,12 +20,12 @@
     let SA_times = 0;
     let SA;
 
-    let version = "1.3";
+    let version = "1.4";
     let savedData;
 
     let currStytle = {};
     let inputName = ["location", "class", "power", "weapon", "armor", "engine", "sensor", "count", "reqs"];
-    let reqTypes = {hasTech: {name:"有科技", desc:"只有在研究对应科技后才会建造", req:true}, noTech: {name:"无科技", desc:"只有在研究对应科技前才会建造", req:false}};
+    let reqTypes = {hasTech: {name:"有科技", desc:"只有在研究对应科技后才会建造", req:true}, noTech: {name:"无科技", desc:"只有在研究对应科技前才会建造", req:false}, hasCharge: {name:"有中继器蓄能", desc:"只有在中继器蓄能达到100%后才会建造", req:true}, noCharge: {name:"无中继器蓄能", desc:"只有在中继器蓄能未达到100%时才会建造", req:false}};
     let partsName = ["class", "power", "weapon", "armor", "engine", "sensor"];
     let shipPartsName = {"class" : ["corvette", "frigate", "destroyer", "cruiser", "battlecruiser", "dreadnought"],
     "power" : ["solar", "diesel", "fission", "fusion", "elerium"],
@@ -203,6 +203,7 @@
             let count = savedData.buildList[i]["count"];
             let yardShips = [];
 
+            shipTableBody.children().eq(i).children().eq(inputName.length).html(``);
             //检查配置解锁没
             let result = buildCheck(savedData.buildList[i]);
             if(!result.pass)
@@ -321,16 +322,34 @@
         {
             return {pass:false, reason:"目标地点未解锁"};
         }
-        curOne.reqs.forEach((item, i) => {
+        for (var i = 0; i < curOne.reqs.length; i++)
+        {
+            let item = curOne.reqs[i];
             if(item.reqType == "hasTech" || item.reqType == "noTech")
             {
                 let tec = evolve.actions.tech[item.reqData];
-                if ((!evolve.global.tech[tec.grant[0]] || evolve.global.tech[tec.grant[0]] < tec.grant[1]) == reqTypes[item.reqType.req])
+                if ((!evolve.global.tech[tec.grant[0]] || evolve.global.tech[tec.grant[0]] < tec.grant[1]) == reqTypes[item.reqType].req)
                 {
                     return {pass:false, reason:"前置条件未达成"};
                 }
             }
-        });
+            else if(item.reqType == "hasCharge" || item.reqType == "noCharge")
+            {
+                let charged = 0;
+                try
+                {
+                    charged = evolve.global.space.m_relay.charged;
+                }
+                catch (e)
+                {
+                    charged = 0;
+                }
+                if(!(charged == 10000) == reqTypes[item.reqType].req)
+                {
+                    return {pass:false, reason:"前置条件未达成"};
+                }
+            }
+        }
         return {pass:true, reason:"前置条件已达成"};
     }
 
@@ -444,6 +463,12 @@
                     req.reqData = $(ele).children().eq(1).children(".reqData.tech").eq(0).attr("data-value");
                 }
 
+                if(req.reqType == "hasCharge" || req.reqType == "noCharge")
+                {
+                    req.reqData = "";
+                }
+
+
                 reqs.push(req);
             });
             line.reqs = reqs;
@@ -535,7 +560,7 @@
 
     function addReqLine(curOne)
     {
-        let tempTR, tempTD, tempSelect, tempInput, tempButton, tempTable;
+        let tempTR, tempTD, tempSelect, tempInput, tempButton, tempTable, tempDiv;
         tempTR = $(`<tr></tr>`);
         //条件种类
         tempTD = $(`<td></td>`);
@@ -547,7 +572,7 @@
         tempTD.append(tempSelect);
         tempTR.append(tempTD);
 
-        //科技框
+        //第二条件
         tempTD = $(`<td></td>`);
         tempInput = $(`<input class="reqData tech" type="text" style="width: 100px; display:none;">`);
         tempInput.autocomplete({
@@ -575,19 +600,42 @@
             },
             select: onChanges.reqData, // Dropdown list click
             change: onChanges.reqData // Keyboard type
+        })
+        setValues.reqData(tempInput, curOne.reqData != undefined ? curOne.reqData : "club");;
+        tempTD.append(tempInput);
+
+        tempDiv = $(`<div class="reqData charge" style="width: 100px; display:none;"></div>`);
+        tempTD.append(tempDiv);
+        tempTR.append(tempTD);
+
+        tempSelect.on('change', function() {
+            if(this.value == "hasTech" || this.value == "noTech")
+            {
+                tempInput.show();
+                tempDiv.hide();
+            }
+            else if(this.value == "hasCharge" || this.value == "noCharge")
+            {
+                tempDiv.show();
+                tempInput.hide();
+            }
         });
         if(curOne.reqType == "hasTech" || curOne.reqType == "noTech")
         {
             tempInput.show();
-            setValues.reqData(tempInput, curOne.reqData != undefined ? curOne.reqData : "club");
+            tempDiv.hide();
         }
-        tempTD.append(tempInput);
-        tempTR.append(tempTD);
+        else if(curOne.reqType == "hasCharge" || curOne.reqType == "noCharge")
+        {
+            tempDiv.show();
+            tempInput.hide();
+        }
 
         tempTD = $(`<td></td>`);
         tempButton = $(`<a class="button is-dark is-small"><span>-</span></a>`);
         tempButton.click(function () {
             let pare = $(this).parent().parent();
+            tempSelect.unbind();
             tempButton.unbind();
             pare.remove();
         });
