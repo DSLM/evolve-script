@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Evolve
 // @namespace    http://tampermonkey.net/
-// @version      3.3.1.98
+// @version      3.3.1.99
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_automation_DSLM.user.js
 // @author       Fafnir
@@ -1273,7 +1273,7 @@
         getWeighting() {
             // Locked races always have zero weighting
             let habitability = this.getHabitability();
-            if (habitability <= 0) {
+            if (habitability < (settings.evolutionAutoUnbound ? 0.8 : 1)) {
                 return 0;
             }
 
@@ -2524,7 +2524,7 @@
           () => true,
           (building) => {
               if (building._tab !== "city" && building.stateOffCount > 0) {
-                  if (building === buildings.RuinsGuardPost && building.isSmartManaged() && !isHellSupressUseful() 
+                  if (building === buildings.RuinsGuardPost && building.isSmartManaged() && !isHellSupressUseful()
                     && building.count < Math.ceil(5000 / (game.armyRating(traitVal('high_pop', 0, 1), "hellArmy", 0) * traitVal('holy', 1, '+')))) { return false; }
                   if (building === buildings.BadlandsAttractor && building.isSmartManaged()) { return false; }
                   if (building === buildings.SpireMechBay && building.isSmartManaged()) { return false; }
@@ -4425,11 +4425,11 @@
 
             if (yard.sort) {
                 $("#shipPlans .b-checkbox").eq(1).click()
-                this._fleetVue.build();  
+                this._fleetVue.build();
                 getVueById('shipReg0')?.setLoc(region, yard.ships.length);
                 $("#shipPlans .b-checkbox").eq(1).click()
             } else {
-                this._fleetVue.build();  
+                this._fleetVue.build();
                 getVueById('shipReg0')?.setLoc(region, yard.ships.length);
             }
             return true;
@@ -4493,7 +4493,7 @@
                     patrol += 500;
                     sensor += 10;
                 }
-                
+
                 if (sensor > 100){
                     sensor = Math.round((sensor - 100) / ((sensor - 100) + 200) * 100) + 100;
                 }
@@ -5980,6 +5980,7 @@
             evolutionQueue: [],
             evolutionQueueEnabled: false,
             evolutionQueueRepeat: false,
+            evolutionAutoUnbound: true,
             evolutionBackup: false,
         }
         challenges.forEach(set => def["challenge_" + set[0].id] = false);
@@ -7570,7 +7571,7 @@
         }
 
         let minersDisabled = settings.jobDisableMiners && buildings.GatewayStarbase.count > 0;
-        let hoovedMiner = game.global.race.hooved && !minersDisabled && availableEmployees > 0 ? jobList.indexOf(jobs.Miner) : -1;
+        let hoovedMiner = game.global.race.hooved && resources.Horseshoe.usefulRatio < 1 && !minersDisabled && availableEmployees > 0 ? jobList.indexOf(jobs.Miner) : -1;
 
         // Make sure our hooved have miner for horseshoes
         if (hoovedMiner !== -1) {
@@ -10628,7 +10629,7 @@
 
         // Unlocked and affordable techs, but only if we don't have anything more important
         if (prioritizedTasks.length === 0 && (isEarlyGame() ? settings.researchRequest : settings.researchRequestSpace)) {
-            prioritizedTasks = state.unlockedTechs.filter(t => t.isAffordable());
+            prioritizedTasks = state.unlockedTechs.filter(t => t.isAffordable(true));
         }
 
         if (prioritizedTasks.length > 0) {
@@ -10654,7 +10655,7 @@
         if (FleetManagerOuter.nextShipAffordable && settings.prioritizeOuterFleet.includes("req")) {
             for (let res in FleetManagerOuter.nextShipCost) {
                 let resource = resources[res];
-                resource.requestedQuantity = Math.max(resource.requestedQuantity, FleetManagerOuter.nextShipCost[res]);              
+                resource.requestedQuantity = Math.max(resource.requestedQuantity, FleetManagerOuter.nextShipCost[res]);
             }
         }
 
@@ -11042,7 +11043,8 @@
     function getTooltipInfo(obj) {
         let notes = [];
         if (obj === buildings.NeutronCitadel) {
-            notes.push(`下次建造将多耗电 ${getCitadelConsumption(obj.stateOnCount+1) - getCitadelConsumption(obj.stateOnCount)} MW`);
+            let diff = getCitadelConsumption(obj.stateOnCount + 1) - getCitadelConsumption(obj.stateOnCount);
+            notes.push(`下次建造将多耗电 ${getNiceNumber(diff)} MW`);
         }
         if (obj === buildings.SpireMechBay && MechManager.initLab()) {
             notes.push(`当前机甲潜力：${getNiceNumber(MechManager.mechsPotential)}`);
@@ -11052,7 +11054,6 @@
             if (supplyCollected > 0) {
                 notes.push(`补给获取：${getNiceNumber(supplyCollected)}/s`);
             }
-
         }
 
         if ((obj instanceof Technology || (!settings.autoARPA && obj._tab === "arpa") || (!settings.autoBuild && obj._tab !== "arpa")) && !state.queuedTargetsAll.includes(obj) && !state.triggerTargets.includes(obj)) {
@@ -11129,6 +11130,13 @@
         if (obj === buildings.Smokehouse) {
             let spoilage = 50 * (0.9 ** obj.count);
             notes.push(`每秒消耗 ${getNiceNumber(spoilage)}% 的${resources.Food.title}储量`);
+        }
+        if (obj === buildings.LakeCoolingTower) {
+            let coolers = buildings.LakeCoolingTower.stateOnCount;
+            let current = 500 * (0.92 ** coolers);
+            let next = 500 * (0.92 ** (coolers+1));
+            let diff = ((current - next) * buildings.LakeHarbour.stateOnCount) * (game.global.race['emfield'] ? 1.5 : 1);
+            notes.push(`下次建造将使耗电量减少 ${getNiceNumber(diff)} MW`);
         }
 
         if (obj.extraDescription) {
@@ -11252,6 +11260,11 @@
                 }
             }
         }
+
+        let currentNode = $(`#script_override_true_value:visible`);
+        if (currentNode.length !== 0) {
+            changeDisplayInputNode(currentNode.attr("type"), settings[currentNode.attr("value")], currentNode.find(`td:eq(1)>*:first-child`));
+        }
     }
 
     function automateAscension() {
@@ -11272,7 +11285,7 @@
         } else {
             state.scriptTick = 1;
         }
-        if (state.scriptTick % (settings.tickRate * (game.global.settings.at ? 2 : 1)) !== 0) {
+        if (state.scriptTick % (game.global.settings.at ? settings.tickRate * 2 : settings.tickRate) !== 0) {
             return;
         }
 
@@ -12150,6 +12163,7 @@
         let note = typeof settingsRaw[settingName] === "object" ?
           "所有满足条件的数值将添加入列表，或者从列表中移除":
           "从上往下，首个条件满足时，将使用相应数值。默认值为：";
+        let note_2 = "当前值为：";
 
         let newTableBodyText = "";
         for (let i = 0; i < overrides.length; i++) {
@@ -12160,6 +12174,11 @@
             <td style="width:76%" colspan="5">${note}</td>
             <td style="width:15%"></td>
             <td style="width:9%"><a class="button is-dark is-small"><span>+</span></a></td>
+          </tr>
+          <tr id="script_override_true_value" class="unsortable" value="${settingName}" type="${type}">
+            <td style="width:76%" colspan="5">${note_2}</td>
+            <td style="width:15%"></td>
+            <td style="width:9%"></td>
           </tr>`;
         let tableBodyNode = $(`#script_${settingName}ModalTable`);
         tableBodyNode.append($(newTableBodyText));
@@ -12175,6 +12194,7 @@
                   $(".script_" + settingName).prop(retType, settingsRaw[settingName]);
               }));
         }
+        $(`#script_override_true_value td:eq(1)`).append(buildInputNodeForDisplay(type, options, settings[settingName]));
 
         // Add button
         $(`#script_${settingName}_d a`).on('click', function() {
@@ -12266,6 +12286,44 @@
                 return buildObjectListInput(options(), "name", "id", value, callback);
             default:
                 return "";
+        }
+    }
+
+    function buildInputNodeForDisplay(type, options, value) {
+        switch (type) {
+            case "string":
+            case "number":
+                return $(`
+                  <input type="text" class="input is-small" style="height: 22px; width:100%" disabled="disabled"/>`)
+                .val(value);
+            case "boolean":
+                return $(`
+                  <label tabindex="0" disabled="disabled" class="switch is-disabled" style="position:absolute; margin-top: 8px; margin-left: 10px;">
+                    <input type="checkbox"  disabled="disabled">
+                    <span class="check" style="height:5px; max-width:15px"></span><span style="margin-left: 20px;"></span>
+                  </label>`)
+                .find('input').prop('checked', value).end();
+            case "select":
+                return $(`
+                  <select style="width: 100%"  disabled="disabled" class="dropdown is-disabled">${options}</select>`)
+                .val(value);
+            default:
+                return $(`
+                  <span></span>`)
+                .text(JSON.stringify(value));
+        }
+    }
+
+    function changeDisplayInputNode(type, value, node) {
+        switch (type) {
+            case "string":
+            case "number":
+            case "select":
+                return node.val(value);
+            case "boolean":
+                return node.find('input').prop('checked', value).end();
+            default:
+                return node.text(JSON.stringify(value));
         }
     }
 
@@ -12809,6 +12867,7 @@
         currentNode.append(`<div><span id="script_race_warning"></span></div>`);
         updateRaceWarning();
 
+        addSettingsToggle(currentNode, "evolutionAutoUnbound", "是否允许选择不匹配种族", "获得相应鲜血灌注升级(自由、暗影战争)后，允许自动完成成就选择不匹配当前星球环境的种族。");
         addSettingsToggle(currentNode, "evolutionBackup", "是否进行软重置", "直到选中想要选择的种族之前一直进行软重置。在获得大灭绝特权后就没有必要选择了。");
 
         // Challenges
