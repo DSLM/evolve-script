@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Evolve
 // @namespace    http://tampermonkey.net/
-// @version      3.3.1.99.1
+// @version      3.3.1.100
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_automation_DSLM.user.js
 // @author       Fafnir
@@ -14,7 +14,6 @@
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // ==/UserScript==
 //炼钢、冶炼和石墨烯厂会在需求资源储量大于10万时继续运作而非关闭
-//让部分背景色随主题变化
 //暴露当前设置配合监听脚本
 //
 // This script forked from TMVictor's script version 3.3.1. Original script: https://gist.github.com/TMVictor/3f24e27a21215414ddc68842057482da
@@ -4109,7 +4108,7 @@
         },
 
         // function mercCost from civics.js
-        getMercenaryCost() {
+        get mercenaryCost() {
             let cost = Math.round((1.24 ** this.workers) * 75) - 50;
             if (cost > 25000){
                 cost = 25000;
@@ -4126,7 +4125,7 @@
         },
 
         hireMercenary() {
-            let cost = this.getMercenaryCost();
+            let cost = this.mercenaryCost;
             if (this.workers >= this.max || resources.Money.currentQuantity < cost){
                 return false;
             }
@@ -5787,10 +5786,10 @@
         priorityList.push(buildings.GateInferniteMine);
 
         priorityList.push(buildings.SpireMission);
+        priorityList.push(buildings.SpirePurifier);
         priorityList.push(buildings.SpireMechBay);
         priorityList.push(buildings.SpireBaseCamp);
         priorityList.push(buildings.SpirePort);
-        priorityList.push(buildings.SpirePurifier);
         priorityList.push(buildings.SpireBridge);
         priorityList.push(buildings.SpireSphinx);
         priorityList.push(buildings.SpireBribeSphinx);
@@ -6303,7 +6302,7 @@
             productionFoundryWeighting: "demanded",
             productionSmelting: "required",
             productionSmeltingIridium: 0.5,
-            productionFactoryMinIngredients: 0.001,
+            productionFactoryMinIngredients: 0,
         }
 
         // Foundry
@@ -7066,7 +7065,7 @@
         }
 
         if (!haveTask("merc")) {
-            let mercenaryCost = m.getMercenaryCost();
+            let mercenaryCost = m.mercenaryCost;
             let mercenariesHired = 0;
             let mercenaryMax = m.maxSoldiers - settings.foreignHireMercDeadSoldiers;
             let maxCost = state.moneyMedian * settings.foreignHireMercCostLowerThanIncome;
@@ -7080,7 +7079,7 @@
                   (resources.Money.spareQuantity - mercenaryCost > minMoney || mercenaryCost < maxCost) &&
                 m.hireMercenary()) {
                 mercenariesHired++;
-                mercenaryCost = m.getMercenaryCost();
+                mercenaryCost = m.mercenaryCost;
             }
 
             // Log the interaction
@@ -11603,7 +11602,53 @@
     }
 
     function addScriptStyle() {
-        let styles = `
+        // Hover calculated by (alt - 111111), and others from original
+        let cssData = {
+            dark: {background: "#282f2f", alt: "#0f1414", hover: "#010303", border: "#ccc", primary: "#fff"},
+            light: {background: "#fff", alt: "#ddd", hover: "#ccc", border: "#000", primary: "#000"},
+            night: {background: "#282f2f", alt: "#1b1b1b", hover: "#0a0a0a", border: "#ccc", primary: "#fff"},
+            darkNight: {background: "#282f2f", alt: "#1b1b1b", hover: "#0a0a0a", border: "#ccc", primary: "#b8b8b8"},
+            redgreen: {background: "#282f2f", alt: "#1b1b1b", hover: "#0a0a0a", border: "#ccc", primary: "#fff"},
+            gruvboxLight: {background: "#fbf1c7", alt: "#f9f5d7", hover: "#e8e4c6", border: "#3c3836", primary: "#3c3836"},
+            gruvboxDark: {background: "#282828", alt: "#1d2021", hover: "#0c0f10", border: "#3c3836", primary: "#ebdbb2"},
+            orangeSoda: {background: "#131516", alt: "#292929", hover: "#181818", border: "#313638", primary: "#EBDBB2"}
+        };
+        let styles = "";
+        // Colors for different themes
+        for (let [theme, color] of Object.entries(cssData)) {
+            styles += `
+                html.${theme} .script-modal-content {
+                    background-color: ${color.background};
+                }
+
+                html.${theme} .script-modal-header {
+                    border-color: ${color.border};
+                }
+
+                /*
+                html.${theme} .script-modal-body .button {
+                    background-color: ${color.alt};
+                }*/
+
+                html.${theme} .script-modal-body table td,
+                html.${theme} .script-modal-body table th {
+                    border-color: ${color.border};
+                }
+
+                html.${theme} .script-collapsible {
+                    background-color: ${color.alt};
+                }
+
+                html.${theme} .script-collapsible:after {
+                    color: ${color.primary};
+                }
+
+                html.${theme} .script-contentactive,
+                html.${theme} .script-collapsible:hover {
+                    background-color: ${color.hover};
+                }`;
+        };
+        styles += `
             .script-lastcolumn:after { float: right; content: "\\21c5"; }
             .script-refresh:after { float: right; content: "\\1f5d8"; }
             .script-draggable { cursor: move; cursor: grab; }
@@ -11611,7 +11656,6 @@
             .ui-sortable-helper { display: table; cursor: grabbing !important; }
 
             .script-collapsible {
-                background-color: #444;
                 color: white;
                 cursor: pointer;
                 padding: 18px;
@@ -11620,10 +11664,6 @@
                 text-align: left;
                 outline: none;
                 font-size: 15px;
-            }
-
-            .script-contentactive, .script-collapsible:hover {
-                background-color: #333;
             }
 
             .script-collapsible:after {
@@ -11644,7 +11684,6 @@
                 //max-height: 0;
                 overflow: hidden;
                 //transition: max-height 0.2s ease-out;
-                //background-color: #f1f1f1;
             }
 
             .script-searchsettings {
@@ -11676,7 +11715,6 @@
             /* Modal Content/Box */
             .script-modal-content {
                 position: relative;
-                border: #ccc solid 0.0625rem;
                 margin: auto;
                 margin-top: 50px;
                 margin-bottom: 50px;
@@ -11727,6 +11765,7 @@
                 cursor: default;
                 z-index: 10000 !important;
             }
+
             .ui-helper-hidden-accessible {
                 border: 0;
                 clip: rect(0 0 0 0);
@@ -11765,7 +11804,7 @@
             .area { width: calc(100% / 6) !important; max-width: 8rem; }
             .offer-item { width: 15% !important; max-width: 7.5rem; }
             .tradeTotal { margin-left: 11.5rem !important; }
-        `
+        `;
 
         // Create style document
         var css = document.createElement('style');
@@ -11909,7 +11948,7 @@
     function buildSettingsSection(sectionId, sectionName, resetFunction, updateSettingsContentFunction) {
         $("#script_settings").append(`
           <div id="script_${sectionId}Settings" style="margin-top: 10px;">
-            <h3 id="${sectionId}SettingsCollapsed" class="script-collapsible text-center has-text-success resource alt">${sectionName}设置</h3>
+            <h3 id="${sectionId}SettingsCollapsed" class="script-collapsible text-center has-text-success">${sectionName}设置</h3>
             <div class="script-content">
               <div style="margin-top: 10px;"><button id="script_reset${sectionId}" class="button">${sectionName}设置还原</button></div>
               <div style="margin-top: 10px; margin-bottom: 10px;" id="script_${sectionId}Content"></div>
@@ -11933,7 +11972,7 @@
         } else {
             parentNode.append(`
               <div id="script_${sectionId}Settings" style="margin-top: 10px;">
-                <h3 id="${sectionId}SettingsCollapsed" class="script-collapsible text-center has-text-success resource alt">${sectionName}设置</h3>
+                <h3 id="${sectionId}SettingsCollapsed" class="script-collapsible text-center has-text-success">${sectionName}设置</h3>
                 <div class="script-content">
                   <div style="margin-top: 10px;"><button id="script_reset${sectionId}" class="button">${sectionName}设置还原</button></div>
                   <div style="margin-top: 10px; margin-bottom: 10px;" id="script_${sectionId}Content"></div>
@@ -11959,7 +11998,7 @@
     }
 
     function addStandardHeading(node, heading) {
-        node.append('<div style="margin-top: 5px; width: 600px;"><span class="has-text-danger" style="margin-left: 10px;">' + heading + '</span></div>');
+        node.append(`<div style="margin-top: 5px; width: 600px; text-align: left;"><span class="has-text-danger" style="margin-left: 10px;">${heading}</span></div>`);
     }
 
     function addSettingsHeader1(node, headerText) {
@@ -12054,7 +12093,7 @@
            {val: "temp", label: "温度", hint: "当前温度(0为寒冷，1为温度适中，2为炎热)"}]},
         soldiers: {def: "workers", arg: "select_cb", options: () =>
           [{val: "workers", label: "士兵总数"},
-           {val: "max", label: "士兵总上限"},
+           {val: "max", label: "士兵上限"},
            {val: "currentCityGarrison", label: "非地狱维度士兵数"},
            {val: "maxCityGarrison", label: "非地狱维度士兵上限"},
            {val: "hellSoldiers", label: "地狱维度士兵数"},
@@ -12063,7 +12102,8 @@
            {val: "hellPatrolSize", label: "地狱维度巡逻队规模"},
            {val: "wounded", label: "伤兵数"},
            {val: "deadSoldiers", label: "士兵阵亡数"},
-           {val: "crew", label: "船员数"}]},
+           {val: "crew", label: "船员数"},
+           {val: "mercenaryCost", label: "雇佣兵花费"}]},
         tab: {def: "civTabs1", arg: "select_cb", options: () =>
           [{val: "civTabs0", label: game.loc('tab_evolve')},
            {val: "civTabs1", label: game.loc('tab_civil')},
@@ -12181,7 +12221,7 @@
           <tr id="script_${settingName}_d" class="unsortable">
             <td style="width:76%" colspan="5">${note}</td>
             <td style="width:15%"></td>
-            <td style="width:9%"><a class="button is-dark is-small"><span>+</span></a></td>
+            <td style="width:9%"><a class="button is-small" style="width: 26px; height: 26px"><span>+</span></a></td>
           </tr>
           <tr id="script_override_true_value" class="unsortable" value="${settingName}" type="${type}">
             <td style="width:76%" colspan="5">${note_2}</td>
@@ -12329,7 +12369,7 @@
             case "select":
                 return node.val(value);
             case "boolean":
-                return node.find('input').prop('checked', value).end();
+                return node.find('input').prop('checked', value);
             default:
                 return node.text(JSON.stringify(value));
         }
@@ -12366,7 +12406,7 @@
     }
 
     function buildConditionRemove(settingName, id, rebuild) {
-        return $(`<a class="button is-dark is-small"><span>-</span></a>`)
+        return $(`<a class="button is-small" style="width: 26px; height: 26px"><span>-</span></a>`)
         .on('click', function() {
             settingsRaw.overrides[settingName].splice(id, 1);
             if (settingsRaw.overrides[settingName].length === 0) {
@@ -12996,7 +13036,7 @@
           <tr id="script_evolution_${id}" value="${id}" class="script-draggable">
             <td style="width:25%"><span class="${raceClass}">${raceName}</span> <span class="${prestigeClass}">${prestigeName}</span> ${star.prop('outerHTML') ?? (getStarLevel(queuedEvolution)-1) + "*"}</td>
             <td style="width:70%"><textarea class="textarea">${JSON.stringify(queuedEvolution, null, 4)}</textarea></td>
-            <td style="width:5%"><a class="button is-dark is-small"><span>X</span></a></td>
+            <td style="width:5%"><a class="button is-dark is-small" style="width: 26px; height: 26px"><span>X</span></a></td>
           </tr>`);
 
         // Delete button
@@ -13344,7 +13384,7 @@
         let triggerElement = $('#script_trigger_' + trigger.seq).children().eq(6);
         triggerElement.empty().off("*");
 
-        let deleteTriggerButton = $('<a class="button is-dark is-small"><span>X</span></a>');
+        let deleteTriggerButton = $('<a class="button is-dark is-small" style="width: 26px; height: 26px"><span>X</span></a>');
         triggerElement.append(deleteTriggerButton);
         deleteTriggerButton.on('click', function() {
             TriggerManager.RemoveTrigger(trigger.seq);
@@ -13416,7 +13456,7 @@
     }
 
     function buildTriggerCountInput(trigger, property) {
-        let textBox = $('<input type="text" class="input is-small" style="width:100%"/>');
+        let textBox = $('<input type="text" class="input is-small" style="height: 22px; width:100%"/>');
         textBox.val(trigger[property]);
 
         textBox.on('change', function() {
@@ -13630,7 +13670,7 @@
         }
 
         currentNode.append(`
-          <table style="width:100%">
+          <table style="width:100%; text-align: left">
             <tr>
               <th class="has-text-warning" style="width:55%">地区</th>
               <th class="has-text-warning" style="width:20%">权重</th>
@@ -13643,13 +13683,13 @@
         let newTableBodyText = "";
 
         for (let reg of FleetManagerOuter.Regions) {
-            newTableBodyText += `<tr><td id="script_fleet_${reg}" style="width:55%"></td><td style="width:20%"></td><td style="width:25%"></td></tr>`;
+            newTableBodyText += `<tr><td id="script_${secondaryPrefix}fleet_${reg}" style="width:55%"></td><td style="width:20%"></td><td style="width:25%"></td></tr>`;
         }
         tableBodyNode.append($(newTableBodyText));
 
         // Build all other productions settings rows
         for (let reg of FleetManagerOuter.Regions) {
-            let fleetElement = $('#script_fleet_' + reg);
+            let fleetElement = $(`#script_${secondaryPrefix}fleet_${reg}`);
 
             let nameRef = game.actions.space[reg].info.name;
             let gameName = typeof nameRef === 'function' ? nameRef() : nameRef;
@@ -15262,7 +15302,7 @@
         $(document.body).append(`
           <div id="scriptModal" class="script-modal content">
             <span id="scriptModalClose" class="script-modal-close">&times;</span>
-            <div class="script-modal-content resource alt">
+            <div class="script-modal-content">
               <div id="scriptModalHeader" class="script-modal-header has-text-warning">
                 <p>You should never see this modal header...</p>
               </div>
@@ -16037,5 +16077,4 @@
     };
 
     $().ready(mainAutoEvolveScript);
-
 })($);
