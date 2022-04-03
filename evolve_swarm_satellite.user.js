@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         蜂群建造
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.1
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_swarm_satellite.user.js
 // @author       DSLM
@@ -41,7 +41,7 @@
 		{
 			var SS_temp = SS
 			SS_times = 0;
-			SS = window.setInterval(SeqCollider, 5000);
+			SS = window.setInterval(swarmSatellite, 5000);
 			clearInterval(SS_temp)
 			return;
 		}
@@ -63,6 +63,11 @@
                 pressKeys = whichKeys[sizes[i]];
                 break;
             }
+        }
+
+        if(pressKeys == [])
+        {
+            return;
         }
 
         if(pressKeys[10])
