@@ -99,8 +99,8 @@
                                 <b-input id="playfab-autoSaveTime"
                                     v-model="playfabData.autoSaveTime"
                                     v-on:input="saveAutoSaveTime"
-                                    placeholder="Number"
-                                    type="不少于1分钟"
+                                    placeholder="不少于1分钟"
+                                    type="number"
                                     min="1">
                                 </b-input>
                                 </b-field>
@@ -178,7 +178,7 @@
                     },
                     saveAutoSaveTime:function(time)
                     {
-                        playfabData.autoSaveTime = time;
+                        playfabData.autoSaveTime = time ? time : 1;
                         saveSettings();
                         let autoSaveTh_temp = autoSaveTh;
                         autoSaveTh = window.setInterval(autoSaveToPlayFab, playfabData.autoSaveTime * 60 * 1000);
