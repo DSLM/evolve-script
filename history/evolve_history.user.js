@@ -894,7 +894,7 @@
 	    ]
 	}
 	
-        var cri_popper = $(`<div id="CRISPR_popper" class="popper has-background-light has-text-dark pop-desc"></div>`);
+        var cri_popper = $(`<div id="CRISPR_popper" style="display: none;" class="popper has-background-light has-text-dark pop-desc"></div>`);
         $(`#main`).append(cri_popper);
         var cri_popperRef = false;
         inner.selectAll("g.node")
@@ -1068,7 +1068,7 @@
         svg.call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(0.5));
 
         //提示框
-        var blo_popper = $(`<div id="BLOOD_popper" class="popper has-background-light has-text-dark pop-desc"></div>`);
+        var blo_popper = $(`<div id="BLOOD_popper" style="display: none;" class="popper has-background-light has-text-dark pop-desc"></div>`);
         $(`#main`).append(blo_popper);
         var blo_popperRef = false;
         inner.selectAll("g.node")
@@ -1160,7 +1160,7 @@
         let types = {achieve:{fName:"achievements"}, feat:{fName:"feats"}};
 
         //提示框
-        var per_popper = $(`<div id="PERK_popper" class="popper has-background-light has-text-dark pop-desc"></div>`);
+        var per_popper = $(`<div id="PERK_popper" style="display: none;" class="popper has-background-light has-text-dark pop-desc"></div>`);
         $(`#main`).append(per_popper);
         var per_popperRef = false;
 
