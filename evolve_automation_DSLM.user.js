@@ -7,7 +7,7 @@
 // @author       Fafnir
 // @author       TMVictor
 // @author       Vollch
-// @match        https://likexia.gitee.io/evolve/
+// @match        https://g8hh.github.io/evolve/
 // @match        https://pmotschmann.github.io/Evolve/
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
@@ -12456,7 +12456,7 @@
         };
 
         listNode.autocomplete({
-            minLength: 2,
+            minLength: 1,
             delay: 0,
             source: function(request, response) {
                 let matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
@@ -12590,7 +12590,7 @@
         };
 
         listBlock.find('input').autocomplete({
-            minLength: 2,
+            minLength: 1,
             delay: 0,
             source: function(request, response) {
                 let matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
@@ -13435,7 +13435,7 @@
         };
 
         typeSelectNode.autocomplete({
-            minLength: 2,
+            minLength: 1,
             delay: 0,
             source: function(request, response) {
                 let matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
