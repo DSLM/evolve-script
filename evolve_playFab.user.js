@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.0.1
 // @description  try to take over the world!
-// @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_listener.user.js
+// @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_playFab.user.js
 // @author       DSLM
 // @match        https://g8hh.github.io/evolve/
 // @match        https://pmotschmann.github.io/Evolve/
