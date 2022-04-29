@@ -7,7 +7,7 @@
 // @author       Fafnir
 // @author       TMVictor
 // @author       Vollch
-// @match        https://likexia.gitee.io/evolve/
+// @match        https://g8hh.github.io/evolve/
 // @match        https://pmotschmann.github.io/Evolve/
 // @grant        none
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
@@ -4629,7 +4629,8 @@
               + game.global.blood.wrath
               + game.global.portal.mechbay.scouts * 1e7
               + (settings.mechSpecial ? 1e14 : 0)
-              + (settings.mechInfernalCollector ? 1e15 : 0);
+              + (settings.mechInfernalCollector ? 1e15 : 0)
+              + (settings.mechCollectorValue);
 
               return this.stateHash !== oldHash;
         },
@@ -11262,7 +11263,7 @@
 
         let currentNode = $(`#script_override_true_value:visible`);
         if (currentNode.length !== 0) {
-            changeDisplayInputNode(currentNode.attr("type"), settings[currentNode.attr("value")], currentNode.find(`td:eq(1)>*:first-child`));
+            changeDisplayInputNode(currentNode.attr("type"), currentNode.attr("value"), settings[currentNode.attr("value")], currentNode.find(`td:eq(1)>*:first-child`));
         }
     }
 
@@ -12355,6 +12356,10 @@
                 return $(`
                   <select style="width: 100%"  disabled="disabled" class="dropdown is-disabled">${options}</select>`)
                 .val(value);
+            case "list":
+                return $(`
+                  <span></span>`)
+               .text(value.map(item => options.list[item].name).join(", "));
             default:
                 return $(`
                   <span></span>`)
@@ -12362,7 +12367,7 @@
         }
     }
 
-    function changeDisplayInputNode(type, value, node) {
+    function changeDisplayInputNode(type, id, value, node) {
         switch (type) {
             case "string":
             case "number":
@@ -12370,6 +12375,9 @@
                 return node.val(value);
             case "boolean":
                 return node.find('input').prop('checked', value);
+            case "list":
+                if(id === "researchIgnore")
+                    return node.text(value.map(item => techIds[item].name).join(", "));
             default:
                 return node.text(JSON.stringify(value));
         }
@@ -12456,7 +12464,7 @@
         };
 
         listNode.autocomplete({
-            minLength: 2,
+            minLength: 1,
             delay: 0,
             source: function(request, response) {
                 let matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
@@ -12590,7 +12598,7 @@
         };
 
         listBlock.find('input').autocomplete({
-            minLength: 2,
+            minLength: 1,
             delay: 0,
             source: function(request, response) {
                 let matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
@@ -13435,7 +13443,7 @@
         };
 
         typeSelectNode.autocomplete({
-            minLength: 2,
+            minLength: 1,
             delay: 0,
             source: function(request, response) {
                 let matcher = new RegExp($.ui.autocomplete.escapeRegex(request.term), "i");
