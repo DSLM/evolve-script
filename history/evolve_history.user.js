@@ -894,7 +894,7 @@
 	        }
 	    ]
 	}
-
+	
         var cri_popper = $(`<div id="CRISPR_popper" style="display: none;" class="popper has-background-light has-text-dark pop-desc"></div>`);
         $(`#main`).append(cri_popper);
         var cri_popperRef = false;
