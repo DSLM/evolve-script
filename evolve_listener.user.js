@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         数据监听
 // @namespace    http://tampermonkey.net/
-// @version      1.1.1
+// @version      1.1.1.1
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_listener.user.js
 // @author       DSLM
@@ -36,7 +36,8 @@
         redgreen:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc", primary_color:"#fff"},
         gruvboxLight:{background_color:"#fbf1c7", alt_color:"#f9f5d7", primary_border:"#3c3836", primary_color:"#3c3836"},
         gruvboxDark:{background_color:"#282828", alt_color:"#1d2021", primary_border:"#3c3836", primary_color:"#ebdbb2"},
-        orangeSoda:{background_color:"#131516", alt_color:"#292929", primary_border:"#313638", primary_color:"#EBDBB2"}
+        orangeSoda:{background_color:"#131516", alt_color:"#292929", primary_border:"#313638", primary_color:"#EBDBB2"},
+        dracula:{background_color:"#282a36", alt_color:"#1d2021", primary_border:"#44475a", primary_color:"#f8f8f2"}
     };
     //全局CSS
     const padTB = "0.5em";

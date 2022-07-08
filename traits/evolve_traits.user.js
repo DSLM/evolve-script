@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         自动增删特质
 // @namespace    http://tampermonkey.net/
-// @version      1.1.4
+// @version      1.1.4.1
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/traits/evolve_traits.user.js
 // @author       DSLM
@@ -39,7 +39,8 @@
         redgreen:{background_color:"#000", alt_color:"#1b1b1b", primary_border:"#ccc", primary_color:"#fff"},
         gruvboxLight:{background_color:"#fbf1c7", alt_color:"#f9f5d7", primary_border:"#3c3836", primary_color:"#3c3836"},
         gruvboxDark:{background_color:"#282828", alt_color:"#1d2021", primary_border:"#3c3836", primary_color:"#ebdbb2"},
-        orangeSoda:{background_color:"#131516", alt_color:"#292929", primary_border:"#313638", primary_color:"#EBDBB2"}
+        orangeSoda:{background_color:"#131516", alt_color:"#292929", primary_border:"#313638", primary_color:"#EBDBB2"},
+        dracula:{background_color:"#282a36", alt_color:"#1d2021", primary_border:"#44475a", primary_color:"#f8f8f2"}
     };
     //全局CSS
     const padTB = "0.5em";
@@ -175,7 +176,7 @@
 	        desc: loc('trait_adaptable'),
 	        type: 'genus',
 	        val: 3,
-	        vars(r){ 
+	        vars(r){
 	            switch (r || evolve.global.race.adaptable || 1){
 	                case 0.25:
 	                    return [3];
@@ -195,7 +196,7 @@
 	        desc: loc('trait_wasteful'),
 	        type: 'genus',
 	        val: -3,
-	        vars(r){ 
+	        vars(r){
 	            switch (r || evolve.global.race.wasteful || 1){
 	                case 0.25:
 	                    return [14];
@@ -248,7 +249,7 @@
 	        desc: loc('trait_cautious'),
 	        type: 'genus',
 	        val: -2,
-	        vars(r){ 
+	        vars(r){
 	            switch (r || evolve.global.race.cautious || 1){
 	                case 0.25:
 	                    return [14];
@@ -2985,5 +2986,5 @@
 	        vars(r){ return [1]; },
 	    }
 	}
-	
+
  })(jQuery);
