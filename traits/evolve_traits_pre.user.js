@@ -90,6 +90,7 @@
         let traitRemove = $("#traitRemove");
         let traitButton = $("#traitButton");
         let traitSave = $("#traitSave");
+        let traitModified = $("#traitModified");
 
         if(smallTraitTitle.length === 0)
         {
@@ -99,10 +100,12 @@
             traitRemove = $("<div id='traitRemove' style='float: right;'></div>");
             traitButton = $('<div id="traitButton" style="float: top;"></div>');
             traitSave = $('<button id="traitSave" class="button">保存特质设置</button>');
+            traitModified = $('<div id="traitModified" class="has-text-caution"></div>');
 
             traitSave.click(saveTraitList);
 
             traitButton.append(traitSave);
+            traitButton.append(traitModified);
 
             traitContent.append(traitButton);
             traitContent.append(traitRemove);
@@ -147,6 +150,10 @@
                 document.querySelector(".add" + element).click();
             }
         });
+
+        //监听修改次数
+        let modif = evolve.global.race["modified"] > 0 ? evolve.global.race["modified"] : 0;
+        traitModified.text("特质修改次数：" + modif);
     }
 
     function saveTraitList()
