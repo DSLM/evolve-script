@@ -2909,11 +2909,11 @@
 	        type: 'minor',
 	        vars(r){ return [1]; },
 	    },
-	    promiscuous: { // Population Growth Bonus
+	    promiscuous: { // Organics Growth Bonus, Synths Population Discount
 	        name: loc('trait_promiscuous_name'),
 	        desc: loc('trait_promiscuous'),
 	        type: 'minor',
-	        vars(r){ return [1]; },
+	        vars(r){ return [1,0.02]; },
 	    },
 	    resilient: { // Coal Mining Bonus
 	        name: loc('trait_resilient_name'),
