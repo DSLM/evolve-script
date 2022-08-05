@@ -1550,7 +1550,7 @@
 	        'laser_shark','infested','mass_starvation','colonist','world_domination','illuminati',
 	        'syndicate','cult_of_personality','doomed','pandemonium','blood_war','landfill','seeder',
 	        'miners_dream','shaken','blacken_the_sun','trade','resonance','enlightenment','gladiator',
-	        'corrupted'
+	        'corrupted','red_dead'
 	    ],
 	    species: [
 	        'mass_extinction','extinct_human','extinct_elven','extinct_orc','extinct_cath','extinct_wolven','extinct_vulpine','extinct_centaur',
@@ -1571,13 +1571,13 @@
 	        'explorer','biome_grassland','biome_oceanic','biome_forest','biome_desert','biome_volcanic','biome_tundra',
 	        'biome_savanna','biome_swamp','biome_ashland','biome_taiga','biome_hellscape','biome_eden',
 	        'atmo_toxic','atmo_mellow','atmo_rage','atmo_stormy','atmo_ozone','atmo_magnetic','atmo_trashed','atmo_elliptical','atmo_flare','atmo_dense',
-	        'atmo_unstable','atmo_permafrost'
+	        'atmo_unstable','atmo_permafrost','atmo_retrograde'
 	    ],
 	    universe: [
 	        'vigilante','squished','double_density','cross','macro','marble','heavyweight','whitehole','heavy','canceled',
 	        'eviltwin','microbang','pw_apocalypse','fullmetal','pass'
 	    ],
-	    challenge: ['joyless','steelen','dissipated','technophobe','wheelbarrow','iron_will','failed_history','banana','pathfinder','ashanddust','exodus','obsolete','gross'],
+	    challenge: ['joyless','steelen','dissipated','technophobe','wheelbarrow','iron_will','failed_history','banana','pathfinder','ashanddust','exodus','obsolete','gross','lamentis'],
 	}
 	const feats = {
 	    utopia: {
@@ -2242,6 +2242,33 @@
 	            return false;
 	        }
 	    },
+	    civil_service: {
+	        id: 'genes-civil_service',
+	        title: loc('arpa_genepool_civil_service_title'),
+	        desc: loc('arpa_genepool_civil_service_desc'),
+	        reqs: { governor: 1 },
+	        grant: ['governor',2],
+	        cost: {
+	            Plasmid(){ return 1000; },
+	            Harmony(){ return 1; }
+	        },
+	        action(){
+	            if (payCrispr('civil_service')){
+	                return true;
+	            }
+	            return false;
+	        },
+	        post(){
+	            if (global.race.hasOwnProperty('governor') && global.race.governor.hasOwnProperty('tasks')){
+	                for (let i=0; i<6; i++){
+	                    if (!global.race.governor.tasks.hasOwnProperty(`t${i}`)){
+	                        global.race.governor.tasks[`t${i}`] = 'none';
+	                    }
+	                }
+	            }
+	            defineGovernor();
+	        }
+	    },
 	    hardened_genes: {
 	        id: 'genes-hardened_genes',
 	        title: loc('arpa_genepool_hardened_genes_title'),
@@ -2856,8 +2883,6 @@
 	    },
 	}
 	const universeExclusives = {
-	    biome_hellscape: ['standard', 'micro', 'heavy', 'antimatter', 'magic'],
-	    biome_eden: ['evil'],
 	    cross: ['antimatter'],
 	    vigilante: ['evil'],
 	    squished: ['micro'],
