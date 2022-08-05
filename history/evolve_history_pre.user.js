@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.4.8
+// @version      1.4.4.9
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -1248,6 +1248,7 @@
         enlightenment: ['other', 'progression'],
     	gladiator: ['other'],
         corrupted: ['other', 'progression'],
+    	red_dead: ['other', 'reset'],
         mass_extinction: ['reset', 'perk'],
     	extinct_human: ['species'],
     	extinct_elven: ['species'],
@@ -1342,6 +1343,7 @@
     	atmo_dense: ['atmosphere'],
     	atmo_unstable: ['atmosphere'],
     	atmo_permafrost: ['atmosphere'],
+    	atmo_retrograde: ['atmosphere'],
     	vigilante: ['reset', 'universe'],
     	squished: ['reset', 'universe'],
     	double_density: ['universe'],
@@ -1370,6 +1372,7 @@
     	exodus: ['perk', 'scenario'],
     	obsolete: ['perk', 'scenario'],
     	gross: ['perk', 'challenge'],
+    	lamentis: ['perk', 'challenge'],
     };
     //手动维护特权列表
     const perks = [
@@ -1473,6 +1476,14 @@
         {src:['failed_history', 'achieve' ],
         desc(){
             return [loc("achieve_perks_failed_history",[2])()];
+        }},
+        {src:['lamentis', 'achieve' ],
+        desc(){
+            return ["无星："+loc("achieve_perks_lamentis1",[`10%`])(),
+                    "白星："+loc("achieve_perks_lamentis2",[`10%`])(),
+                    "铜星："+loc("achieve_perks_lamentis3",[`10%`])(),
+                    "银星："+loc("achieve_perks_lamentis4")(),
+                    "金星："+loc("achieve_perks_lamentis5")()];
         }},
         {src:['gladiator', 'achieve' ],
         desc(){
