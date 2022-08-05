@@ -183,7 +183,7 @@
 	        desc: loc('trait_adaptable'),
 	        type: 'genus',
 	        val: 3,
-	        vars(r){
+	        vars(r){ 
 	            switch (r || evolve.global.race.adaptable || 1){
 	                case 0.25:
 	                    return [3];
@@ -203,7 +203,7 @@
 	        desc: loc('trait_wasteful'),
 	        type: 'genus',
 	        val: -3,
-	        vars(r){
+	        vars(r){ 
 	            switch (r || evolve.global.race.wasteful || 1){
 	                case 0.25:
 	                    return [14];
@@ -256,7 +256,7 @@
 	        desc: loc('trait_cautious'),
 	        type: 'genus',
 	        val: -2,
-	        vars(r){
+	        vars(r){ 
 	            switch (r || evolve.global.race.cautious || 1){
 	                case 0.25:
 	                    return [14];
@@ -2993,5 +2993,5 @@
 	        vars(r){ return [1]; },
 	    }
 	}
-
+	
  })(jQuery);
