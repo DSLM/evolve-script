@@ -229,6 +229,21 @@
 	        desc: loc('trait_carnivore'),
 	        type: 'genus',
 	        val: 3,
+	        vars(r){ 
+	            // [Rot Percent]
+	            switch (r || evolve.global.race.carnivore || 1){
+	                case 0.25:
+	                    return [65];
+	                case 0.5:
+	                    return [60];
+	                case 1:
+	                    return [50];
+	                case 2:
+	                    return [40];
+	                case 3:
+	                    return [35];
+	            }
+	        },
 	    },
 	    beast: { // Improved hunting and soldier training
 	        name: loc('trait_beast_name'),
@@ -1214,7 +1229,22 @@
 	        name: loc('trait_hooved_name'),
 	        desc: loc('trait_hooved'),
 	        type: 'major',
-	        val: -4
+	        val: -4,
+	        vars(r){
+	            // [Cost Adjustment]
+	            switch (r || evolve.global.race.hooved || 1){
+	                case 0.25:
+	                    return [130];
+	                case 0.5:
+	                    return [120];
+	                case 1:
+	                    return [100];
+	                case 2:
+	                    return [80];
+	                case 3:
+	                    return [70];
+	            }
+	        },
 	    },
 	    rage: { // Wounded soldiers rage with extra power
 	        name: loc('trait_rage_name'),
@@ -1710,6 +1740,21 @@
 	        desc: loc('trait_leathery'),
 	        type: 'major',
 	        val: 2,
+	        vars(r){
+	            // Morale loss (Base value is 5)
+	            switch (r || evolve.global.race.leathery || 1){
+	                case 0.25:
+	                    return [4];
+	                case 0.5:
+	                    return [3];
+	                case 1:
+	                    return [2];
+	                case 2:
+	                    return [1];
+	                case 3:
+	                    return [0];
+	            }
+	        },
 	    },
 	    pessimistic: { // Minor increase to stress
 	        name: loc('trait_pessimistic_name'),
@@ -2692,6 +2737,21 @@
 	        desc: loc('trait_unified'),
 	        type: 'major',
 	        val: 4,
+	        vars(r){
+	            // [Bonus to unification]
+	            switch (r || evolve.global.race.unified || 1){
+	                case 0.25:
+	                    return [0];
+	                case 0.5:
+	                    return [1];
+	                case 1:
+	                    return [3];
+	                case 2:
+	                    return [5];
+	                case 3:
+	                    return [7];
+	            }
+	        }
 	    },
 	    rainbow: { // Gain a bonus if sunny after raining
 	        name: loc('trait_rainbow_name'),
@@ -2718,6 +2778,21 @@
 	        desc: loc('trait_magnificent'),
 	        type: 'major',
 	        val: 6,
+	        vars(r){
+	            // [Knowledge Base, Knowledge Scale, Tax Bonus]
+	            switch (r || evolve.global.race.magnificent || 1){
+	                case 0.25:
+	                    return [300, 1, 0.5, 0.75, 1];
+	                case 0.5:
+	                    return [350, 2, 0.75, 0.8, 1];
+	                case 1:
+	                    return [400, 3, 1, 1, 1];
+	                case 2:
+	                    return [450, 3, 1.5, 1.5, 1.5];
+	                case 3:
+	                    return [500, 3, 2, 2, 2];
+	            }
+	        }
 	    },
 	    noble: { // Unable to raise taxes above base value or set very low taxes
 	        name: loc('trait_noble_name'),
