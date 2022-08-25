@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         世界超级对撞机队列
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.2
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_world_controller.user.js
 // @author       DSLM
@@ -42,7 +42,14 @@
             }
 
             if(evolve.global.space.world_collider.count < 10)
+            {
                 return;
+            }
+
+            if(document.querySelector("#space-world_collider > a.button > span.aTitle") == null)
+            {
+                return;
+            }
         }
         catch(err)
         {
