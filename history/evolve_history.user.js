@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.4.9
+// @version      1.4.4.10
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -334,10 +334,12 @@
                 {
                     var calData = (i == 0) ? (evolve.global.stats[label.slice(0,-7)] - value) : (historyData[i-1][label] - value);
                     if(calData == 0) continue;
+                    if(calData % 1 > 0) calData = calData.toFixed(2);
                     $("#recoList").append($(`<tr><td class="has-text-warning">${evolve.loc("achieve_stats_" + label)}</td><td>${calData}</td></tr>`));
                 }
                 else
                 {
+                    var calData = (value % 1 > 0) ? value.toFixed(2) : value;
                     $("#recoList").append($(`<tr><td class="has-text-warning">${evolve.loc("achieve_stats_" + label)}</td><td>${value}</td></tr>`));
                 }
             }
