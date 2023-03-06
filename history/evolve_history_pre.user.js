@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.4.10
+// @version      1.4.5
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -1369,12 +1369,16 @@
     	iron_will: ['perk', 'scenario'],
     	failed_history: ['perk', 'scenario'],
     	banana: ['perk', 'scenario'],
-    	pathfinder: ['perk', 'scenario'],
-    	ashanddust: ['perk', 'scenario'],
-    	exodus: ['perk', 'scenario'],
-    	obsolete: ['perk', 'scenario'],
+    	pathfinder: ['perk', 'reset', 'scenario'],
+    	ashanddust: ['perk', 'reset', 'scenario'],
+    	exodus: ['perk', 'reset', 'scenario'],
+    	obsolete: ['perk', 'reset', 'scenario'],
+    	bluepill: ['perk', 'reset', 'scenario'],
+    	retired: ['perk', 'reset', 'scenario'],
     	gross: ['perk', 'challenge'],
     	lamentis: ['perk', 'challenge'],
+    	overlord: ['perk'],
+    	adam_eve: ['perk', 'scenario'],
     };
     //手动维护特权列表
     const perks = [
@@ -1394,6 +1398,10 @@
         desc(){
             return [loc("achieve_perks_mass_extinction")(),
                     loc("achieve_perks_mass_extinction2",["0 / 50 / 100 / 150 / 200"])()];
+        }},
+        {src:['doomed', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_doomed")()];
         }},
         {src:['explorer', 'achieve' ],
         desc(){
@@ -1499,9 +1507,16 @@
                     "银星："+loc("unavailable_content")(),
                     "金星："+loc("unavailable_content")()];
         }},
-        {src:['doomed', 'achieve' ],
+        {src:['overlord', 'achieve' ],
         desc(){
-            return [loc("achieve_perks_doomed")()];
+            return [loc("achieve_perks_overlord1",[10])(),
+                    loc("achieve_perks_overlord2")(),
+                    loc("achieve_perks_overlord3")(),
+                    loc("achieve_perks_overlord4")()];
+        }},
+        {src:['adam_eve', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_adam_eve")()];
         }},
         {src:['novice', 'feat' ],
         desc(){
@@ -1516,6 +1531,14 @@
         {src:['adept', 'feat' ],
         desc(){
             return [loc("achieve_perks_adept",["100 / 200 / 300 / 400 / 500","60 / +120 / +180 / +240 / +300"])()];
+        }},
+        {src:['master', 'feat' ],
+        desc(){
+            return [loc("achieve_perks_master",["1/2/3/4/5", "2/4/6/8/10", loc('evo_mitochondria_title'), loc('evo_eukaryotic_title'), loc('evo_membrane_title'), loc('evo_organelles_title'), loc('evo_nucleus_title')])()];
+        }},
+        {src:['grandmaster', 'feat' ],
+        desc(){
+            return [loc("achieve_perks_grandmaster",["1/2/3/4/5"])()];
         }}
     ];
 
