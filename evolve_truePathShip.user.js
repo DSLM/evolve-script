@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         自动智械造船配置
 // @namespace    http://tampermonkey.net/
-// @version      1.4.0.1
+// @version      1.4.1
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_truePathShip.user.js
 // @author       DSLM
@@ -27,14 +27,15 @@
     let inputName = ["location", "class", "power", "weapon", "armor", "engine", "sensor", "count", "reqs"];
     let reqTypes = {hasTech: {name:"有科技", desc:"只有在研究对应科技后才会建造", req:true}, noTech: {name:"无科技", desc:"只有在研究对应科技前才会建造", req:false}, hasCharge: {name:"有中继器蓄能", desc:"只有在中继器蓄能达到100%后才会建造", req:true}, noCharge: {name:"无中继器蓄能", desc:"只有在中继器蓄能未达到100%时才会建造", req:false}};
     let partsName = ["class", "power", "weapon", "armor", "engine", "sensor"];
-    let shipPartsName = {"class" : ["corvette", "frigate", "destroyer", "cruiser", "battlecruiser", "dreadnought"],
+    let shipPartsName = {"class" : ["corvette", "frigate", "destroyer", "cruiser", "battlecruiser", "dreadnought", "explorer"],
     "power" : ["solar", "diesel", "fission", "fusion", "elerium"],
     "weapon" : ["railgun", "laser", "p_laser", "plasma", "phaser", "disruptor"],
     "armor" : ["steel", "alloy", "neutronium"],
-    "engine" : ["ion", "tie", "pulse", "photon", "vacuum"],
+    "engine" : ["ion", "tie", "pulse", "photon", "vacuum", "emdrive"],
     "sensor" : ["visual", "radar", "lidar", "quantum"]};
     //let a = [];Object.keys(evolve.actions.space).forEach(function(location){if (evolve.actions.space[location].info.syndicate() || location === 'spc_dwarf'){a.push(location);}})
     let shipLocations = ['spc_moon', 'spc_red', 'spc_gas', 'spc_gas_moon', 'spc_belt', 'spc_dwarf', 'spc_titan', 'spc_enceladus', 'spc_triton', 'spc_kuiper', 'spc_eris'];
+
 
     //手动CSS颜色
     let cssData = {
@@ -319,7 +320,20 @@
                 return {pass:false, reason:"舰船部件未解锁"};
             }
         }
-        if (!evolve.actions.space[curOne["location"]].info.syndicate())
+        //天仓五特殊处理
+        if ("tauceti" === curOne["location"])
+        {
+            if ("explorer" !== curOne["class"])
+            {
+                return {pass:false, reason:"目标地点未解锁"};
+            }
+
+            if ("emdrive" !== curOne["engine"])
+            {
+                return {pass:false, reason:"电磁引擎未解锁"};
+            }
+        }
+        else if (!evolve.actions.space[curOne["location"]].info.syndicate())
         {
             return {pass:false, reason:"目标地点未解锁"};
         }
@@ -493,6 +507,8 @@
         {
             tempSelect.append($(`<option value="${value}">${(typeof evolve.actions.space[value].info.name === 'string') ? evolve.actions.space[value].info.name : evolve.actions.space[value].info.name()}</option>`));
         }
+        //天仓五特殊处理
+        tempSelect.append($(`<option value="tauceti">${evolve.actions.tauceti.tau_star.info.name()}</option>`));
         tempSelect.val(values.location);
         tempTD.append(tempSelect);
         tempTR.append(tempTD);
