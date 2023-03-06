@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.4.10
+// @version      1.4.5
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -891,7 +891,7 @@
 	    blood_remembrance: [
 	        {
 	            title: loc(`wiki_arpa_crispr_special_blood_remembrance`),
-	            color: evolve.global.resource['Blood_Stone'] && evolve.global.resource.Blood_Stone.amount >= 1,
+	            color: evolve.global.prestige.Blood_Stone.count >= 1,
 	            link: 'wiki.html#resources-prestige-blood'
 	        }
 	    ]
@@ -1406,12 +1406,16 @@
     	iron_will: ['perk', 'scenario'],
     	failed_history: ['perk', 'scenario'],
     	banana: ['perk', 'scenario'],
-    	pathfinder: ['perk', 'scenario'],
-    	ashanddust: ['perk', 'scenario'],
-    	exodus: ['perk', 'scenario'],
-    	obsolete: ['perk', 'scenario'],
+    	pathfinder: ['perk', 'reset', 'scenario'],
+    	ashanddust: ['perk', 'reset', 'scenario'],
+    	exodus: ['perk', 'reset', 'scenario'],
+    	obsolete: ['perk', 'reset', 'scenario'],
+    	bluepill: ['perk', 'reset', 'scenario'],
+    	retired: ['perk', 'reset', 'scenario'],
     	gross: ['perk', 'challenge'],
     	lamentis: ['perk', 'challenge'],
+    	overlord: ['perk'],
+    	adam_eve: ['perk', 'scenario'],
     };
     //手动维护特权列表
     const perks = [
@@ -1431,6 +1435,10 @@
         desc(){
             return [loc("achieve_perks_mass_extinction")(),
                     loc("achieve_perks_mass_extinction2",["0 / 50 / 100 / 150 / 200"])()];
+        }},
+        {src:['doomed', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_doomed")()];
         }},
         {src:['explorer', 'achieve' ],
         desc(){
@@ -1536,9 +1544,16 @@
                     "银星："+loc("unavailable_content")(),
                     "金星："+loc("unavailable_content")()];
         }},
-        {src:['doomed', 'achieve' ],
+        {src:['overlord', 'achieve' ],
         desc(){
-            return [loc("achieve_perks_doomed")()];
+            return [loc("achieve_perks_overlord1",[10])(),
+                    loc("achieve_perks_overlord2")(),
+                    loc("achieve_perks_overlord3")(),
+                    loc("achieve_perks_overlord4")()];
+        }},
+        {src:['adam_eve', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_adam_eve")()];
         }},
         {src:['novice', 'feat' ],
         desc(){
@@ -1553,6 +1568,14 @@
         {src:['adept', 'feat' ],
         desc(){
             return [loc("achieve_perks_adept",["100 / 200 / 300 / 400 / 500","60 / +120 / +180 / +240 / +300"])()];
+        }},
+        {src:['master', 'feat' ],
+        desc(){
+            return [loc("achieve_perks_master",["1/2/3/4/5", "2/4/6/8/10", loc('evo_mitochondria_title'), loc('evo_eukaryotic_title'), loc('evo_membrane_title'), loc('evo_organelles_title'), loc('evo_nucleus_title')])()];
+        }},
+        {src:['grandmaster', 'feat' ],
+        desc(){
+            return [loc("achieve_perks_grandmaster",["1/2/3/4/5"])()];
         }}
     ];
 
@@ -1590,7 +1613,10 @@
 	        'vigilante','squished','double_density','cross','macro','marble','heavyweight','whitehole','heavy','canceled',
 	        'eviltwin','microbang','pw_apocalypse','fullmetal','pass'
 	    ],
-	    challenge: ['joyless','steelen','dissipated','technophobe','wheelbarrow','iron_will','failed_history','banana','pathfinder','ashanddust','exodus','obsolete','gross','lamentis'],
+	    challenge: [
+	        'joyless','steelen','dissipated','technophobe','wheelbarrow','iron_will','failed_history','banana','pathfinder',
+	        'ashanddust','exodus','obsolete','bluepill','retired','gross','lamentis','overlord',`adam_eve`
+	    ],
 	}
 	const feats = {
 	    utopia: {
@@ -2238,6 +2264,25 @@
 	            calcRQueueMax();
 	        }
 	    },
+	    precognition: {
+	        id: 'genes-precognition',
+	        title: loc('arpa_genepool_precognition_title'),
+	        desc: loc('arpa_genepool_precognition_desc'),
+	        reqs: { queue: 2 },
+	        grant: ['queue',3],
+	        condition(){ return global.stats.aiappoc > 0 ? true : false; },
+	        cost: {
+	            Plasmid(){ return 3500; },
+	            Phage(){ return 100; },
+	            AICore(){ return 1; }
+	        },
+	        action(){
+	            if (payCrispr('precognition')){
+	                return true;
+	            }
+	            return false;
+	        }
+	    },
 	    governance: {
 	        id: 'genes-governance',
 	        title: loc('arpa_genepool_governance_title'),
@@ -2541,7 +2586,7 @@
 	        reqs: {},
 	        grant: ['blood',1],
 	        condition(){
-	            return global.resource.Blood_Stone.amount >= 1 ? true : false;
+	            return global.prestige.Blood_Stone.count >= 1 ? true : false;
 	        },
 	        cost: {
 	            Plasmid(){ return 1000; },
