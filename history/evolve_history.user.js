@@ -1541,8 +1541,8 @@
             return ["无星："+loc("achieve_perks_pathfinder1",[10])(),
                     "白星："+loc("achieve_perks_pathfinder2",[10])(),
                     "铜星："+loc("achieve_perks_pathfinder3")(),
-                    "银星："+loc("unavailable_content")(),
-                    "金星："+loc("unavailable_content")()];
+                    "银星："+loc("achieve_perks_pathfinder4")(),
+                    "金星："+loc("achieve_perks_pathfinder5")()];
         }},
         {src:['overlord', 'achieve' ],
         desc(){
