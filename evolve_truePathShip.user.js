@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         自动智械造船配置
 // @namespace    http://tampermonkey.net/
-// @version      1.4.1
+// @version      1.4.2
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/evolve_truePathShip.user.js
 // @author       DSLM
@@ -25,7 +25,7 @@
 
     let currStytle = {};
     let inputName = ["location", "class", "power", "weapon", "armor", "engine", "sensor", "count", "reqs"];
-    let reqTypes = {hasTech: {name:"有科技", desc:"只有在研究对应科技后才会建造", req:true}, noTech: {name:"无科技", desc:"只有在研究对应科技前才会建造", req:false}, hasCharge: {name:"有中继器蓄能", desc:"只有在中继器蓄能达到100%后才会建造", req:true}, noCharge: {name:"无中继器蓄能", desc:"只有在中继器蓄能未达到100%时才会建造", req:false}};
+    let reqTypes = {hasTech: {name:"有科技", desc:"只有在研究对应科技后才会建造", req:true}, noTech: {name:"无科技", desc:"只有在研究对应科技前才会建造", req:false}, hasCharge: {name:"有中继器蓄能", desc:"只有在中继器蓄能达到100%后才会建造", req:true}, noCharge: {name:"无中继器蓄能", desc:"只有在中继器蓄能未达到100%时才会建造", req:false}, tauceti: {name:"已入驻天仓五", desc:"选择此选项，会在点击拆卸飞船后阻止继续建造，专用于探索者飞船", req:false}};
     let partsName = ["class", "power", "weapon", "armor", "engine", "sensor"];
     let shipPartsName = {"class" : ["corvette", "frigate", "destroyer", "cruiser", "battlecruiser", "dreadnought", "explorer"],
     "power" : ["solar", "diesel", "fission", "fusion", "elerium"],
@@ -254,7 +254,8 @@
                     shipLoc.find(".dropdown-menu-animation").eq(yardShips[j]).find("." + savedData.buildList[i]["location"]).get(0).click();
                 }
 
-                switch(tryBuild(savedData.buildList[i]))
+                let tryResult = tryBuild(savedData.buildList[i]);
+                switch(tryResult.type)
                 {
                     case 0://成功构建，结束本轮
                         shipTotalStatus.text("");
@@ -262,7 +263,7 @@
                         break;
 
                     case 1://部件没解锁，下一个
-                        shipTableBody.children().eq(i).children().eq(inputName.length).html("<span class='has-text-danger'>舰船部件未解锁</span>");
+                        shipTableBody.children().eq(i).children().eq(inputName.length).html("<span class='has-text-danger'>"+tryResult.miss+"未解锁</span>");
                         continue;
                         break;
 
@@ -311,32 +312,57 @@
         return clone.get(0);
     }
 
-    function buildCheck(curOne)
+    //原版的船坞判断
+    function avail(curOne,k,i,v)
     {
-        for (let i = 0; i < partsName.length; i++)
-        {
-            if ($("#shipPlans").find("div.dropdown-menu-animation").eq(i).find("[data-val='" + curOne[partsName[i]] + "']").eq(0).css("display") == "none")
-            {
-                return {pass:false, reason:"舰船部件未解锁"};
+        if ((k === 'class' || k === 'engine') && evolve.global.tech['tauceti'] && (v === 'emdrive' || v === 'explorer')){
+            return true;
+        }
+        else if (curOne.class === 'explorer'){
+            if (k === 'weapon'){
+                return i === 1 ? true : false;
+            }
+            else if (k === 'engine'){
+                return i === 6 ? true : false;
+            }
+            else if (k === 'sensor'){
+                return i === 4 ? true : false;
             }
         }
-        //天仓五特殊处理
-        if ("tauceti" === curOne["location"])
-        {
-            if ("explorer" !== curOne["class"])
-            {
-                return {pass:false, reason:"目标地点未解锁"};
-            }
+        return evolve.global.tech[`syard_${k}`] > i ? true : false;
+    }
 
-            if ("emdrive" !== curOne["engine"])
+    function buildCheck(curOne)
+    {
+        //检查部件是否解锁
+        for (let i = 0; i < partsName.length; i++)
+        {
+            //探索者锁部件了，跳过这三样
+            if("explorer" === curOne["class"] && ["weapon", "engine", "sensor"].indexOf(partsName[i]) > -1)
             {
-                return {pass:false, reason:"电磁引擎未解锁"};
+                continue;
             }
+            let checkParts = avail(curOne,partsName[i],shipPartsName[partsName[i]].indexOf(curOne[partsName[i]]),curOne[partsName[i]]);
+            if (!checkParts)
+            {
+                return {pass:false, reason: $("#shipPlans").find("div.dropdown-menu-animation").eq(i).find("[data-val='" + curOne[partsName[i]] + "']").eq(0).text() + "未解锁"};
+            }
+        }
+
+        //天仓五特殊处理
+        if (("tauceti" === curOne["location"]) != ("explorer" === curOne["class"]))
+        {
+            return {pass:false, reason:"目标地点未解锁（天仓五与探索者绑定）"};
+        }
+        else if (("tauceti" === curOne["location"]) && ("explorer" === curOne["class"]))
+        {
+
         }
         else if (!evolve.actions.space[curOne["location"]].info.syndicate())
         {
             return {pass:false, reason:"目标地点未解锁"};
         }
+
         for (var i = 0; i < curOne.reqs.length; i++)
         {
             let item = curOne.reqs[i];
@@ -364,6 +390,23 @@
                     return {pass:false, reason:"前置条件未达成"};
                 }
             }
+            else if(item.reqType == "tauceti")
+            {
+                let arrived = false;
+                try
+                {
+                    arrived = (evolve.global.tech.tau_home >= 2);
+                }
+                catch (e)
+                {
+                    arrived = false;
+                }
+                if(arrived)
+                {
+                    return {pass:false, reason:"已入驻天仓五"};
+                }
+            }
+
         }
         return {pass:true, reason:"前置条件已达成"};
     }
@@ -372,21 +415,31 @@
     {
         for (let i = 0; i < partsName.length; i++)
         {
-            if ($("#shipPlans").find("div.dropdown-menu-animation").eq(i).find("[data-val='" + curOne[partsName[i]] + "']").eq(0).css("display") != "none")
+            //探索者锁部件了，跳过这三样
+            if("explorer" === curOne["class"] && ["weapon", "engine", "sensor"].indexOf(partsName[i]) > -1)
             {
-                $("#shipPlans").find("div.dropdown-menu-animation").eq(i).find("[data-val='" + curOne[partsName[i]] + "']").eq(0).get(0).click();
+                continue;
             }
-            else
-            {
-                //部件没有
-                return 1;
-            }
+
+            let targetLi = $("#shipPlans").find("div.dropdown-menu-animation").eq(i).find("[data-val='" + curOne[partsName[i]] + "']").eq(0);
+            targetLi.get(0).click();
+
+            // 由于探索者反应问题，不在此处判断这部分东西
+            // if (targetLi.css("display") != "none")
+            // {
+            //     targetLi.get(0).click();
+            // }
+            // else
+            // {
+            //     //部件没有
+            //     return {"type": 1, "miss": targetLi.text()};
+            // }
         }
 
         //电不够
         if(parseInt(document.querySelector("#shipPlans > div.stats > div:nth-child(3) > span:nth-child(2)").innerText) < 0)
         {
-            return 2;
+            return {"type":2};
         }
 
         document.querySelector("#shipPlans > div.assemble > button").click();
@@ -400,7 +453,7 @@
         {
             //console.log(e);
         }
-        return 0;
+        return {"type":0};
     }
 
     function sameship(obj1, obj2)
@@ -408,6 +461,11 @@
 
         for (let i = 0; i < partsName.length; i++)
         {
+            //探索者锁部件了，跳过这三样
+            if("explorer" === obj1["class"] && ["weapon", "engine", "sensor"].indexOf(partsName[i]) > -1)
+            {
+                continue;
+            }
             if (obj1[partsName[i]] != obj2[partsName[i]])
             {
                 return false;
@@ -478,7 +536,7 @@
                     req.reqData = $(ele).children().eq(1).children(".reqData.tech").eq(0).attr("data-value");
                 }
 
-                if(req.reqType == "hasCharge" || req.reqType == "noCharge")
+                if(req.reqType == "hasCharge" || req.reqType == "noCharge" || req.reqType == "tauceti")
                 {
                     req.reqData = "";
                 }
@@ -631,7 +689,7 @@
                 tempInput.show();
                 tempDiv.hide();
             }
-            else if(this.value == "hasCharge" || this.value == "noCharge")
+            else if(this.value == "hasCharge" || this.value == "noCharge" || this.value == "tauceti")
             {
                 tempDiv.show();
                 tempInput.hide();
@@ -642,7 +700,7 @@
             tempInput.show();
             tempDiv.hide();
         }
-        else if(curOne.reqType == "hasCharge" || curOne.reqType == "noCharge")
+        else if(curOne.reqType == "hasCharge" || curOne.reqType == "noCharge" || curOne.reqType == "tauceti")
         {
             tempDiv.show();
             tempInput.hide();
