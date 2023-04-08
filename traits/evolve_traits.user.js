@@ -442,11 +442,32 @@
 	            }
 	        },
 	    },
+	    flier: { // Use Clay instead of Stone or Cement
+	        name: loc('trait_flier_name'),
+	        desc: loc('trait_flier'),
+	        type: 'genus',
+	        val: 3,
+	        vars(r){
+	            // [Reduce Stone Costs, Extra Trade Post Route]
+	            switch (r || evolve.global.race.flier || 1){
+	                case 0.25:
+	                    return [10,0];
+	                case 0.5:
+	                    return [15,0];
+	                case 1:
+	                    return [25,1];
+	                case 2:
+	                    return [40,1];
+	                case 3:
+	                    return [50,2];
+	            }
+	        },
+	    },
 	    hollow_bones: { // Less Crafted Materials Needed
 	        name: loc('trait_hollow_bones_name'),
 	        desc: loc('trait_hollow_bones'),
 	        type: 'genus',
-	        val: 3,
+	        val: 2,
 	        vars(r){
 	            switch (r || evolve.global.race.hollow_bones || 1){
 	                case 0.25:
@@ -462,11 +483,31 @@
 	            }
 	        },
 	    },
+	    sky_lover: { // Mining type jobs more stressful
+	        name: loc('trait_sky_lover_name'),
+	        desc: loc('trait_sky_lover'),
+	        type: 'genus',
+	        val: -2,
+	        vars(r){
+	            switch (r || evolve.global.race.sky_lover || 1){
+	                case 0.25:
+	                    return [40];
+	                case 0.5:
+	                    return [30];
+	                case 1:
+	                    return [20];
+	                case 2:
+	                    return [15];
+	                case 3:
+	                    return [10];
+	            }
+	        },
+	    },
 	    rigid: { // Crafting production lowered slightly
 	        name: loc('trait_rigid_name'),
 	        desc: loc('trait_rigid'),
 	        type: 'genus',
-	        val: -1,
+	        val: -2,
 	        vars(r){
 	            switch (r || evolve.global.race.rigid || 1){
 	                case 0.25:
