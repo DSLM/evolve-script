@@ -386,6 +386,7 @@
 	        type: 'genus',
 	        val: 5,
 	        vars(r){
+	            // [Manual Gathering, Basic Jobs]
 	            switch (r || evolve.global.race.strong || 1){
 	                case 0.25:
 	                    return [2,1.25];
@@ -997,6 +998,90 @@
 	            }
 	        },
 	    },
+	    psychic: {
+	        name: loc('trait_psychic_name'),
+	        desc: loc('trait_psychic'),
+	        type: 'genus',
+	        val: 10,
+	        vars(r){
+	            // [Mind Break Modifer, Thrall Modifer, Recharge Rate, Effect Strength]
+	            switch (r || evolve.global.race.psychic || 1){
+	                case 0.25:
+	                    return [0.35,5,0.01,20];
+	                case 0.5:
+	                    return [0.65,10,0.025,30];
+	                case 1:
+	                    return [1,15,0.05,40];
+	                case 2:
+	                    return [1.25,20,0.075,50];
+	                case 3:
+	                    return [1.5,25,0.1,60];
+	            }
+	        },
+	    },
+	    tormented: {
+	        name: loc('trait_tormented_name'),
+	        desc: loc('trait_tormented'),
+	        type: 'genus',
+	        val: -25,
+	        vars(r){
+	            // [Morale above 100% is greatly reduced]
+	            switch (r || evolve.global.race.tormented || 1){
+	                case 0.25:
+	                    return [99];
+	                case 0.5:
+	                    return [95];
+	                case 1:
+	                    return [90];
+	                case 2:
+	                    return [80];
+	                case 3:
+	                    return [75];
+	            }
+	        },
+	    },
+	    darkness: {
+	        name: loc('trait_darkness_name'),
+	        desc: loc('trait_darkness'),
+	        type: 'genus',
+	        val: 1,
+	        vars(r){
+	            // [Sunny Days less frequent]
+	            switch (r || evolve.global.race.darkness || 1){
+	                case 0.25:
+	                    return [1];
+	                case 0.5:
+	                    return [2];
+	                case 1:
+	                    return [3];
+	                case 2:
+	                    return [4];
+	                case 3:
+	                    return [5];
+	            }
+	        },
+	    },
+	    unfathomable: {
+	        name: loc('trait_unfathomable_name'),
+	        desc: loc('trait_unfathomable'),
+	        type: 'genus',
+	        val: 15,
+	        vars(r){
+	            // [Thrall Races, Catch Modifer, Thrall Effectiveness]
+	            switch (r || evolve.global.race.unfathomable || 1){
+	                case 0.25:
+	                    return [1,0.5,0.05];
+	                case 0.5:
+	                    return [1,0.65,0.08];
+	                case 1:
+	                    return [2,0.8,0.1];
+	                case 2:
+	                    return [2,0.9,0.12];
+	                case 3:
+	                    return [3,1,0.13];
+	            }
+	        },
+	    },
 	    creative: { // A.R.P.A. Projects are cheaper
 	        name: loc('trait_creative_name'),
 	        desc: loc('trait_creative'),
@@ -1293,7 +1378,7 @@
 	        type: 'major',
 	        val: 4,
 	        vars(r){
-	            // [Armor Bonus, Wounded Bonus]
+	            // [Rage Bonus, Wounded Bonus]
 	            switch (r || evolve.global.race.rage || 1){
 	                case 0.25:
 	                    return [0.3,20];
@@ -2978,6 +3063,109 @@
 	                    return [0.12,100];
 	                case 3:
 	                    return [0.14,100];
+	            }
+	        }
+	    },
+	    dark_dweller: {
+	        name: loc('trait_dark_dweller_name'),
+	        desc: loc('trait_dark_dweller'),
+	        type: 'major',
+	        val: -3,
+	        vars(r){
+	            switch (r || evolve.global.race.dark_dweller || 1){
+	                case 0.25:
+	                    return [90];
+	                case 0.5:
+	                    return [75];
+	                case 1:
+	                    return [60];
+	                case 2:
+	                    return [45];
+	                case 3:
+	                    return [30];
+	            }
+	        }
+	    },
+	    swift: {
+	        name: loc('trait_swift_name'),
+	        desc: loc('trait_swift'),
+	        type: 'major',
+	        val: 10,
+	        vars(r){
+	            // [Combat Bonus, Thrall Catch Bonus]
+	            switch (r || evolve.global.race.swift || 1){
+	                case 0.25:
+	                    return [35,15];
+	                case 0.5:
+	                    return [55,30];
+	                case 1:
+	                    return [75,45];
+	                case 2:
+	                    return [85,55];
+	                case 3:
+	                    return [90,65];
+	            }
+	        }
+	    },
+	    anthropophagite: {
+	        name: loc('trait_anthropophagite_name'),
+	        desc: loc('trait_anthropophagite'),
+	        type: 'major',
+	        val: -2,
+	        vars(r){
+	            switch (r || evolve.global.race.anthropophagite || 1){
+	                case 0.25:
+	                    return [0.4];
+	                case 0.5:
+	                    return [0.65];
+	                case 1:
+	                    return [1];
+	                case 2:
+	                    return [1.5];
+	                case 3:
+	                    return [2];
+	            }
+	        }
+	    },
+	    living_tool: {
+	        name: loc('trait_living_tool_name'),
+	        desc: loc('trait_living_tool'),
+	        type: 'major',
+	        val: 12,
+	        vars(r){
+	            // [Tool Factor, Crafting Factor]
+	            switch (r || evolve.global.race.living_tool || 1){
+	                case 0.25:
+	                    return [0.65,5];
+	                case 0.5:
+	                    return [0.8,12];
+	                case 1:
+	                    return [1,25];
+	                case 2:
+	                    return [1.1,35];
+	                case 3:
+	                    return [1.2,42];
+	            }
+	        }
+	    },
+	    bloated: {
+	        name: loc('trait_bloated_name'),
+	        desc: loc('trait_bloated'),
+	        type: 'major',
+	        val: -10,
+	        vars(r){
+	            // [Costs are higher]
+	            switch (r || evolve.global.race.bloated || 1){
+	                case 0.25:
+	                    return [25];
+	                case 0.5:
+	                    return [20];
+	                case 1:
+	                    return [15];
+	                case 2:
+	                    return [10];
+	                case 3:
+	                    return [5];
 	            }
 	        }
 	    },
