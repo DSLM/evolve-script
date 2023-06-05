@@ -1527,33 +1527,33 @@
         desc(){
             return [loc("achieve_perks_novice",["0.5 / +1 / +1.5 / +2 / +2.5","0.25 / +0.5 / +0.75 / +1 / +1.25"])(),
                     loc("achieve_perks_novice2")(),
-                    loc(`wiki_perks_progress_note1`,[10,loc(`wiki_resets_mad`)]),
-                    loc(`wiki_perks_progress_note2`)];
+                    loc(`wiki_perks_progress_note1`,[10,loc(`wiki_resets_mad`)()])(),
+                    loc(`wiki_perks_progress_note2`)()];
         }},
         {src:['journeyman', 'feat' ],
         desc(){
             return [loc("achieve_perks_journeyman2",["1 / +1 / +2 / +2 / +3","0 / +1 / +1 / +2 / +2"])(),
                     loc("achieve_perks_journeyman3")(),
-                    loc(`wiki_perks_progress_note1`,[25,loc(`wiki_resets_bioseed`)]),
-                    loc(`wiki_perks_progress_note2`)];
+                    loc(`wiki_perks_progress_note1`,[25,loc(`wiki_resets_bioseed`)()])(),
+                    loc(`wiki_perks_progress_note2`)()];
         }},
         {src:['adept', 'feat' ],
         desc(){
             return [loc("achieve_perks_adept",["100 / 200 / 300 / 400 / 500","60 / +120 / +180 / +240 / +300"])(),
-                    loc(`wiki_perks_progress_note1`,[50,loc(`wiki_resets_blackhole`)]),
-                    loc(`wiki_perks_progress_note2`)];
+                    loc(`wiki_perks_progress_note1`,[50,loc(`wiki_resets_blackhole`)()])(),
+                    loc(`wiki_perks_progress_note2`)()];
         }},
         {src:['master', 'feat' ],
         desc(){
             return [loc("achieve_perks_master",["1/2/3/4/5", "2/4/6/8/10", loc('evo_mitochondria_title'), loc('evo_eukaryotic_title'), loc('evo_membrane_title'), loc('evo_organelles_title'), loc('evo_nucleus_title')])(),
-                    loc(`wiki_perks_progress_note1`,[75,loc(`wiki_resets_ascension`)]),
-                    loc(`wiki_perks_progress_note2`)];
+                    loc(`wiki_perks_progress_note1`,[75,loc(`wiki_resets_ascension`)()])(),
+                    loc(`wiki_perks_progress_note2`)()];
         }},
         {src:['grandmaster', 'feat' ],
         desc(){
             return [loc("achieve_perks_grandmaster",["1/2/3/4/5"])(),
-                    loc(`wiki_perks_progress_note1`,[100,loc(`wiki_resets_infusion`)]),
-                    loc(`wiki_perks_progress_note2`)];
+                    loc(`wiki_perks_progress_note1`,[100,loc(`wiki_resets_infusion`)()])(),
+                    loc(`wiki_perks_progress_note2`)()];
         }}
     ];
 
