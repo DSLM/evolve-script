@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.5.1
+// @version      1.4.5.2
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -1335,6 +1335,8 @@
     	extinct_unicorn: ['species'],
     	extinct_synth: ['species'],
     	extinct_nano: ['species'],
+    	extinct_ghast: ['species'],
+    	extinct_shoggoth: ['species'],
     	extinct_junker: ['species', 'perk', 'scenario'],
     	extinct_sludge: ['species', 'perk', 'challenge'],
     	extinct_custom: ['species'],
@@ -1357,6 +1359,7 @@
     	genus_demonic: ['genus'],
     	genus_angelic: ['genus', 'universe'],
     	genus_synthetic: ['genus'],
+    	genus_eldritch: ['genus'],
     	explorer: ['biome', 'reset', 'perk'],
     	biome_grassland: ['biome'],
     	biome_oceanic: ['biome'],
@@ -1398,6 +1401,8 @@
     	pw_apocalypse: ['reset', 'universe'],
     	fullmetal: ['progression', 'universe'],
     	pass: ['reset'],
+    	soul_sponge: ['challenge', 'universe'],
+    	nightmare: ['challenge', 'reset', 'universe'],
         joyless: ['progression', 'challenge'],
     	steelen: ['challenge', 'reset', 'perk'],
     	dissipated: ['reset', 'challenge', 'perk'],
@@ -1558,24 +1563,34 @@
         {src:['novice', 'feat' ],
         desc(){
             return [loc("achieve_perks_novice",["0.5 / +1 / +1.5 / +2 / +2.5","0.25 / +0.5 / +0.75 / +1 / +1.25"])(),
-                    loc("achieve_perks_novice2")()];
+                    loc("achieve_perks_novice2")(),
+                    loc(`wiki_perks_progress_note1`,[10,loc(`wiki_resets_mad`)]),
+                    loc(`wiki_perks_progress_note2`)];
         }},
         {src:['journeyman', 'feat' ],
         desc(){
             return [loc("achieve_perks_journeyman2",["1 / +1 / +2 / +2 / +3","0 / +1 / +1 / +2 / +2"])(),
-                    loc("achieve_perks_journeyman3")()];
+                    loc("achieve_perks_journeyman3")(),
+                    loc(`wiki_perks_progress_note1`,[25,loc(`wiki_resets_bioseed`)]),
+                    loc(`wiki_perks_progress_note2`)];
         }},
         {src:['adept', 'feat' ],
         desc(){
-            return [loc("achieve_perks_adept",["100 / 200 / 300 / 400 / 500","60 / +120 / +180 / +240 / +300"])()];
+            return [loc("achieve_perks_adept",["100 / 200 / 300 / 400 / 500","60 / +120 / +180 / +240 / +300"])(),
+                    loc(`wiki_perks_progress_note1`,[50,loc(`wiki_resets_blackhole`)]),
+                    loc(`wiki_perks_progress_note2`)];
         }},
         {src:['master', 'feat' ],
         desc(){
-            return [loc("achieve_perks_master",["1/2/3/4/5", "2/4/6/8/10", loc('evo_mitochondria_title'), loc('evo_eukaryotic_title'), loc('evo_membrane_title'), loc('evo_organelles_title'), loc('evo_nucleus_title')])()];
+            return [loc("achieve_perks_master",["1/2/3/4/5", "2/4/6/8/10", loc('evo_mitochondria_title'), loc('evo_eukaryotic_title'), loc('evo_membrane_title'), loc('evo_organelles_title'), loc('evo_nucleus_title')])(),
+                    loc(`wiki_perks_progress_note1`,[75,loc(`wiki_resets_ascension`)]),
+                    loc(`wiki_perks_progress_note2`)];
         }},
         {src:['grandmaster', 'feat' ],
         desc(){
-            return [loc("achieve_perks_grandmaster",["1/2/3/4/5"])()];
+            return [loc("achieve_perks_grandmaster",["1/2/3/4/5"])(),
+                    loc(`wiki_perks_progress_note1`,[100,loc(`wiki_resets_infusion`)]),
+                    loc(`wiki_perks_progress_note2`)];
         }}
     ];
 
