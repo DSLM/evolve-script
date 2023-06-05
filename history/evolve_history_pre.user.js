@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         历史数据统计
 // @namespace    http://tampermonkey.net/
-// @version      1.4.5.2
+// @version      1.4.5.3
 // @description  try to take over the world!
 // @downloadURL  https://github.com/DSLM/evolve-script/raw/master/history/evolve_history.user.js
 // @author       DSLM
@@ -1499,6 +1499,14 @@
                     "铜星："+loc("achieve_perks_lamentis3",[`10%`])(),
                     "银星："+loc("achieve_perks_lamentis4")(),
                     "金星："+loc("achieve_perks_lamentis5")()];
+        }},
+        {src:['soul_sponge', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_soul_sponge",["100/200/300/400/500"])()];
+        }},
+        {src:['nightmare', 'achieve' ],
+        desc(){
+            return [loc("achieve_perks_nightmare")()];
         }},
         {src:['gladiator', 'achieve' ],
         desc(){
